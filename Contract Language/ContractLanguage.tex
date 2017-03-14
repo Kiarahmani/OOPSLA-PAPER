@@ -46,10 +46,10 @@ I believe the system is complete for all contracts of this type, and the languag
 	\centering
 	\begin{minipage}{.75\textwidth}
 		$\eta_s,\eta_d, x \in$ EffVis   \hspace {25 mm}  $Op \in $ OperationName \\
-		$N_s \in $ StartNode   ::=    $\eta_s | x \xrightarrow{txn} \eta_s$ \\
-		$N_e \in $ EndNode ::= $\eta_d | x \xrightarrow{txn} \eta_d | \eta_d \xrightarrow{txn} x $ \\
-		$R \in $ Relation ::= $vis | so | R \cup R | R^*$ \\ 
-		$C \in $ Clause ::= $empty | R::C $ \\		
+		$N_s \in $ StartNode   ::=    $\eta_s | x \xrightarrow{txn} \eta_s | \eta_s \xrightarrow{txn} x$ \\
+		$N_e \in $ EndNode ::= $\eta_d | x \xrightarrow{txn} \eta_d $ \\
+		$R \in $ Relation ::= $vis | so | R \cup R $ \\ 
+		$C \in $ Clause ::= $[R] | R^*$ \\		
 		$\pi \in$ Prop ::= $(<N_s,N_e>,C) | \pi \vee \pi$ \\
 		%$\tau \in $ EffectType ::= $Op | \tau \vee \tau$ \\
 		$\psi \in$ Contract ::= $ \pi \Rightarrow {\color{Red} vis (\eta_s,\eta_d)}$ 
@@ -74,9 +74,7 @@ I believe the system is complete for all contracts of this type, and the languag
 	\item {\bf Read Committed (RC)}
 	\subitem $ (<x \xrightarrow{txn} \eta_s,\eta_d> , [vis])  \Rightarrow {\color{Red}vis (\eta_s,\eta_d) } $
 	\item {\bf Monotonic Atomic View (MAV)}
-	\subitem $ [(<x \xrightarrow{txn} \eta_s,x \xrightarrow{txn} \eta_d > , [vis])  \vee  (<x \xrightarrow{txn} \eta_s,  \eta_d \xrightarrow{txn} x > , [vis])] \Rightarrow {\color{Red} vis (\eta_s,\eta_d)} $
-	\item {\bf Repeatable Read (RR)}
-	\subitem $ (<x \xrightarrow{txn} \eta_s,x \xrightarrow{txn} \eta_d > , [vis])  \Rightarrow {\color{Red} vis (\eta_s,\eta_d)} $
+	\subitem $ (<\eta_s,x \xrightarrow{txn} \eta_d > , [vis])  \Rightarrow {\color{Red} vis (\eta_s,\eta_d)} $
 	
 
 \end {itemize}

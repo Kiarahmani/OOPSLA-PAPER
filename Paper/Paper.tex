@@ -68,13 +68,13 @@
 \begin{document}
 
 %% Title information
-\title{The Most Awesomest Paper Ever}         %% [Short Title] is optional;
+\title{The Best Paper Ever}         %% [Short Title] is optional;
                                         %% when present, will be used in
                                         %% header instead of Full Title.
 %\titlenote{with title note}             %% \titlenote is optional;
                                         %% can be repeated if necessary;
                                         %% contents suppressed with 'anonymous'
-\subtitle{Automatic and Provably Correct Enforcement of Weak Consistency Guarantees}                     %% \subtitle is optional
+\subtitle{Automatic and Provably Correct Implementation of Weakly Consistent Key-Value Stores}                     %% \subtitle is optional
 %\subtitlenote{with subtitle note}       %% \subtitlenote is optional;
                                         %% can be repeated if necessary;
                                         %% contents suppressed with 'anonymous'
@@ -160,7 +160,12 @@
 %% Note: \begin{abstract}...\end{abstract} environment must come
 %% before \maketitle command
 \begin{abstract}
-\lipsum[1-2]
+According to the CAP theorem, strongly consistent replicated data stores are not an option for scalable and always-on distributed applications. To face this challenge, weak consistency guarantees have been introduced to allow developers to implement only the necessary synchronization between application instances. 
+However, most of the modern off-the-shelf replicated stores (e.g. Amazon's Dynamo and Facebook's Cassandra) only offer the eventually consistent environment, and the non-trivial task of implementing suitable application-level synchronization is on the developer's shoulders. 
+
+In this paper, we introduce an abstract layer on top of the eventually consistent stores, that liberates developers from dealing with low-level synchronization methodologies. In this work, developers are offered with a language to specify their application-level requirements and they will be given an automatically generated shim layer, with the exact specified behavior. Our shim generating method, is proven to be correct and also to minimize the staleness and synchronization between replicas. 
+
+We have implemented our technique in a tool called \emph{TheBestTool}  which is evaluated on real-world distributed machines, and has shown comparable performance to the current hard-coded implementations of weak consistency levels. 
 \end{abstract}
 
 
@@ -261,7 +266,7 @@ Contracts are basically logical formulae that specify \emph{when} (the pre-condi
 All contracts that can be written in our language, are basically consisted of three parts:
 \begin{enumerate}
   \item Head and tail of the contract - the blue circles in Figure \ref {fig:MR} - 
-  \item The dashed vis edge, that connects head of the contract to its tail, and can be interpreted as the visibility relation \emph{that must be enforced by the system}. 
+  \item The dashed vis edge, that connects head of the contract to its tail, and should be interpreted as the visibility relation \emph{that must be enforced by the system}. 
   %The end of this vis arrow, points to an special effect which can be thought of as the \emph{current effect}, the effect that is about to be generated.
   \item The linear array of relations connecting head and tail, which represents the relation between the tail and all the effects that must be visible to it.  
 \end{enumerate}

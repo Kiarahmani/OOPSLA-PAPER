@@ -6,25 +6,26 @@ enforcement. These criteria are however too strong for
 distributed applications operating over replicated data. The inherent
 tradeoff between consistency and availability in a distributed setting
 makes it impossible for these applications to enforce strong
-consistency, thus requiring them to adopt various forms of weak
-consistency. Unfortunately, the lack of standardized definitions and
-enforcement techniques for weak consistency has incentivized programmers
-to adopt \emph{ad hoc} implementation techniques for their
-enforcement, which are highly error-prone.  
+consistency, thus requiring them to adopt weak alternatives.
+Unfortunately, the lack of standardized definitions and enforcement
+techniques for weak consistency has incentivized programmers to adopt
+\emph{ad hoc} implementation techniques for their enforcement, which
+don't lend themselves to a uniform reasoning technique, making it
+hard to reason about their correctness.  
 
 In this paper, we describe a principled approach to derive the
 enforcement mechanisms for various forms of weak consistency. Our
 approach is parametric over the declarative semantics of weak
 consistency, and generates a provably optimal enforcement mechanism
-for any given semantics of weak consistency. We implement our approach
-in a tool called \tool that accepts a declarative specification of a
-weak consistency guarantee, and extends an eventually consistent data
-store with the capability to the enforce the consistency guarantee.
-Our method thus works for  any off-the-shelf key-value store. We
-demonstrate the applicability of our approach by automatically
-deriving enforcement mechanisms for various well-known weak
-consistency guarantees in the literature. Experiments show that the
-performance of the derived mechanisms is utmost 100\% worse than their
+for any given consistency semantics. We implement our approach in a
+tool called \tool that accepts a declarative specification of a weak
+consistency guarantee, and extends an eventually consistent data store
+with the capability to enforce the guarantee.  Our method thus
+works for  any off-the-shelf key-value store. We demonstrate the
+applicability of our approach by automatically deriving enforcement
+mechanisms for various well-known weak consistency guarantees in the
+literature. Experiments show that the performance of the derived
+mechanisms is comparable to (utmost 100\% worse than) their
 corresponding hand-written implementations, thus attesting to the
 practical utility of \tool.
 \end{abstract}

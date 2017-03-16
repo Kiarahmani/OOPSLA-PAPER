@@ -1,5 +1,5 @@
 %% For double-blind review submission
-\documentclass[acmlarge]{acmart}\settopmatter{printfolios=true} % review will add line numbers -- anonymous will make it anonymous
+\documentclass[acmlarge,anonymous]{acmart}\settopmatter{printfolios=true} % review will add line numbers -- anonymous will make it anonymous
 %% For single-blind review submission
 %\documentclass[acmlarge,review]{acmart}\settopmatter{printfolios=true}
 %% For final camera-ready submission
@@ -10,6 +10,9 @@
 \usepackage{bussproofs}
 \usepackage{mathtools}
 \usepackage{dsfont}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{xspace}
 
 
 %% Note: Authors migrating a paper from PACMPL format to traditional
@@ -63,18 +66,18 @@
 %% issue of PACMPL.
 \citestyle{acmauthoryear}   %% For author/year citations
 
+\input{mydefs}
 
 
 \begin{document}
 
 %% Title information
-\title{The Best Paper Ever}         %% [Short Title] is optional;
+\title{\tool: Automatic Enforcement of Distributed Consistency Guarantees}         %% [Short Title] is optional;
                                         %% when present, will be used in
                                         %% header instead of Full Title.
 %\titlenote{with title note}             %% \titlenote is optional;
                                         %% can be repeated if necessary;
                                         %% contents suppressed with 'anonymous'
-\subtitle{Automatic and Provably Correct Implementation of Weakly Consistent Key-Value Stores}                     %% \subtitle is optional
 %\subtitlenote{with subtitle note}       %% \subtitlenote is optional;
                                         %% can be repeated if necessary;
                                         %% contents suppressed with 'anonymous'
@@ -159,15 +162,8 @@
 %% Abstract
 %% Note: \begin{abstract}...\end{abstract} environment must come
 %% before \maketitle command
-\begin{abstract}
-According to the CAP theorem, strongly consistent replicated data stores are not an option for scalable and always-on distributed applications. To face this challenge, weak consistency guarantees have been introduced to allow developers to implement only the necessary synchronization between application instances. 
-However, most of the modern off-the-shelf replicated stores (e.g. Amazon's Dynamo and Facebook's Cassandra) only offer the eventually consistent environment, and the non-trivial task of implementing suitable application-level synchronization is on the developer's shoulders. 
 
-In this paper, we introduce an abstract layer on top of the eventually consistent stores, that liberates developers from dealing with low-level synchronization methodologies. In this work, developers are offered with a language to specify their application-level requirements and they will be given an automatically generated shim layer, with the exact specified behavior. Our shim generating method, is proven to be correct and also to minimize the staleness and synchronization between replicas. 
-
-We have implemented our technique in a tool called \emph{TheBestTool}  which is evaluated on real-world distributed machines, and has shown comparable performance to the current hard-coded implementations of weak consistency levels. 
-\end{abstract}
-
+\input{abstract}
 
 %% 2012 ACM Computing Classification System (CSS) concepts
 %% Generate at 'http://dl.acm.org/ccs/ccs.cfm'.

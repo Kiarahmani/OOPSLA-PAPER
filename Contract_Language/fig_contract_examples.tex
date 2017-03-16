@@ -1,0 +1,28 @@
+\begin{figure}[h]
+	\centering
+	\begin{minipage}{.88\textwidth}
+		{\bf Read My Write (RMW): } \hspace {12 mm}
+		$ (\eta_h \xrightarrow{so} \eta_t) \Rightarrow vis (\eta_h,\eta_t) $ \\
+		
+		{\bf Monotonic Reads (MR): } \hspace {12 mm}
+		$ (\eta_h \xrightarrow{vis;so} \eta_t) \Rightarrow vis (\eta_h,\eta_t) $ \\
+		
+		{\bf Monotonic Writes (MW): } 	\hspace {10 mm}
+		$ (\eta_h \xrightarrow{so;vis} \eta_t) \Rightarrow vis (\eta_h,\eta_t) $ \\
+		
+		{\bf Writes Follow Reads (WFR): } \hspace {5 mm} 	
+		$ (\eta_h \xrightarrow{vis;vis} \eta_t) \vee  (\eta_h \xrightarrow{vis;so;vis} \eta_t)  \Rightarrow vis (\eta_h,\eta_t)  $ \\
+		
+		{\bf Read Committed (RC): } \hspace {14 mm} 		
+		$  ((\eta_h \xrightarrow{txso} x)\xrightarrow{vis} \eta_t) \vee 
+		((x \xrightarrow{txso} \eta_h)\xrightarrow{vis} \eta_t)  \Rightarrow vis (\eta_h,\eta_t) $ \\
+		
+		{\bf Monotonic Atomic View (MAV): } 	
+		$ (\eta_h \xrightarrow{vis} (x \xrightarrow{txso}  \eta_t))  \Rightarrow vis (\eta_h,\eta_t) $ \\
+
+	\end{minipage}
+	\\
+	\hrulefill
+	\caption{Well-known guarantees specified in our contract language}
+	\label{fig:ctrt-examples}
+\end{figure}

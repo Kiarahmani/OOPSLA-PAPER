@@ -1,0 +1,65 @@
+\begin{figure}[h]
+\begin{flushleft}
+%AUXILIARY REDUCTION
+\begin{minipage}{0.25\textwidth}
+\emph{\bf[Auxiliary Reduction]}
+\begin{prooftree} 
+ 	\AxiomC{$E'.A = E.A \cup \{\eta\}$} \noLine
+	\UnaryInfC{$E'.vis = E.vis \cup S\times\{\eta\}$} \noLine
+	\UnaryInfC {$E'.so = E.vis \cup (E.so^{-1}(\eta')\cup\{\eta'\})\times\{\eta\}$}
+	\AxiomC{$\eta = \mathds {F}_{op}(S)$} \noLine
+	\UnaryInfC{$\eta' = <\eta_{SessID},\eta_{SeqNo}-1>$} 
+              		\BinaryInfC{$(E,S) \xhookrightarrow {op}(E',\eta)$}
+     \end{prooftree}
+\end{minipage}  
+\vspace {10mm}
+
+%CACHE REFRESH
+\begin{minipage}{0.5\textwidth}
+\emph{\bf[Cache Refresh]}
+\begin{prooftree} 
+	\AxiomC {$\mathds{T_{DEPS}}(op_{\pi},\eta) \subseteq Cache$} \noLine 
+	\UnaryInfC {$\mathds{S_{DEPS}}(op_{\pi},\eta) \subseteq Cache(op)$}\noLine
+	\UnaryInfC {$Cache' = Cache [op \mapsto Cache(op)\cup\{\eta\}]$}
+	\AxiomC{$op = \eta_{op}$} \noLine
+	\UnaryInfC{$\eta\notin Cache(op)$}\noLine
+	\UnaryInfC{$\eta \in E.A$} 
+              		\BinaryInfC{$(E,Cache) \xrightarrow {} (E,Cache') $}
+     \end{prooftree}
+\end{minipage}
+% Effect ARRIVAL
+\hspace {30mm}
+\begin{minipage}{0.2\textwidth}
+\emph{\bf[Effect Arrival]}
+\begin{prooftree} 
+	\AxiomC{$\eta \in E.A$} \noLine
+	\UnaryInfC {$Cache' = Cache \cup \{\eta\}$}
+              		\UnaryInfC{$(E,Cache) \xrightarrow {op} (E,Cache') $}
+     \end{prooftree}
+\end{minipage}
+  
+\vspace{12mm}
+%NON BLOCKING EXECUTION
+\begin{minipage}{0.27\textwidth}
+\emph{\bf[Non-blocking Execution]}
+\begin{prooftree} 
+	\AxiomC{$\mathds{TYPE} (op_\pi) = non\_blocking$} \noLine
+	\UnaryInfC {$(E,Cache(op)) \xhookrightarrow {op}(E',\eta)$}
+              		\UnaryInfC{$(E,Cache) \xrightarrow {op} (E',Cache) $}
+     \end{prooftree}
+ \end{minipage}     
+ \hspace{20mm}
+%BLOCKING EXECUTION
+\begin{minipage}{0.3\textwidth}
+\emph{\bf [Blocking Execution]}
+\begin{prooftree} 
+	\AxiomC{$\mathds{TYPE}(op_\pi)=blocking$} \noLine
+	\AxiomC{$\mathds{WAIT}_{op}(\eta)\subseteq Cache(op)$} \noLine
+	\UnaryInfC{$(E,Cache(op)) \xhookrightarrow {op}(E',\eta)$} 
+              		\BinaryInfC{$(E,Cache) \xrightarrow {op} (E',Cache)$}
+     \end{prooftree}   
+\end{minipage}     
+\end{flushleft}
+\hrulefill
+\caption{Operational Semantics of the Shim Layer}
+\end{figure}

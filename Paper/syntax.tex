@@ -1,0 +1,19 @@
+\begin{figure}[h]
+	\centering
+  \begin{smathpar}
+  \begin{array}{lclcl}
+%   \multicolumn{5}{c}{
+% 	  a,b \in \texttt{effect}
+%   }\\
+		R & \in & \texttt{relation} & \coloneqq & \visZ \ALT \soZ 
+      \ALT \sameobjZ \ALT R \cup R \ALT R^{*} \ALT R;\,R \\
+%	C & \in & \texttt{composition} & ::= [R] | R^* \hspace{30 mm}		
+% Tail ::= \eta_t | x \xrightarrow{txso} \eta_t  \\
+		\pi & \in & \texttt{clause} & \coloneqq & \forall(a,b).
+      ~a \xrightarrow{R} b ~\Rightarrow~ a \xrightarrow{\visZ} b\\
+		\psi & \in & \texttt{spec} & \coloneqq & \pi \ALT \pi \conj \pi\\
+  \end{array}
+  \end{smathpar}
+\caption{Syntax of the Specification Language}
+\label{fig:ctrt}
+\end{figure}

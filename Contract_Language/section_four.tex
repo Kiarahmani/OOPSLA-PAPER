@@ -3,9 +3,16 @@
 
 \input{../Contract_Language/fig_contract_representation.tex}
 
-\paragraph* {} Users in our system are offered with a contract language to specify their application-level consistency requirements. 
-Developers must separately define a  contract for each of their application operations, since the overall correctness of the program does not require the same level of consistency for all the operations.
-The constructing blocks of contracts are the relations over the set of effects. Relations $vis(a,b)$ and $so(a,b)$ are defined to relate effects $a$ and $b$, respectively if $b$ was visible to the operation that generated $a$ and if they are the result of two operations submitted by the same session, respecting their submission time. 
+Users in our system are offered with a contract language to specify
+their application-level consistency requirements.  Developers must
+separately define a  contract for each of their application
+operations, since the overall correctness of the program does not
+require the same level of consistency for all the operations.  The
+constructing blocks of contracts are the relations over the set of
+effects. Relations $vis(a,b)$ and $so(a,b)$ are defined to relate
+effects $a$ and $b$, respectively if $b$ was visible to the operation
+that generated $a$ and if they are the result of two operations
+submitted by the same session, respecting their submission time. 
 
 
 Contracts are basically logical formulae that specify the possible sets of effects that are allowed to be visible to an operation. For example, the Monotonic Read (MR) session guarantee, requires all the effects that are visible to an operation, to also be visible to the later operations in the same session. Figure \ref {fig:MR} shows how this can be succinctly defined as a contract using the relations over the effects. This contract simply states that all effects $\eta_h$ that satisfy the relation ($vis^{-1} (so^{-1})$) to an effect $\eta_t$, must also be visible to $\eta_t$. 

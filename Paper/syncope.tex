@@ -8,11 +8,12 @@
 \usepackage[inline]{enumitem}
 \usepackage{bussproofs}
 \usepackage{bussproofs}
-\usepackage{mathtools}
 \usepackage{dsfont}
-\usepackage{amsmath}
-\usepackage{amsthm}
 \usepackage{xspace}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{mathpartir}
+\usepackage{listings}          % format code
 
 
 %% Note: Authors migrating a paper from PACMPL format to traditional
@@ -66,8 +67,10 @@
 %% issue of PACMPL.
 \citestyle{acmauthoryear}   %% For author/year citations
 
-\input{mydefs}
 
+%%% New Definitions %%%%%%%
+%% -----------------------
+\input{mydefs}
 
 \begin{document}
 
@@ -209,6 +212,7 @@
 %\lipsum[1-7]
 \newpage
 %================================ SECTION FOUR
+\input{formalization}
 \input{../Contract_Language/section_four.tex}
 
 %================================ SECTION FIVE

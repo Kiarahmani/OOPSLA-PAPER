@@ -1,0 +1,101 @@
+\section{Introduction}
+\paragraph{} Most of the modern web-based applications are implemented as
+multiple agents simultaneously serving users and working on replicated data objects across 
+geographically distributed machines. Implementation and reasoning techniques for strongly 
+consistent replicated data stores (e.g. stores providing linearizability and serializability) have been 
+studied for decades. 
+However, these strong notions of consistency come with the price of availability and low response-
+time, which are intrinsically crucial for distributed large-scale applications. Weak consistency models 
+such as \emph{monotonic reads} and \emph{monotonic writes} however, liberate the application 
+instances from extensive synchronization and allows them to be "always-on" despite of possible 
+network partitionings. 
+Unfortunately, these weak guarantees suffer from the lack of standardized definitions and 
+enforcement methodologies, which forces developers to modify their applications with ad-hoc 
+fixes in order to enforce their desired levels of consistency. 
+\\ The ad-hoc implementation approaches and the lack of a general reasoning 
+framework for weak consistency, has resulted in the difficulty of proving correctness and 
+optimality properties of such highly error-prone implementations. To make the matter worse, 
+many of distributed applications simultaneously require different levels of consistency for 
+different tasks and even face new consistency requirements after the development phase is over. 
+\paragraph{} Let's consider a distributed bulletin board application where users send 
+requests to servers to post a message or read the current messages on the board. Since the 
+underlying data store provides eventual consistency guarantee, we can be sure that every 
+message submitted to any server, will \emph{eventually} become visible at all servers. 
+However, we might also be interested in ensuring users that if they see a message as a result of a 
+read request, they will also see that message in their subsequent reads. This requirement which is 
+known as "monotonic reads", is not guaranteed under eventual consistency, since users might 
+send read request to different servers with different sets of available messages. 
+Version vectors and similar ad-hoc approaches are usually used to add guards to the code in 
+order to enforce the required consistency guarantees. This error-prone task requires 
+developers to also come up their own proofs of correctness which to make the 
+matter worse, has to be renewed each time the application is updated or the 
+consistency requirements are changed (e.g. write operations are also realized 
+to require guards before executions). 
+
+%The Figure Containing The Bulletin Board and its Modified Version
+\input {../Introduction/fig_application_ex.tex}
+
+In this paper, we address these issues by introducing a principled approach to 
+derive enforcement mechanisms for various forms of weak consistency 
+guarantees. We offer developers with a language to specify their application-level consistency 
+requirements as logical formulae expressing allowed relationships between update effects. 
+We also introduce a new tool that generates a shim layer on top of the eventually 
+consistent data store, and extends it to a key-value store with multiple environments, each of which 
+shows the desired behavior specified by the given specifications. Our consistency enforcement 
+methodology is independent of the underlying store, and only assumes the well established 
+guarantee of "eventual delivery". 
+Moreover, our specification language is also powerful enough to express all the known consistency 
+guarantees in the context. 
+
+We argue that all the consistency guarantees basically specify, \emph{when} an 
+application instance should block a user request and for arrival of 
+\emph{what} remote updates it should wait. For obvious reasons, any implementation of these 
+consistency guarantees must be \emph{correct} and \emph{optimal}. The former property states that 
+all possible behaviors of the implementation are allowed by the given specification and the later 
+ensures that application instances do not engage in 
+any unnecessary synchronization before responding to a user request (i.e. users are only blocked if 
+it is absolutely necessary).
+\\ Our technique is based on tracking relationships between update effects, and maintaining multiple 
+(logical) caches at the shim layer, each of which is enforced to satisfy a specific level of consistency, 
+derived from the given specifications. We believe that our approach is the first ever principled 
+reasoning and implementation framework for weak consistency enforcement techniques which 
+is also proven to be \emph{correct} and \emph{optimal}. 
+By separating all the consistency management procedures from the application level, we are taking 
+the non-trivial task of proving soundness criteria for ad-hoc consistency enforcement techniques 
+off of the developer's shoulders. 
+% Contributions of the paper
+\\The paper makes the following contributions:
+\begin{itemize}
+\item Introducing a new specification language that covers all the known consistency guarantees in 
+the context. Our language is arguably simpler than the previous works, and is based on observing 
+similarities of different consistency requirements.
+
+\item Proposing a principled consistency enforcement methodology that is 
+complete for our specification language and allows deriving multi-purpose consistency enforcement 
+tools.
+
+\item Presenting proofs of correctness and optimality of our consistency enforcement methodology 
+and introducing the first ever general reasoning framework for weak consistency guarantees. 
+
+\item Introducing our tool called  \tool that realizes our consistency enforcement methods and 
+extends an off-the-shelf eventually consistent data store (Cassandra) to a multi purpose key-value 
+data store with the ability to guarantee any requested consistency level defined by the 
+developers. 
+
+\item Presenting the evaluation results showing the utility of \tool compared to a hard-coded
+implementation of a weak consistency guarantee. 
+\end{itemize}
+
+% Structure of the paper
+The rest of the paper is structured as follows. 
+In section 2 we introduce the running example and explain problems associated with it. 
+Section 3 introduces our system model, including the distributed underlying database model, our 
+multi-purpose shim layer, and the formal definition of our specification language.
+In section 4, we introduce our consistency enforcement strategy in detail and introduce the 
+formal semantics of the shim layer. In section 5, we present the formal definitions 
+and proofs of correctness of optimality properties of our shim. Sections 6 introduces our tool 
+including 
+the implementation details,  
+which is followed by section 7, where the test results from running \tool on 
+distributed real world machines are presented. 
+We discuss the related works and future directions in the section 8. 

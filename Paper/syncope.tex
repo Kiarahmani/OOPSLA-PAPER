@@ -13,6 +13,15 @@
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{xspace}
+\usepackage{listings}
+\usepackage{color}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+
+\input{../Introduction/header_listings.tex}
+
 
 
 %% Note: Authors migrating a paper from PACMPL format to traditional
@@ -199,14 +208,11 @@
 \maketitle
 
 %================================ SECTION ONE
-%\section{Introduction}
-%\lipsum[1-13]
+\input{../Introduction/section_one.tex}
+
 %================================ SECTION TWO
 %\section{Motivation}
-%\lipsum[1-16]
-%================================ SECTION THREE
-%\section{Related Works}
-%\lipsum[1-7]
+
 \newpage
 %================================ SECTION FOUR
 \input{../Contract_Language/section_four.tex}

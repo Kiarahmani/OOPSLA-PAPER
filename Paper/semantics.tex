@@ -1,24 +1,24 @@
 \begin{figure*}[t]
 \raggedright
 %
-\textbf{RDT Specification Language}\\
+\textbf{Auxiliary Definitions}\\
 %
 \begin{minipage}{\columnwidth}
 \begin{smathpar}
 \stretcharraybig
 \begin{array}{lclcl}
   \multicolumn{5}{c}{
-    {\delta} \in \texttt{Replicated\; Data\; Type} \spc\spc
-    {v} \in \texttt{Value}\spc\spc
-    {op} \in \texttt{Operation\; Name}
+    {\delta} \in \mathtt{Replicated\; Data\; Type} \spc\spc
+    {v} \in \mathtt{Value}\spc\spc
+    {op} \in \mathtt{Operation\; Name}
   }\\
   \multicolumn{5}{c}{
-    {s} \in \texttt{Session\; Id} \spc\spc
-    {i} \in \texttt{Effect\; Id} \spc\spc
-    {r} \in \texttt{Replica\; Id}
+    {s} \in \mathtt{Session\; Id} \spc\spc
+    {i} \in \mathtt{Effect\; Id} \spc\spc
+    {r} \in \mathtt{Replica\; Id}
   }\\
   \eff & \in & \mathtt{Effect} & \coloneqq &  (s,i,op,v)\\
-  F_{op} & \in & \texttt{Op.\,Def.} & \coloneqq & \delta \rightarrow \eta\\
+  F_{op} & \in & \mathtt{Op.\,Def.} & \coloneqq & \delta \rightarrow \eta\\
   \EffSoup & \in & \mathtt{Eff\,Soup}	  & \coloneqq & \set{\eff} \\
   \visZ,\soZ &	\in & \mathtt{Relations} & \coloneqq & \set{(\eff,\eff)} \\
   {\E} 		& \in & \mathtt{Exec\;State}  & \coloneqq & \Exec \\

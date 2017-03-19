@@ -1,0 +1,15 @@
+\begin{figure}[h]
+  \begin{smathpar}
+  \begin{array}{ll}
+		\texttt{ Read My Write (RMW): }  & \forall(a,b). a \xrightarrow{so} b ~\Rightarrow~ a \xrightarrow{\visZ} b\\
+		\texttt{ Monotonic Reads (MR): }  & \forall(a,b). a \xrightarrow{so;vis} b ~\Rightarrow~ a \xrightarrow{\visZ} b\\
+		\texttt{ Monotonic Writes (MW): }  & \forall(a,b). a \xrightarrow{vis;so} b ~\Rightarrow~ a \xrightarrow{\visZ} b\\
+		\texttt{ Writes Follow Reads (WFR): }  & \forall(a,b). [a \xrightarrow{vis;vis} b ~\Rightarrow~ a \xrightarrow{\visZ} b] \wedge  
+		[a \xrightarrow{vis;so;vis} b ~\Rightarrow~ a \xrightarrow{\visZ} b]\\
+
+
+  \end{array}
+  \end{smathpar}
+\caption{Well-known consistency requirements, written in our specification language}
+\label{fig:ctrt}
+\end{figure}

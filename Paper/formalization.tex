@@ -1,4 +1,22 @@
 \section{Formalization}
+In this chapter we first present our specification language and then
+introduce the core opeational semantics of our tool.
+\subsection{Specification Language}
+Following is the formal syntax of contract language in our system:
 \input{syntax}
+\\ The language is general enough to cover all  the known consistency
+levels in the context:
+\input{fig_contract_examples}
+\\ Contracts written in our language, can be visualized by simple graphs. For example, \texttt{(MR)} contract from the above figure can be represented as:
 
+\input{fig_contract_visualize}
+
+\newpage
+\subsection{Operational Semantics}
+Our system is consisted of a number of replicas, each of which itself is consisted of an array of caches. Each cache is consistent according to a part of the contract:
+\input{fig_replica_model}
+\\ Here we explain the the core operational semantics of our algorithm, which for simplicity reasons, 
+is parametrized over a single contract 
+$\psi = \forall (a,b). a \xrightarrow{r_1;r_2;...;r_k} b  \Rightarrow a \xrightarrow{vis} b$. 
+However this can be easily  genralized to maintain different levels of consistency. 
 \input{semantics}

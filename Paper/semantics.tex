@@ -15,14 +15,15 @@
   \multicolumn{5}{c}{
     {s} \in \mathtt{Session\; Id} \spc\spc
     {i} \in \mathtt{Effect\; Id} \spc\spc
-    {r} \in \mathtt{Replica\; Id}
+    {\rho} \in \mathtt{Replica\; Id}
   }\\
   \eff & \in & \mathtt{Effect} & \coloneqq &  (s,i,op,v)\\
   F_{op} & \in & \mathtt{Op.\,Def.} & \coloneqq & \delta \rightarrow \eta\\
   \EffSoup & \in & \mathtt{Eff\,Soup}	  & \coloneqq & \set{\eff} \\
   \visZ,\soZ &	\in & \mathtt{Relations} & \coloneqq & \set{(\eff,\eff)} \\
   {\E} 		& \in & \mathtt{Exec\;State}  & \coloneqq & \Exec \\
-  \Theta  & \in & \mathtt{Store}      & \coloneqq & r \mapsto (\delta,\set{\eff}) \\
+  {\Cache} & \in & \mathtt {Cache} & \coloneqq & (\delta,\set{\eff})\\
+  \Theta  & \in & \mathtt{Store}      & \coloneqq & \rho \mapsto \overline{\Cache} \\
   {\sigma} 	& \in & \mathtt{Session} 					 	& \coloneqq & \cdot \ALT op::\sigma \\
   \Sigma 		& \in & \mathtt{Session\;Soup}   	 	& \coloneqq &
         \langle s, i, \sigma \rangle \pll \Sigma \ALT \emptyset \\
@@ -42,7 +43,7 @@
 
 \vspace{5mm}
 \textbf{Auxiliary Reduction} \;
-  \fbox{\(\auxred{\Theta} {(\E,\langle s,i,op \rangle)} {r} {(\E',\eff)}\)}\\
+  \fbox{\(\auxred{\Theta} {(\E,\langle s,i,op \rangle)} {\rho} {(\E',\eff)}\)}\\
 
 \begin{minipage}{\textwidth}
 \rulelabel{Oper}
@@ -51,7 +52,7 @@
 \begin{array}{l}
 \RuleTwo
 {
-\Theta(r \mapsto (v,S)) \qquad
+\Theta(\rho \mapsto X::(v,c)) \qquad
 F_{op}(v) = \eta \qquad
 \ssn(\eta) = s \qquad 
 \id(\eta) = i \qquad
@@ -64,7 +65,7 @@ F_{op}(v) = \eta \qquad
 }
 {
   \auxred {\Theta} {((\EffSoup,\visZ,\soZ), \langle s,i,op \rangle}
-  {r} {((\EffSoup',\visZ',\soZ'),\eta)}
+  {\rho} {((\EffSoup',\visZ',\soZ'),\eta)}
 }
 \end{array}
 \end{smathpar}
@@ -76,17 +77,17 @@ F_{op}(v) = \eta \qquad
   \fbox{\((\E,\Theta,\Sigma) \;\xrightarrow{\eff}\; (\E',\Theta',\Sigma')\)}\\
 
 \begin{minipage}{3in}
-\rulelabel{EffVis}
+\rulelabel{Effect Arrival}
 \begin{smathpar}
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
 {
   \eta \in \E.\EffSoup \spc
-  \Theta(r) = (v,S) \spc
-  \eta \not\in S \\
-  {\sf deps}_{\psi}(\eta) \subseteq  S \spc
-  \Theta' = \Theta[r \mapsto (apply \;\eta \;v, \{\eta\} \cup S)]\\
+  \Theta(\rho) = XS::(v,c) \spc
+  \eta \not\in c \\
+  (v',c') = (apply \; \eta \; v, c \cup \{\eta\})\spc
+  \Theta' = \Theta[\rho \mapsto (v',c')::XS]\\
 }
 {
   (\E,\Theta,\Sigma) \;\xrightarrow{\eff}\; (\E, \Theta', \Sigma)
@@ -94,6 +95,29 @@ F_{op}(v) = \eta \qquad
 \end{array}
 \end{smathpar}
 \end{minipage}
+ \vspace{5mm}
+
+
+\begin{minipage}{3in}
+\rulelabel{Cache Refresh}
+\begin{smathpar}
+\stretcharraybig
+\begin{array}{l}
+\RuleTwo
+{
+  \eta \in \E.\EffSoup \spc
+  \Theta(\rho) = X::(v_{i},c_{i});(v_{i+1},c_{i+1})::XS \spc
+  \eta \not\in c_i \\
+  (v_i',c_i') = (apply \; \eta \; v_i, c_i \cup \{\eta\})\spc r_i^{-1} (\eta) \subseteq c_i
+ \\  \Theta' = \Theta[\rho \mapsto X::(v_i',c_i');(v_{i+1},c_{i+1})::XS]\\
+}
+{
+  (\E,\Theta,\Sigma) \;\xrightarrow{\eff}\; (\E, \Theta', \Sigma)
+}
+\end{array}
+\end{smathpar}
+\end{minipage}
+\hspace{8 mm}
 \begin{minipage}{2.3in}
 \rulelabel{Exec}
 \begin{smathpar}
@@ -101,8 +125,8 @@ F_{op}(v) = \eta \qquad
 \begin{array}{l}
 \RuleTwo
 {
-  \auxred{\Theta} {(\E,\langle s,i,op \rangle)} {r} {(\E',\eta)} \\
-  \Theta(r) = (v,S) \spc {\sf deps}_{\psi}(\eta) \subseteq   S \spc
+  \auxred{\Theta} {(\E,\langle s,i,op \rangle)} {\rho} {(\E',\eta)} \\
+  \Theta(r) = (v,c)::XS \spc {r_k^{-1}}(\eta) \subseteq   c \spc
 }
 {
   (\E,\Theta,\langle s,i,op::\sigma \rangle \pll \Sigma) 

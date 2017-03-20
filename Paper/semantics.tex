@@ -18,12 +18,12 @@
     {\rho} \in \mathtt{Replica\; Id}
   }\\
   \eff & \in & \mathtt{Effect} & \coloneqq &  (s,i,op,v)\\
+   {\Cache} & \in & \mathtt {Cache} & \coloneqq & \{1,2,3\}\mapsto \set{\eff}\\
   F_{op} & \in & \mathtt{Op.\,Def.} & \coloneqq & \delta \rightarrow \eta\\
   \EffSoup & \in & \mathtt{Eff\,Soup}	  & \coloneqq & \set{\eff} \\
   \visZ,\soZ &	\in & \mathtt{Relations} & \coloneqq & \set{(\eff,\eff)} \\
   {\E} 		& \in & \mathtt{Exec\;State}  & \coloneqq & \Exec \\
-  {\Cache} & \in & \mathtt {Cache} & \coloneqq & (\delta,\set{\eff})\\
-  \Theta  & \in & \mathtt{Store}      & \coloneqq & \rho \mapsto \overline{\Cache} \\
+  \Theta  & \in & \mathtt{Store}      & \coloneqq & \rho \mapsto (\delta,\Cache) \\
   {\sigma} 	& \in & \mathtt{Session} 					 	& \coloneqq & \cdot \ALT op::\sigma \\
   \Sigma 		& \in & \mathtt{Session\;Soup}   	 	& \coloneqq &
         \langle s, i, \sigma \rangle \pll \Sigma \ALT \emptyset \\
@@ -52,7 +52,7 @@
 \begin{array}{l}
 \RuleTwo
 {
-\Theta(\rho \mapsto X::(v,c)) \qquad
+\Theta(\rho \mapsto (v,cache)) \qquad
 F_{op}(v) = \eta \qquad
 \ssn(\eta) = s \qquad 
 \id(\eta) = i \qquad
@@ -77,17 +77,17 @@ F_{op}(v) = \eta \qquad
   \fbox{\((\E,\Theta,\Sigma) \;\xrightarrow{\eff}\; (\E',\Theta',\Sigma')\)}\\
 
 \begin{minipage}{3in}
-\rulelabel{Effect Arrival}
+\rulelabel{Cache \#3 Refresh}
 \begin{smathpar}
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
 {
   \eta \in \E.\EffSoup \spc
-  \Theta(\rho) = XS::(v,c) \spc
-  \eta \not\in c \\
-  (v',c') = (apply \; \eta \; v, c \cup \{\eta\})\spc
-  \Theta' = \Theta[\rho \mapsto (v',c')::XS]\\
+  \Theta(\rho) = (v,\Cache) \spc
+  \eta \not\in \Cache(3) \\
+  \Cache' = \Cache[3 \mapsto \Cache(3) \cup \{\eta\}] \spc
+  \Theta' = \Theta[\rho \mapsto (v,\Cache')]\\
 }
 {
   (\E,\Theta,\Sigma) \;\xrightarrow{\eff}\; (\E, \Theta', \Sigma)
@@ -98,18 +98,18 @@ F_{op}(v) = \eta \qquad
  \vspace{5mm}
 
 
-\begin{minipage}{3in}
-\rulelabel{Cache Refresh}
+\begin{minipage}{2.8in}
+\rulelabel{Cache \#2 Refresh}
 \begin{smathpar}
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
 {
-  \eta \in \E.\EffSoup \spc
-  \Theta(\rho) = X::(v_{i},c_{i});(v_{i+1},c_{i+1})::XS \spc
-  \eta \not\in c_i \\
-  (v_i',c_i') = (apply \; \eta \; v_i, c_i \cup \{\eta\})\spc r_i^{-1} (\eta) \subseteq c_i
- \\  \Theta' = \Theta[\rho \mapsto X::(v_i',c_i');(v_{i+1},c_{i+1})::XS]\\
+  \Theta(\rho) = (v,\Cache) \spc
+  \eta \in \Cache(3) \spc
+  \eta \not\in \Cache(2) \\
+  \Cache'=\Cache[2\mapsto \Cache(2)\cup\{\eta\}] \spc r_2^{-1} (\eta) \subseteq \Cache(3)
+ \\  \Theta' = \Theta[\rho \mapsto (v,\Cache')]\\
 }
 {
   (\E,\Theta,\Sigma) \;\xrightarrow{\eff}\; (\E, \Theta', \Sigma)
@@ -118,6 +118,28 @@ F_{op}(v) = \eta \qquad
 \end{smathpar}
 \end{minipage}
 \hspace{8 mm}
+\begin{minipage}{2.8in}
+\rulelabel{Cache \#1 Refresh}
+\begin{smathpar}
+\stretcharraybig
+\begin{array}{l}
+\RuleTwo
+{
+  \Theta(\rho) = (v,\Cache) \spc
+  \eta \in \Cache(2) \spc
+  \eta \not\in \Cache(1) \\
+  \Cache'=\Cache[1\mapsto \Cache(1)\cup\{\eta\}] \spc r_1^{-1} (\eta) \subseteq \Cache(1)
+ \\  \Theta' = \Theta[\rho \mapsto (v,\Cache')]\\
+}
+{
+  (\E,\Theta,\Sigma) \;\xrightarrow{\eff}\; (\E, \Theta', \Sigma)
+}
+\end{array}
+\end{smathpar}
+\end{minipage}
+
+
+\vspace{5 mm}
 \begin{minipage}{2.3in}
 \rulelabel{Exec}
 \begin{smathpar}
@@ -126,7 +148,7 @@ F_{op}(v) = \eta \qquad
 \RuleTwo
 {
   \auxred{\Theta} {(\E,\langle s,i,op \rangle)} {\rho} {(\E',\eta)} \\
-  \Theta(r) = (v,c)::XS \spc {r_k^{-1}}(\eta) \subseteq   c \spc
+  \Theta(r) = (v,\Cache) \spc {r_1^{-1}}(\eta) \subseteq   \Cache(1) \spc
 }
 {
   (\E,\Theta,\langle s,i,op::\sigma \rangle \pll \Sigma) 

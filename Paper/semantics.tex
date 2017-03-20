@@ -18,12 +18,14 @@
     {\rho} \in \mathtt{Replica\; Id}
   }\\
   \eff & \in & \mathtt{Effect} & \coloneqq &  (s,i,op,v)\\
-   {\Cache} & \in & \mathtt {Cache} & \coloneqq & \{1,2,3\}\mapsto \set{\eff}\\
-  F_{op} & \in & \mathtt{Op.\,Def.} & \coloneqq & \delta \rightarrow \eta\\
+   {\Pool} & \in & \mathtt {Pool} & \coloneqq & (v,\set {\eff}) \\
+   {\Cache} & \in & \mathtt {Cache} & \coloneqq & (v,\set{\eff})\\
+   {\tagger} & \in & \mathtt {Tagger} & \coloneqq & \eta \mapsto \{0,1,2\} \\
+  F_{op} & \in & \mathtt{Op.\,Def.} & \coloneqq & v \rightarrow \eta\\
   \EffSoup & \in & \mathtt{Eff\,Soup}	  & \coloneqq & \set{\eff} \\
   \visZ,\soZ &	\in & \mathtt{Relations} & \coloneqq & \set{(\eff,\eff)} \\
   {\E} 		& \in & \mathtt{Exec\;State}  & \coloneqq & \Exec \\
-  \Theta  & \in & \mathtt{Store}      & \coloneqq & \rho \mapsto (\delta,\Cache) \\
+  \Theta  & \in & \mathtt{Store}      & \coloneqq & \rho \mapsto (\Pool,\Cache,\tagger) \\
   {\sigma} 	& \in & \mathtt{Session} 					 	& \coloneqq & \cdot \ALT op::\sigma \\
   \Sigma 		& \in & \mathtt{Session\;Soup}   	 	& \coloneqq &
         \langle s, i, \sigma \rangle \pll \Sigma \ALT \emptyset \\
@@ -43,7 +45,7 @@
 
 \vspace{5mm}
 \textbf{Auxiliary Reduction} \;
-  \fbox{\(\auxred{\Theta} {(\E,\langle s,i,op \rangle)} {\rho} {(\E',\eff)}\)}\\
+  \fbox{\(\auxred{v} {(\E,\langle s,i,op \rangle)} {} {(\E',\eff)}\)}\\
 
 \begin{minipage}{\textwidth}
 \rulelabel{Oper}
@@ -52,7 +54,7 @@
 \begin{array}{l}
 \RuleTwo
 {
-\Theta(\rho \mapsto (v,cache)) \qquad
+%\Theta(\rho \mapsto (v,cache)) \qquad
 F_{op}(v) = \eta \qquad
 \ssn(\eta) = s \qquad 
 \id(\eta) = i \qquad
@@ -64,8 +66,8 @@ F_{op}(v) = \eta \qquad
 %\soZ' = (\soZ^{-1}(\eff') \cup \eff') \times\{\eff\} \cup \soZ
 }
 {
-  \auxred {\Theta} {((\EffSoup,\visZ,\soZ), \langle s,i,op \rangle}
-  {\rho} {((\EffSoup',\visZ',\soZ'),\eta)}
+  \auxred {v} {((\EffSoup,\visZ,\soZ), \langle s,i,op \rangle}
+  {} {((\EffSoup',\visZ',\soZ'),\eta)}
 }
 \end{array}
 \end{smathpar}
@@ -77,17 +79,17 @@ F_{op}(v) = \eta \qquad
   \fbox{\((\E,\Theta,\Sigma) \;\xrightarrow{\eff}\; (\E',\Theta',\Sigma')\)}\\
 
 \begin{minipage}{3in}
-\rulelabel{Cache \#3 Refresh}
+\rulelabel{Pool Refresh}
 \begin{smathpar}
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
-{
+{ \\
   \eta \in \E.\EffSoup \spc
-  \Theta(\rho) = (v,\Cache) \spc
-  \eta \not\in \Cache(3) \\
-  \Cache' = \Cache[3 \mapsto \Cache(3) \cup \{\eta\}] \spc
-  \Theta' = \Theta[\rho \mapsto (v,\Cache')]\\
+  \Theta(\rho) = (\Pool,\Cache,\tagger) \spc
+  \eta \not\in \Pool \\
+  \Pool' = \Pool \cup \{\eta\} \spc
+  \Theta' = \Theta[\rho \mapsto (\Pool',\Cache,\tagger)]\\
 }
 {
   (\E,\Theta,\Sigma) \;\xrightarrow{\eff}\; (\E, \Theta', \Sigma)
@@ -95,21 +97,19 @@ F_{op}(v) = \eta \qquad
 \end{array}
 \end{smathpar}
 \end{minipage}
- \vspace{5mm}
-
-
+\hspace{10 mm}
 \begin{minipage}{2.8in}
-\rulelabel{Cache \#2 Refresh}
+\rulelabel{Tag Refresh}
 \begin{smathpar}
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
 {
-  \Theta(\rho) = (v,\Cache) \spc
-  \eta \in \Cache(3) \spc
-  \eta \not\in \Cache(2) \\
-  \Cache'=\Cache[2\mapsto \Cache(2)\cup\{\eta\}] \spc r_2^{-1} (\eta) \subseteq \Cache(3)
- \\  \Theta' = \Theta[\rho \mapsto (v,\Cache')]\\
+  \Theta(\rho) = (\Pool,\Cache,\tagger) \spc \eta \in \Pool
+  \\ \tagger(\eta) < i \spc
+  \tagger' = \tagger [\eta \mapsto i] \\ 
+  \psi_i^{-1} (\eta) \subseteq \Pool
+ \spc  \Theta' = \Theta[\rho \mapsto (\Pool,\Cache,\tagger')]\\
 }
 {
   (\E,\Theta,\Sigma) \;\xrightarrow{\eff}\; (\E, \Theta', \Sigma)
@@ -117,19 +117,19 @@ F_{op}(v) = \eta \qquad
 \end{array}
 \end{smathpar}
 \end{minipage}
-\hspace{8 mm}
+
+\vspace{5mm}
 \begin{minipage}{2.8in}
-\rulelabel{Cache \#1 Refresh}
+\rulelabel{Cache Refresh}
 \begin{smathpar}
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
 {
-  \Theta(\rho) = (v,\Cache) \spc
-  \eta \in \Cache(2) \spc
-  \eta \not\in \Cache(1) \\
-  \Cache'=\Cache[1\mapsto \Cache(1)\cup\{\eta\}] \spc r_1^{-1} (\eta) \subseteq \Cache(1)
- \\  \Theta' = \Theta[\rho \mapsto (v,\Cache')]\\
+  \Theta(\rho) = (\Pool,\Cache,\tagger) \spc \eta \in \Pool
+  \\ \eta \not\in \Cache \spc
+  \Cache'=\Cache \cup \{\eta\} \\ \psi^{-1} (\eta) \subseteq \Cache
+ \spc  \Theta' = \Theta[\rho \mapsto (\Pool,\Cache',\tagger)]\\
 }
 {
   (\E,\Theta,\Sigma) \;\xrightarrow{\eff}\; (\E, \Theta', \Sigma)
@@ -137,9 +137,8 @@ F_{op}(v) = \eta \qquad
 \end{array}
 \end{smathpar}
 \end{minipage}
-
-
-\vspace{5 mm}
+\hspace{12 mm}
+\vspace{3mm}
 \begin{minipage}{2.3in}
 \rulelabel{Exec}
 \begin{smathpar}
@@ -147,8 +146,8 @@ F_{op}(v) = \eta \qquad
 \begin{array}{l}
 \RuleTwo
 {
-  \auxred{\Theta} {(\E,\langle s,i,op \rangle)} {\rho} {(\E',\eta)} \\
-  \Theta(r) = (v,\Cache) \spc {r_1^{-1}}(\eta) \subseteq   \Cache(1) \spc
+  \auxred{\CacheFinder_{\psi}(\Theta(\rho))} {(\E,\langle s,i,op \rangle)} {} {(\E',\eta)}  \\
+  \Theta(\rho) = (\Pool,\Cache,\tagger) \spc \tagger({r_3^{-1}}(\eta)) = 2 \spc
 }
 {
   (\E,\Theta,\langle s,i,op::\sigma \rangle \pll \Sigma) 

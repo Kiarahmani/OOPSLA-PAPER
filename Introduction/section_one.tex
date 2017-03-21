@@ -48,26 +48,37 @@ $\mathtt{read}$ requests from
 a user, would necessarily include prior writes by the same user.  This
 guarantee which is known as {\bf read my writes (RMW)} can be violated in
 eventually consistent stores.  
+\input {../Paper/fig_system_cons_example.tex}
 Here, delopers are forced to come up with their own implementation of
 RMW. They must modify client and server applications to generate, send
 and receive special tokens, to maintain the set of updates available at
 each server, and block user requests, if some necessary updates are
-still missing.
+still missing. Now, in order to have a correct application, the
+developer must prove certain non-trivial safety and liveness
+properties for this implementation. To make the matter worse, the
+proof will becmoe obsolete after each modification in the application or
+the consistency requirements. For example, after users reporting some unaccepatble
+behaviors, in order to disallow those executions, developers 
+implement and add another consistency guarantee to RMW; a task that
+would clearly make the original correctness proofs obsolete. 
 
 
-\input {../Paper/fig_system_cons_example.tex}
 
-In this paper, we address these issues by introducing a principled approach to 
+
+In this paper, we address these issues by introducing a compositional, principled approach to 
 derive enforcement mechanisms for various forms of weak consistency 
-guarantees. We offer developers with a language to specify their application-level consistency 
-requirements as logical formulae expressing allowed relationships between update effects. 
-We also introduce a new tool that generates a shim layer on top of the eventually 
-consistent data store, and extends it to a key-value store with multiple environments, each of which 
-shows the desired behavior specified by the given specifications. Our consistency enforcement 
-methodology is independent of the underlying store, and only assumes the well established 
-guarantee of "eventual delivery". 
-Moreover, our specification language is also powerful enough to express all the known consistency 
-guarantees in the context. 
+guarantees. 
+We offer developers with a tool that generates a shim layer that works
+with an eventually consistent store and extends it to a key-value store
+with multiple environment, each of which shows a certain level of
+consistency, specified by the developers. 
+We also introduce a language for specifying application-level consistency 
+requirements as logical formulae that express legal execution states of the distributed store. 
+Our consistency enforcement methodology is independent of the underlying store 
+and only assumes the well-established guarantee of "eventual delivery". 
+Moreover, our enforcement tool is complete for the specification
+language, which itself is powerful enough to express all the known consistency 
+guarantees in the literature.
 
 We argue that all the consistency guarantees basically specify, \emph{when} an 
 application instance should block a user request and for arrival of 

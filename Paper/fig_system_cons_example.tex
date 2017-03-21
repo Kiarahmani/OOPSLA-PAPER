@@ -1,27 +1,25 @@
 \begin{figure}
 \centering
-\begin{subfigure}[b]{0.3\textwidth}
-\includegraphics[scale=0.2]{../Figures/System_example.pdf}
-\label{fig:rmw_falsified}
-\caption{A behavior allowd in EC stores that falsifies RMW guarantee}
+\begin{subfigure}[t]{0.48\textwidth}
+\begin{center}
+\includegraphics[scale=0.45]{../Figures/System_example.pdf}
+\end{center}
+\label{fig:rmw_falsified} \vspace{0 mm}
+\caption{ $\mathtt{read}$ operation is sent to server\#2 that does not yet
+contain $m_1$, a message previously submitted by the same session}
 \end{subfigure}\quad
-\begin{subfigure}[b]{0.3\textwidth}
-A figure showing tokens being passed around for enforcing RMW
+\begin{subfigure}[t]{0.48\textwidth}
+\includegraphics[scale=0.45]{../Figures/System_example_adhoc.pdf}
 \label{fig:addhoc_impl}
-\caption{An ad-hoc implementation of RMW consistency guarantee, using
-tokens and guards}
-\end{subfigure}\quad
-\begin{subfigure}[b]{0.3\textwidth}
-A figure showing how consistency management can be separated from the
-applications and underlying stores,using shim layers (our shims are
-synthesized according to the given contract)
-\label{fig:shim_impl}
-\caption{Consistency management shim layer that guarantees desired
-levels of consistency, based on the given specifications}
-\end{subfigure}~
-\caption{Running applications on EC store, ad-hoc consistency
-implementations, general-purpose shim layers}
-
+\caption{Each $\mathtt{write}$ is responded with a token, which is later
+passed with each $\mathtt{read}$. The token manager at the server side,
+blocks the read requests, until the desired token is available, which
+here means that $m_1$ has arrived. }
+\end{subfigure}
+\\ \hrulefill 
+\caption {A behavior allowed under eventual consistency, that
+falsifies RMW (left).  Ad-hoc modification of the application to
+maintain RMW (right)}
 
 
 \end{figure}

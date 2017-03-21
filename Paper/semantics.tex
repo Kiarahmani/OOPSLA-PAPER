@@ -1,6 +1,12 @@
 \begin{figure*}[t]
 \raggedright
 %
+$Ctxt_{r_1;r_2;so}(p,c,\_)$ := $p_v$\\
+$Ctxt_{r_1;r_2;vis}(p,c,\_)$ := $c_v$\\
+$\psi_1^{-1}(\eta) = r_2^{-1}(\eta)$\\
+$\psi_2^{-1}(\eta) = r_1^{-1}(r_2^{-1}(\eta))$
+
+
 \textbf{Auxiliary Definitions}\\
 %
 \begin{minipage}{\columnwidth}
@@ -84,11 +90,11 @@ F_{op}(v) = \eta \qquad
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
-{ \\
+{ 
   \eta \in \E.\EffSoup \spc
   \Theta(\rho) = (\Pool,\Cache,\tagger) \spc
-  \eta \not\in \Pool \\
-  \Pool' = \Pool \cup \{\eta\} \spc
+  \eta \not\in \Pool_e \\
+  \Pool' = (apply \; \eta\; pool_v,\Pool \cup \{\eta\}) \spc \\
   \Theta' = \Theta[\rho \mapsto (\Pool',\Cache,\tagger)]\\
 }
 {
@@ -105,10 +111,10 @@ F_{op}(v) = \eta \qquad
 \begin{array}{l}
 \RuleTwo
 {
-  \Theta(\rho) = (\Pool,\Cache,\tagger) \spc \eta \in \Pool
+  \Theta(\rho) = (\Pool,\Cache,\tagger) \spc \eta \in \Pool_e
   \\ \tagger(\eta) < i \spc
   \tagger' = \tagger [\eta \mapsto i] \\ 
-  \psi_i^{-1} (\eta) \subseteq \Pool
+  \psi_i^{-1} (\eta) \subseteq \Pool_e
  \spc  \Theta' = \Theta[\rho \mapsto (\Pool,\Cache,\tagger')]\\
 }
 {
@@ -126,9 +132,10 @@ F_{op}(v) = \eta \qquad
 \begin{array}{l}
 \RuleTwo
 {
-  \Theta(\rho) = (\Pool,\Cache,\tagger) \spc \eta \in \Pool
-  \\ \eta \not\in \Cache \spc
-  \Cache'=\Cache \cup \{\eta\} \\ \psi^{-1} (\eta) \subseteq \Cache
+  \Theta(\rho) = (\Pool,\Cache,\tagger) \spc \eta \in \Pool_e
+  \\ \eta \not\in \Cache_e \spc
+  \Cache'=(apply \; \eta \; \Cache_v ,\Cache \cup \{\eta\}) \\ \psi^{-1}
+  (\eta) \subseteq \Cache_e
  \spc  \Theta' = \Theta[\rho \mapsto (\Pool,\Cache',\tagger)]\\
 }
 {

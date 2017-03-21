@@ -1,49 +1,61 @@
 \section{Introduction}
 
-Most of the modern web-based applications are implemented as multiple
-agents simultaneously serving users and working on replicated data
-objects across geographically distributed machines. Implementation and
-reasoning techniques for strongly consistent replicated data stores
-(e.g. stores providing linearizability and serializability) have been
-studied for decades.  However, these strong notions of consistency
-come with the price of availability and low response- time, which are
-intrinsically crucial for distributed large-scale applications. Weak
-consistency models such as \emph{monotonic reads} and \emph{monotonic
-writes} however, liberate the application instances from extensive
-synchronization and allows them to be "always-on" despite of possible
-network partitionings.  Unfortunately, these weak guarantees suffer
+Modern web-based applications are implemented as multiple
+agents simultaneously serving users, that work on shared data
+objects replicated across geographically distributed machines. 
+Historically, replication transparency (i.e. requiring distributed
+systems to \emph{appear} as a single server and database to the users), has been viewd as the most
+important proprty of such systems, which is resulted in extensive
+studies around the implementation and reasoning techniques of {\bf
+strongly consistent} distributed stores. Although the strong notions of
+consistency, such as {\bf linearizability} and {\bf serializability}, 
+are ideal for developing and reasoning about distributed applications, they
+come with the price of availability and low response-time. 
+%which are intrinsically crucial for web-based large-scale applications. 
+To liberate the application instances from the extensive
+synchronization required in strong consistency models and allows 
+them to be "always-on" despite of unavoidable
+network partitionings, {\bf weak consistency} models are taken into
+account and distributed applications are instead designed to
+tolerate certain inconsistencies. For example, user's $\mathtt{read}$ requests can
+be immediately responded with the \emph{local state} of a server, if the users
+can tolerate reading values that are not necessarily the latest ones.
+
+Even though weak models of consistency (e.g. session guarantees from
+Terry et. al.) have been known for more than two decades, they suffer 
 from the lack of standardized definitions and enforcement
 methodologies, which forces developers to modify their applications
 with ad-hoc fixes in order to enforce their desired levels of
-consistency. The ad-hoc implementation approaches and the lack of a
-general reasoning framework for weak consistency, has resulted in the
+consistency. The lack of a
+general reasoning framework for weak consistency models, has resulted in the
 difficulty of proving correctness and optimality properties of such
 highly error-prone implementations. To make the matter worse, many of
-distributed applications simultaneously require different levels of
-consistency for different tasks and even face new consistency
-requirements after the development phase is over. 
+distributed applications require different \emph{combinations} of known
+consistency guarantees, or might even face new consistency requirements
+after the developement phase is over.
 
-Let's consider a distributed bulletin board application where users
-send requests to servers to post a message or read the current
-messages on the board. Since the underlying data store provides
-eventual consistency guarantee, we can be sure that every message
-submitted to any server, will \emph{eventually} become visible at all
-servers.  However, we might also be interested in ensuring users that
-if they see a message as a result of a read request, they will also
-see that message in their subsequent reads. This requirement which is
-known as "monotonic reads", is not guaranteed under eventual
-consistency, since users might send read request to different servers
-with different sets of available messages.  Version vectors and
-similar ad-hoc approaches are usually used to add guards to the code
-in order to enforce the required consistency guarantees. This
-error-prone task requires developers to also come up their own proofs
-of correctness which to make the matter worse, has to be renewed each
-time the application is updated or the consistency requirements are
-changed (e.g. write operations are also realized to require guards
-before executions). 
+As an example, let's consider a distributed bulletin board application where users
+send requests to a cloud of servers to post a message or to read the current
+messages on the board. Each user request is sent to an available server,
+which itself is working on top of an instance of an off-the-shelf data
+store (e.g. Facebook's Cassandra). 
+Since the underlying stores, usually satisfy the {\bf eventual consistency} model, 
+developers are guaranteed  that every write to a local instance of the data 
+store will eventually  be delivered at all other instances. However, 
+most of the desirable application-level properties are not met under this model.          
+For example, assume the developers wants to make sure that all the
+$\mathtt{read}$ requests from
+a user, would necessarily include prior writes by the same user.  This
+guarantee which is known as {\bf read my writes (RMW)} can be violated in
+eventually consistent stores.  
+Here, delopers are forced to come up with their own implementation of
+RMW. They must modify client and server applications to generate, send
+and receive special tokens, to maintain the set of updates available at
+each server, and block user requests, if some necessary updates are
+still missing.
 
-%The Figure Containing The Bulletin Board and its Modified Version
-\input {../Introduction/fig_application_ex.tex}
+
+\input {../Paper/fig_system_cons_example.tex}
 
 In this paper, we address these issues by introducing a principled approach to 
 derive enforcement mechanisms for various forms of weak consistency 

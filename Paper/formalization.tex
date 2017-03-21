@@ -13,6 +13,12 @@ levels in the context:
 
 \newpage
 \subsection{Operational Semantics}
+\begin{center}
+$Ctxt_{r_1;r_2;so}(p,c,\_)$ := $p_v$\\
+$Ctxt_{r_1;r_2;vis}(p,c,\_)$ := $c_v$\\
+$\psi_1^{-1}(\eta) = r_2^{-1}(\eta)$\\
+$\psi_2^{-1}(\eta) = r_1^{-1}(r_2^{-1}(\eta))$
+\end{center}
 Our system is consisted of a number of replicas, each of which itself is consisted of an array of caches. Each cache is consistent according to a part of the contract:
 \input{fig_replica_model}
 \\ Here we explain the the core operational semantics of our algorithm, which for simplicity reasons, 

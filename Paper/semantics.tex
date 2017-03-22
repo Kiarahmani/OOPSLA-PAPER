@@ -1,47 +1,5 @@
 \begin{figure*}[h]
 \raggedright
-%
-
-\textbf{Auxiliary Definitions}\\
-%
-\begin{minipage}{\columnwidth}
-\begin{smathpar}
-\stretcharraybig
-\begin{array}{lclcl}
-  \multicolumn{5}{c}{
-    {\delta} \in \mathtt{Replicated\; Data\; Type} \spc\spc
-    {v} \in \mathtt{Value}\spc\spc
-    {op} \in \mathtt{Operation\; Name}
-  }\\
-  \multicolumn{5}{c}{
-    {s} \in \mathtt{Session\; Id} \spc\spc
-    {i} \in \mathtt{Effect\; Id} \spc\spc
-    {\rho} \in \mathtt{Replica\; Id}
-  }\\
-  \eff & \in & \mathtt{Effect} & \coloneqq &  (s,i,op,v)\\
-   {\Pool} & \in & \mathtt {Pool} & \coloneqq & (v,\set {\eff}) \\
-   {\Cache} & \in & \mathtt {Cache} & \coloneqq & (v,\set{\eff})\\
-  F_{op} & \in & \mathtt{Op.\,Def.} & \coloneqq & v \rightarrow \eta\\
-  \EffSoup & \in & \mathtt{Eff\,Soup}	  & \coloneqq & \set{\eff} \\
-  \visZ,\soZ &	\in & \mathtt{Relations} & \coloneqq & \set{(\eff,\eff)} \\
-  {\E} 		& \in & \mathtt{Exec\;State}  & \coloneqq & \Exec \\
-  \Theta  & \in & \mathtt{Store}      & \coloneqq & \rho \mapsto (\Pool,\Cache) \\
-  {\sigma} 	& \in & \mathtt{Session} 					 	& \coloneqq & \cdot \ALT op::\sigma \\
-  \Sigma 		& \in & \mathtt{Session\;Soup}   	 	& \coloneqq &
-        \langle s, i, \sigma \rangle \pll \Sigma \ALT \emptyset \\
-\end{array}
-\end{smathpar}
-\end{minipage}
-%
-
-\begin{smathpar}
-\begin{array}{c}
-\ssn(s,\_,\_,\_) = s \spc\spc
-\id(\_,j,\_,\_) = j \spc\spc
-\oper(\_,\_,op,\_) = op \spc\spc
-\rval(\_,\_,\_,n) = n\\
-\end{array}
-\end{smathpar}
 
 \vspace{5mm}
 \textbf{Auxiliary Reduction} \;
@@ -86,10 +44,10 @@ F_{op}(v) = \eta \qquad
 \RuleTwo
 { 
   \eta \in \E.\EffSoup \spc
-  \Theta(\rho) = (\Pool,\Cache) \spc
+  \Theta(\rho) = (\Pool,\Cache,\Avail) \spc
   \eta \not\in \Pool_e \\
   \Pool' = (apply \; \eta\; \Pool_v,\Pool_e \cup \{\eta\}) \spc \\
-  \Theta' = \Theta[\rho \mapsto (\Pool',\Cache)]\\
+  \Theta' = \Theta[\rho \mapsto (\Pool',\Cache,\Avail)]\\
 }
 {
   (\E,\Theta,\Sigma) \;\xrightarrow{\eff}\; (\E, \Theta', \Sigma)
@@ -97,7 +55,29 @@ F_{op}(v) = \eta \qquad
 \end{array}
 \end{smathpar}
 \end{minipage}
-
+%
+\begin{minipage}{2.8in}
+\rulelabel{Avail Refresh}
+\begin{smathpar}
+\stretcharraybig
+\begin{array}{l}
+\RuleTwo
+{
+  \Theta(\rho) = (\Pool,\Cache,\Avail) \spc \eta \in \Pool_e \spc
+  \oper(\eta) = op 
+  \\ \Avail_{op}(\eta) < i < k  \spc
+  \Avail_{op}'= \Avail_{op}[\eta \mapsto i] \spc \\ \psi_{i}^{-1}
+  (\eta) \subseteq \Pool_e
+ \spc  \Theta' = \Theta[\rho \mapsto (\Pool,\Cache,\Avail[op \mapsto
+ \Avail'_{op}])]\\
+}
+{
+  (\E,\Theta,\Sigma) \;\xrightarrow{\eff}\; (\E, \Theta', \Sigma)
+}
+\end{array}
+\end{smathpar}
+\end{minipage}
+%
 \vspace{5mm}
 \begin{minipage}{2.8in}
 \rulelabel{Cache Refresh}
@@ -106,11 +86,12 @@ F_{op}(v) = \eta \qquad
 \begin{array}{l}
 \RuleTwo
 {
-  \Theta(\rho) = (\Pool,\Cache) \spc \eta \in \Pool_e
-  \\ \eta \not\in \Cache_e \spc
-  \Cache'=(apply \; \eta \; \Cache_v ,\Cache_e \cup \{\eta\}) \\ \psi^{-1}
+  \Theta(\rho) = (\Pool,\Cache,\Avail) \spc \eta \in \Pool_e \spc
+  \oper(\eta) = op 
+  \\ \eta \not\in \Cache(op)_e \spc
+  \Cache'=(apply \; \eta \; \Cache(op)_v ,\Cache(op)_e \cup \{\eta\}) \\ \psi^{-1}
   (\eta) \subseteq \Cache_e
- \spc  \Theta' = \Theta[\rho \mapsto (\Pool,\Cache')]\\
+ \spc  \Theta' = \Theta[\rho \mapsto (\Pool,\Cache',\Avail)]\\
 }
 {
   (\E,\Theta,\Sigma) \;\xrightarrow{\eff}\; (\E, \Theta', \Sigma)
@@ -118,7 +99,7 @@ F_{op}(v) = \eta \qquad
 \end{array}
 \end{smathpar}
 \end{minipage}
-\hspace{12 mm}
+\hspace{22 mm}
 \vspace{3mm}
 \begin{minipage}{2.3in}
 \rulelabel{Exec}

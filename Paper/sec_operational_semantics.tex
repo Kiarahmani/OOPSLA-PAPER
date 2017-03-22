@@ -1,0 +1,30 @@
+In this section we introduce the complete behavior of our multi-consistenct shim layer as a new set of operational semantics. 
+The rules are parametrized over a given map of operation names to
+contracts, $\Psi :  op
+\mapsto \psi $ and we assume each contract is of the form:
+$\Psi(op)=\forall (a,b). a \xrightarrow{Q_{op}} \Rightarrow a \xrightarrow{vis} b.$ 
+We use $Q_{op}[m]$ notation to refer to the m'th clause in the composition.
+We define a pool to be a set of effects and a value that contains all
+the effects that arrive to the replica. 
+Our shim layer, also maintains a set of k caches (one cache for each
+given contract). Each cache is maintained to be the largest
+subset of pool that is closed under its
+contract.  i.e. $\forall \eff \in \Cache(op). Q_{op}^{-1}(\eff)
+\subseteq \Cache(op) $ 
+\\We also maintain a level of availability for each effect
+according to an operation and the current pool. If the availability of an effect for
+$op$ is $x$, it means
+that the effect satisfies the suffix of size $x$ of contract $\Psi(op)$.
+An effect $\eta$ satisfies a suffix of size $x\geq 1$ of contaract
+$\psi=\forall (a,b). a \xrightarrow{q_1;q_2;...;q_n} b$,
+written as $ (\eta \models_{\Pool}^{x} \psi )$, if and only if
+$(q_{n-(x-1)};...;q_{n} )^{-1}_{\Pool}(\{\eta\}) \subseteq \Pool$. The
+initial availability value for all effects is 0, and increases when more
+dependent effects arrive. 
+\\
+Following are the formal definitions: 
+\\
+\input {def_large_semantics}
+\input{semantics}
+
+

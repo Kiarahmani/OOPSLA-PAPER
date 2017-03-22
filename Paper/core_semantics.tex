@@ -33,6 +33,7 @@
 \end{array}
 \end{smathpar}
 
+\vspace{5mm}
 \textbf{Auxiliary Reduction} \;
   \fbox{\(\auxred{S} {(\E,op_{<s,i>})} {} {(\E',\eff)}\)}\\
 
@@ -62,9 +63,10 @@ F_{op}(S) = \eta \qquad
 \end{smathpar}
 \end{minipage}
 
+\vspace{5mm}
 \textbf{Operational Semantics} \;
   \fbox{\((\E,op_{<s,i>}) \;\xrightarrow{}\; (\E',v)\)}\\
-
+\vspace{3mm}
 \begin{minipage}{2.8in}
 \rulelabel{vis Exec}
 \begin{smathpar}
@@ -72,7 +74,7 @@ F_{op}(S) = \eta \qquad
 \begin{array}{l}
 \RuleTwo
 {
-  \mathtt{Type}(q_3) = 1 \spc
+  (vis \succ q_k) \spc
   V \subseteq E.A \spc S\subseteq V \spc  Q^{-1}_{V}(\{\eta\}) \subseteq V \\ Q^{-1}_{V}(S) \subseteq S
   \spc \nexists S'\subseteq V. [(Q^{-1}_{V}(S') \subseteq S') \wedge (|S'|>|S|)]   \\
   \auxred {S} {((\EffSoup,\visZ,\soZ), op_{<s,i>}))}
@@ -85,6 +87,7 @@ F_{op}(S) = \eta \qquad
 \end{smathpar}
 \end{minipage}
 \hspace{12 mm}
+\vspace{3mm}
 \begin{minipage}{2.3in}
 \rulelabel{non-vis Exec}
 \begin{smathpar}
@@ -92,7 +95,7 @@ F_{op}(S) = \eta \qquad
 \begin{array}{l}
 \RuleTwo
 {\\
-  \mathtt{Type} (q_3) = 2\spc
+  (vis \nsucc q_k )\spc
   V \subseteq E.A \spc  Q^{-1}_{V}(\{\eta\}) \subseteq V \\
   \auxred {V} {((\EffSoup,\visZ,\soZ),op_{<s,i>}))}
     {} {((\EffSoup',\visZ',\soZ'),\eta)}

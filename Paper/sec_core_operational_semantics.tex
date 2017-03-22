@@ -1,0 +1,32 @@
+Here we explain the the core operational semantics of our algorithm, which for simplicity reasons, 
+is parametrized over a single contract 
+$\psi = \forall (a,b). a \xrightarrow{Q} b  \Rightarrow a
+\xrightarrow{vis} b$, where $Q=q_1;q_2;...;q_k$. 
+\\Before intorducing the semantics, let's define the inverse of the
+given composition $Q=q_1;q_2;...;q_k$ according to a given
+set of available effects $P$, as a partial function from $\set{\eff}$ to
+$\set{\eff}$. The idea is to define the function only if the \emph{necessary information about the relations beetween effects, is present in P}.
+\\ $
+(q_1;...;q_k)^{-1}_P (S)= (q_1;...;q_{k-1})^{-1}_P (q^{-1}_{k}(S)), \qquad 
+if \; (q_k)^{-1}(S) \subseteq P$
+\\Trivially, the above definition is based on the following definition of
+the inverse of a clause :\\
+$q^{-1}(S) = 
+\begin{cases}
+\bigcup^{}_{e\in S}. \{\eta|(\eta,e) \in E.q \}, \hspace{8.5 mm} if \;
+q\in\{so,vis\} \\ 
+r_1^{-1}(S)\cup r_2^{-1}(S), \qquad \spc \qquad if \; q=r_1\cup r_2\\
+G_{r}(S,\emptyset), \quad \hspace{17.25 mm} \qquad if \; q=r^* 
+\end{cases}
+$
+\\ Where we define the helping function $G$ as follows: 
+$G_r(S,R) =
+\begin{cases} 
+G_r(r^{-1}(S,R\cup r^{-1}(S))), \qquad if r^{-1}(S) \neq \emptyset  \\
+R,                          \hspace{36.1mm} otherwise
+\end{cases}$ \\
+We also define the relation $\succ$ over clauses as follows: $q \succ
+p \iff \forall (a,b). (q(a,b) \rightarrow p(a,b)) $
+\input{core_semantics}
+
+

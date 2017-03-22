@@ -7,11 +7,11 @@
 %   }\\
 		R & \in & \texttt{relation} & \coloneqq & \visZ \ALT \soZ \ALT R \cup R \\
                C & \in & \texttt{clause} & \coloneq &  R \ALT R^{*} \\
-               P & \in &  \texttt{composition} & ::= & C \ALT C;P  \\
+               Q & \in &  \texttt{composition} & \coloneq & C \ALT C;Q  \\
 %	C & \in & \texttt{composition} & ::= [R] | R^* \hspace{30 mm}		
 % Tail ::= \eta_t | x \xrightarrow{txso} \eta_t  \\
 		\pi & \in & \texttt{prop} & \coloneqq & \forall(a,b).
-      ~a \xrightarrow{C} b ~\Rightarrow~ a \xrightarrow{\visZ} b\\
+      ~a \xrightarrow{Q} b ~\Rightarrow~ a \xrightarrow{\visZ} b\\
 		\psi & \in & \texttt{spec} & \coloneqq & \pi \ALT \pi \conj \pi\\
   \end{array}
   \end{smathpar}

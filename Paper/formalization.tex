@@ -1,6 +1,6 @@
 \section{Formalization}
-In this chapter we first present our specification language and then
-introduce the core opeational semantics of our tool.
+In this section we first present our specification language and then
+introduce the opeational semantics of our tool. The operational semantics of our tool is presented in two different sets. First set of rules, presents the core of our algorithm and we use it to present the proofs of correctness and optimality. 
 \subsection{Specification Language}
 Following is the formal syntax of contract language in our system:
 \input{syntax}
@@ -12,16 +12,41 @@ levels in the context:
 \input{fig_contract_visualize}
 
 \newpage
-\subsection{Core Operational Semantics}
+\subsection{Core Algorithm Operational Semantics}
 Here we explain the the core operational semantics of our algorithm, which for simplicity reasons, 
 is parametrized over a single contract 
-$\psi = \forall (a,b). a \xrightarrow{r_1;r_2;r_3} b  \Rightarrow a \xrightarrow{vis} b$. 
-We also omit the unnecessary notions of replicated stores and programs.
+$\psi = \forall (a,b). a \xrightarrow{Q} b  \Rightarrow a \xrightarrow{vis} b$, where $Q=q_1;q_2;q_3$. 
+\\Before intorducing the semantics, we define the inverse of the given composition $Q=q_1;q_2;q_3$ according to a given
+set of available effects $P$, as a partial function from $\set{\eff}$ to
+$\set{\eff}$. The idea is to define the function only if the \emph{necessary information about the relations beetween effects, is present in P}.
+\\ $
+Q^{-1}_P (S)= q_1^{-1} (q_2^{-1}(q_3^{-1}(S))), \qquad 
+if \; (q_3^{-1}(S) \subseteq P)\wedge
+(q_2^{-1}(q_3^{-1}(S))  \subseteq P)$
+\\Trivially, the above definition is based on the following definition of
+the inverse of a clause :\\
+$q^{-1}(S) = 
+\begin{cases}
+\bigcup^{}_{e\in S}. \{\eta|(\eta,e) \in E.q \}, \hspace{8.5 mm} if \;
+q\in\{so,vis\} \\ 
+r_1^{-1}(S)\cup r_2^{-1}(S), \qquad \spc \qquad if \; q=r_1\cup r_2\\
+q^{-1}(S\cup r^{-1}(S)), \qquad \quad \qquad if \; q=r^* \wedge r^{-1}(S) \neq \emptyset \\
+\emptyset, \qquad \quad \hspace{20 mm} \qquad if \; q=r^* \wedge r^{-1}(S) = \emptyset
+\end{cases}
+$
+\\ Moreover, based on their intrinsic differences, we divide clauses into two types. 
+Type 1 clauses include a $vis$ relation in the last edge and type 2 clauses do not. 
+\\$
+\mathtt{Type}(q) = 
+\begin{cases}
+1 \qquad if \; ((q=vis) \vee (q=vis^*) \vee (q=r\cup vis) \vee (q=vis\cup r)) 
+\wedge (r\in\mathtt{relation}) \\ 
+2 \qquad otherwise
+\end{cases}
+$
+
 \input{core_semantics}
-
-
-
-\subsection {System Wide Operational Semantics}
+\subsection {Shim Layer Operational Semantics}
 \input{semantics}
 
 

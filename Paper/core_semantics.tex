@@ -1,16 +1,6 @@
 \begin{figure*}[h]
 \raggedright
 %
-
-
-$
-C^{-1}_V (S)=
-\begin{cases}
-\bigcup_{e \in S}^{}. r_1^{-1} (r_2^{-1}(r_3^{-1}(e))) \qquad if \; \forall e \in S. [(r_3^{-1}(e) \subseteq S)\wedge ([r_2^{-1}((r_3^{-1}(e)) \subseteq S)]
-\end{cases}
-$
-\vspace{4 mm}
-
 \textbf{Auxiliary Definitions}\\
 %
 \begin{minipage}{\columnwidth}
@@ -18,14 +8,15 @@ $
 \stretcharraybig
 \begin{array}{lclcl}
   \multicolumn{5}{c}{
-    {v} \in \mathtt{Value}\spc\spc
+    \hspace{-8mm}
     {op} \in \mathtt{Operation\; Name} \spc \spc
     {s} \in \mathtt{Session\; Id} \spc\spc
     {i} \in \mathtt{Effect\; Id} \spc\spc
   }\\
   \eff & \in & \mathtt{Effect} & \coloneqq &  (s,i,op,v)\\
-  F_{op} & \in & \mathtt{Op.\,Def.} & \coloneqq & v \rightarrow \eta\\
+  F_{op} & \in & \mathtt{Op.\,Def.} & \coloneqq & \set{\eff} \rightarrow \eta\\
   \EffSoup & \in & \mathtt{Eff\,Soup}	  & \coloneqq & \set{\eff} \\
+  S & \in & \mathtt{Vis\,Set} & \coloneqq & \set{\eff}\\
   \visZ,\soZ &	\in & \mathtt{Relations} & \coloneqq & \set{(\eff,\eff)} \\
   {\E} 		& \in & \mathtt{Exec\;State}  & \coloneqq & \Exec \\
 \end{array}
@@ -38,11 +29,10 @@ $
 \ssn(s,\_,\_,\_) = s \spc\spc
 \id(\_,j,\_,\_) = j \spc\spc
 \oper(\_,\_,op,\_) = op \spc\spc
-\rval(\_,\_,\_,n) = n\\
+\rval(\_,\_,\_,v) = v\\
 \end{array}
 \end{smathpar}
 
-\vspace{5mm}
 \textbf{Auxiliary Reduction} \;
   \fbox{\(\auxred{S} {(\E,op_{<s,i>})} {} {(\E',\eff)}\)}\\
 
@@ -54,7 +44,7 @@ $
 \RuleTwo
 {
 %\Theta(\rho \mapsto (v,cache)) \qquad
-F_{op}(v) = \eta \qquad
+F_{op}(S) = \eta \qquad
 \ssn(\eta) = s \qquad 
 \id(\eta) = i \qquad
 %\{\eff'\} = \EffSoup_{({\sf SessID}=s,\,{\sf SeqNo}=i-1)}\\
@@ -72,23 +62,19 @@ F_{op}(v) = \eta \qquad
 \end{smathpar}
 \end{minipage}
 
-
-\vspace{5mm}
 \textbf{Operational Semantics} \;
   \fbox{\((\E,op_{<s,i>}) \;\xrightarrow{}\; (\E',v)\)}\\
 
-
-\vspace{5mm}
 \begin{minipage}{2.8in}
-\rulelabel{Non-blocking Exec}
+\rulelabel{vis Exec}
 \begin{smathpar}
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
 {
-  r_3 = vis \spc
-  V \subseteq E.A \spc S\subseteq V \\ C^{-1}_{V}(S) \subseteq S
-  \spc \nexists S'\subseteq V. [(C^{-1}_{V}(S') \subseteq S') \wedge (|S'|>|S|)]   \\
+  \mathtt{Type}(q_3) = 1 \spc
+  V \subseteq E.A \spc S\subseteq V \spc  Q^{-1}_{V}(\{\eta\}) \subseteq V \\ Q^{-1}_{V}(S) \subseteq S
+  \spc \nexists S'\subseteq V. [(Q^{-1}_{V}(S') \subseteq S') \wedge (|S'|>|S|)]   \\
   \auxred {S} {((\EffSoup,\visZ,\soZ), op_{<s,i>}))}
     {} {((\EffSoup',\visZ',\soZ'),\eta)}
 }
@@ -99,16 +85,15 @@ F_{op}(v) = \eta \qquad
 \end{smathpar}
 \end{minipage}
 \hspace{12 mm}
-\vspace{3mm}
 \begin{minipage}{2.3in}
-\rulelabel{Blocking Exec}
+\rulelabel{non-vis Exec}
 \begin{smathpar}
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
 {\\
-  r_3 = so \spc
-  V \subseteq E.A \spc  C^{-1}_{V}(\{\eta\}) \subseteq V \\
+  \mathtt{Type} (q_3) = 2\spc
+  V \subseteq E.A \spc  Q^{-1}_{V}(\{\eta\}) \subseteq V \\
   \auxred {V} {((\EffSoup,\visZ,\soZ),op_{<s,i>}))}
     {} {((\EffSoup',\visZ',\soZ'),\eta)}
 }

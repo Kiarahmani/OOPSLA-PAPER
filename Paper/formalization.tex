@@ -12,17 +12,16 @@ levels in the context:
 \input{fig_contract_visualize}
 
 \newpage
-\subsection{Operational Semantics}
-\begin{center}
-$Ctxt_{r_1;r_2;so}(p,c,\_)$ := $p_v$\\
-$Ctxt_{r_1;r_2;vis}(p,c,\_)$ := $c_v$\\
-$\psi_1^{-1}(\eta) = r_2^{-1}(\eta)$\\
-$\psi_2^{-1}(\eta) = r_1^{-1}(r_2^{-1}(\eta))$
-\end{center}
-Our system is consisted of a number of replicas, each of which itself is consisted of an array of caches. Each cache is consistent according to a part of the contract:
-\input{fig_replica_model}
-\\ Here we explain the the core operational semantics of our algorithm, which for simplicity reasons, 
+\subsection{Core Operational Semantics}
+Here we explain the the core operational semantics of our algorithm, which for simplicity reasons, 
 is parametrized over a single contract 
 $\psi = \forall (a,b). a \xrightarrow{r_1;r_2;r_3} b  \Rightarrow a \xrightarrow{vis} b$. 
-However this can be easily  genralized to maintain different levels of consistency. 
+We also omit the unnecessary notions of replicated stores and programs.
+\input{core_semantics}
+
+
+
+\subsection {System Wide Operational Semantics}
 \input{semantics}
+
+

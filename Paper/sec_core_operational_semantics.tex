@@ -1,14 +1,17 @@
 Here we explain the the core operational semantics of our algorithm, which for simplicity reasons, 
 is parametrized over a single contract 
+\begin{smathpar}
+\begin{array}{lcll}
+  (q_1;...;q_k)^{-1}_P (S) & = & (q_1;...;q_{k-1})^{-1}_P
+  (q^{-1}_{k}(S))& \mathtt{if} \; (q_k)^{-1}(S) \subseteq P\\
+\end{array}
+\end{smathpar}
 $\psi = \forall (a,b). a \xrightarrow{Q} b  \Rightarrow a
 \xrightarrow{vis} b$, where $Q=q_1;q_2;...;q_k$. 
 \\Before intorducing the semantics, let's define the inverse of the
 given composition $Q=q_1;q_2;...;q_k$ according to a given
 set of available effects $P$, as a partial function from $\set{\eff}$ to
 $\set{\eff}$. The idea is to define the function only if the \emph{necessary information about the relations beetween effects, is present in P}.
-\\ $
-(q_1;...;q_k)^{-1}_P (S)= (q_1;...;q_{k-1})^{-1}_P (q^{-1}_{k}(S)), \qquad 
-if \; (q_k)^{-1}(S) \subseteq P$
 \\Trivially, the above definition is based on the following definition of
 the inverse of a clause :\\
 $q^{-1}(S) = 

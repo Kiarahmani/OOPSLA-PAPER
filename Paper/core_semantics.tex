@@ -65,7 +65,7 @@ F_{op}(S) = \eta \qquad
 
 \vspace{5mm}
 \textbf{Operational Semantics} \;
-  \fbox{\((\E,op_{<s,i>}) \;\xrightarrow{}\; (\E',v)\)}\\
+  \fbox{\((\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E',\eff)\)}\\
 \vspace{3mm}
 \begin{minipage}{2.8in}
 \rulelabel{vis Exec}
@@ -81,7 +81,7 @@ F_{op}(S) = \eta \qquad
     {} {((\EffSoup',\visZ',\soZ'),\eta)}
 }
 {
-  (\E,op_{<s,i>}) \;\xrightarrow{}\; (\E', v)
+  (\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E', \eff)
 }
 \end{array}
 \end{smathpar}
@@ -102,8 +102,8 @@ F_{op}(S) = \eta \qquad
 }
 {
   (\E,op_{<s,i>}) 
-    \;\xrightarrow{}\;
-  (\E',v) 
+    \;\xrightarrow{V}\;
+  (\E',\eff) 
 }
 \end{array}
 \end{smathpar}

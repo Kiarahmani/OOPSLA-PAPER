@@ -62,11 +62,9 @@ F_{op}(S) = \eta \qquad
 \end{array}
 \end{smathpar}
 \end{minipage}
-
-\vspace{5mm}
+\vspace{4mm}\\
 \textbf{Operational Semantics} \;
   \fbox{\((\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E',\eff)\)}\\
-\vspace{3mm}
 \begin{minipage}{2.8in}
 \rulelabel{vis Exec}
 \begin{smathpar}
@@ -74,11 +72,10 @@ F_{op}(S) = \eta \qquad
 \begin{array}{l}
 \RuleTwo
 {
-  (vis \succ q_k) \spc
-  V \subseteq E.A \spc S\subseteq V \spc  Q^{-1}_{V}(\{\eta\}) \subseteq V \\ Q^{-1}_{V}(S) \subseteq S
-  \spc \nexists S'\subseteq V. [(Q^{-1}_{V}(S') \subseteq S') \wedge (|S'|>|S|)]   \\
-  \auxred {S} {((\EffSoup,\visZ,\soZ), op_{<s,i>}))}
-    {} {((\EffSoup',\visZ',\soZ'),\eta)}
+     V \subseteq E.A \spc  R^{-1}_{V}(\{\eta\}) \subseteq V \spc  (vis \subseteq r_k) \spc 
+  S = \left \lfloor V \right \rfloor_V \\
+  \auxred {S} {(E, op_{<s,i>}))}
+    {} {(E',\eta)} 
 }
 {
   (\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E', \eff)
@@ -87,18 +84,17 @@ F_{op}(S) = \eta \qquad
 \end{smathpar}
 \end{minipage}
 \hspace{12 mm}
-\vspace{3mm}
 \begin{minipage}{2.3in}
 \rulelabel{non-vis Exec}
 \begin{smathpar}
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
-{\\
-  (vis \nsucc q_k )\spc
-  V \subseteq E.A \spc  Q^{-1}_{V}(\{\eta\}) \subseteq V \\
-  \auxred {V} {((\EffSoup,\visZ,\soZ),op_{<s,i>}))}
-    {} {((\EffSoup',\visZ',\soZ'),\eta)}
+{
+ 
+  V \subseteq E.A \spc  R^{-1}_{V}(\{\eta\}) \subseteq V\spc (vis \nsubseteq r_k )\\
+  \auxred {V} {(E,op_{<s,i>}))}
+    {} {(E',\eta)}
 }
 {
   (\E,op_{<s,i>}) 

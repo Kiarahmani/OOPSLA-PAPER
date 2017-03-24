@@ -16,7 +16,6 @@
   \eff & \in & \mathtt{Effect} & \coloneqq &  (s,i,op,v)\\
   F_{op} & \in & \mathtt{Op.\,Def.} & \coloneqq & \set{\eff} \rightarrow \eta\\
   \EffSoup & \in & \mathtt{Eff\,Soup}	  & \coloneqq & \set{\eff} \\
-  S & \in & \mathtt{Vis\,Set} & \coloneqq & \set{\eff}\\
   \visZ,\soZ &	\in & \mathtt{Relations} & \coloneqq & \set{(\eff,\eff)} \\
   {\E} 		& \in & \mathtt{Exec\;State}  & \coloneqq & \Exec \\
 \end{array}
@@ -33,7 +32,6 @@
 \end{array}
 \end{smathpar}
 
-\vspace{5mm}
 \textbf{Auxiliary Reduction} \;
   \fbox{\(\auxred{S} {(\E,op_{<s,i>})} {} {(\E',\eff)}\)}\\
 
@@ -73,8 +71,8 @@ F_{op}(S) = \eta \qquad
 \RuleTwo
 {
      V \subseteq E.A \spc  R^{-1}_{V}(\{\eta\}) \subseteq V \spc  (vis \subseteq r_k) \spc 
-  S = \left \lfloor V \right \rfloor_V \\
-  \auxred {S} {(E, op_{<s,i>}))}
+  V'= \left \lfloor V \right \rfloor_V \\
+  \auxred {V'} {(E, op_{<s,i>}))}
     {} {(E',\eta)} 
 }
 {

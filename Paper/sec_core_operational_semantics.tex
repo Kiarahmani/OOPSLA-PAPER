@@ -8,8 +8,12 @@ is parametrized over a single contract $\psi$:
 \end{smathpar}
 Before intorducing the semantics, let us define the inverse of a
 given relation $R=r_1;r_2;...;r_k$.
-The definition is parametrized over an execution $E$ and a set of \emph{available} effects V.
-The idea is to define the function only if the \emph{necessary information} about the sequence of relations, is available in V:
+The following definitions are parametrized over an execution $E$ and a set of \emph{available} effects V.
+The idea is to define the inverse only if the \emph{necessary
+information} about the sequence of relations, is available in V; this
+way we can capture the reality of the distributed stores, where some
+effects, carrying the required info about the relation being computed
+might not be present at the moment.
 \begin{smathpar}
 \begin{array}{ccccl}
    (R;r_k)^{-1}_V (a,b) & \iff & \exists c,r_k^{-1} (a,c) \wedge R^{-1}
@@ -41,12 +45,12 @@ R  & &  otherwise
 Given a set of effects, we also define its maximal closed subset
 under the relation R as follows: 
 \begin{smathpar}
-S' = \left \lfloor S \right \rfloor_V \iff (S' \subseteq S) \wedge
-(R_V^{-1}(S') \subseteq S') \wedge 
-(\not\exists
-P.(R_V^{-1}(P)\subseteq P\wedge |P|>|S'|))
+\left \lfloor S \right \rfloor_V = S' \spc \mathtt{iff} \spc S'
+\subseteq S \; \wedge \;
+R_V^{-1}(S') \subseteq S' \; \wedge \; 
+\not\exists
+S''.((R_V^{-1}(S''))\subseteq S''\wedge |S''|>|S'|)
 \end{smathpar}
 \input{core_semantics}
 \newpage
-\subsubsection{Theorems and proofs}
-\input{subsec_theorems}
+

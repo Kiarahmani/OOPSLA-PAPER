@@ -1,41 +1,26 @@
-\subsubsection{Correctnes (Preservation)}
 \begin{definition}
 For a given contract ($\psi=\forall(a,b). a
-\xrightarrow{Q} b \Rightarrow a \xrightarrow{vis} b $), we define a set
-of effects S, to be  $\psi$-consistent under an execution $E$, if and
+\xrightarrow{R} b \Rightarrow a \xrightarrow{vis} b $), we define a set
+of effects $S$, to be  $\psi$-consistent under an execution $E$, if and
 only if: 
-$\forall (\eff \in S). \forall(a\in E.\EffSoup). Q(a,\eta)
+$\forall (\eff \in S). \forall(a\in E.\EffSoup). R(a,\eta)
 \Rightarrow a \in S$ 
-\\(We use definition of $Q^{-1}$ from the previous section to formally
-define: $Q(a,b) \iff a \in Q_{E.A}^{-1}(b)  $)
+\\(We use definition of $R^{-1}$ from the previous section to formally
+define: $R(a,b) \iff a \in R_{E.A}^{-1}(b)  $)
 \end{definition}
 
 \begin{theorem}
-For all operation executions of the form: 
+For all operation executions of the form,  
 \begin{smathpar}
 (\E,op_{<s,i>}) 
     \;\xrightarrow{V}\;
   (\E',\eff) 
 ,\end{smathpar}
+
 if $V$ is $\psi$-consistent then $(V\cup\{\eta\})$ is also
 $\psi$-consistent.
 \begin{proof}
-Sine $\eff$ is the only effect added to $V$, we only need to check the
-following property for $\eta$, in order to prove $\psi$-consistency of
-$V\cup\{\eta\}$:
-\begin{smathpar}
-\forall (a \in E.A). Q(a,\eta) \Rightarrow vis(a,\eta) 
-\end{smathpar}
-\begin{smathpar}
-\begin{array}{ll}
-(1) & Q(a,\eta) \spc \mathtt{(hypothesis)}\\
-(2) & a \in Q^{-1}_V (\eta) \spc  \mathtt{(we \;need \;to \;prove\; this)}\\
-(3) & a \in V \spc \mathtt{(premise \;of \;the \;rules \;and\; (2))}\\
-(4) & \mathtt{since \;} V \mathtt{ \; is\;} \psi \mathtt{-consistent, \;from \;(3) \;and
-\;definition \;of
-\;consistency, \;the \;property \;holds \;for \;a}
-\end{array}
-\end{smathpar}
+\input{correctness_proof}
 \end{proof}
 \end{theorem}
 %%%
@@ -47,18 +32,20 @@ For all operation executions of the form:
     \;\xrightarrow{V}\;
   (\E',\eff) 
 ,\end{smathpar}
-the set of effects made visible to $\eta$ is maximal. i.e. For all
+then set of effects made visible to $\eta$ is maximal. i.e. For all
 execution states $E''$ such that:
 \begin{smathpar}
 (\E,op_{<s,i>})\;\xrightarrow{V}\;(\E'',\eff)
 \end{smathpar}
 then    
-\begin{smathpar}
-(\E''.vis^{-1}(\eta)) \subseteq
-(\E'.vis^{-1}(\eta))
-\end{smathpar}
+$\small (\E''.vis^{-1}(\eta)) \subseteq
+(\E'.vis^{-1}(\eta))$
+\begin{proof}
+\input{maxvis_proof}
+\end{proof}
 \end{theorem}
 %%%
+\newpage
 \subsubsection{Minimum Wait (Progress)}
 \begin{theorem}
 For all execution states $E$, and {replica states} ($V\subseteq

@@ -10,10 +10,11 @@
   \multicolumn{5}{c}{
     \hspace{-8mm}
     {op} \in \mathtt{Operation\; Name} \spc \spc
-    {s} \in \mathtt{Session\; Id} \spc\spc
-    {i} \in \mathtt{Effect\; Id} \spc\spc
+    {v} \in \mathtt{Return\; Value} 
+ %   {s} \in \mathtt{Session\; Id} \spc\spc
+ %   {i} \in \mathtt{Effect\; Id} \spc\spc
   }\\
-  \eff & \in & \mathtt{Effect} & \coloneqq &  (s,i,op,v)\\
+  \eff & \in & \mathtt{Effect} & \coloneqq &  (op,v)\\
   F_{op} & \in & \mathtt{Op.\,Def.} & \coloneqq & \set{\eff} \rightarrow \eta\\
   \EffSoup & \in & \mathtt{Eff\,Soup}	  & \coloneqq & \set{\eff} \\
   \visZ,\soZ &	\in & \mathtt{Relations} & \coloneqq & \set{(\eff,\eff)} \\
@@ -23,14 +24,14 @@
 \end{minipage}
 %
 
-\begin{smathpar}
-\begin{array}{c}
-\ssn(s,\_,\_,\_) = s \spc\spc
-\id(\_,j,\_,\_) = j \spc\spc
-\oper(\_,\_,op,\_) = op \spc\spc
-\rval(\_,\_,\_,v) = v\\
-\end{array}
-\end{smathpar}
+%\begin{smathpar}
+%\begin{array}{c}
+%\ssn(s,\_,\_,\_) = s \spc\spc
+%\id(\_,j,\_,\_) = j \spc\spc
+%\oper(\_,\_,op,\_) = op \spc\spc
+%\rval(\_,\_,\_,v) = v\\
+%\end{array}
+%\end{smathpar}
 
 \textbf{Auxiliary Reduction} \;
   \fbox{\(\auxred{S} {(\E,op_{<s,i>})} {} {(\E',\eff)}\)}\\
@@ -44,13 +45,12 @@
 {
 %\Theta(\rho \mapsto (v,cache)) \qquad
 F_{op}(S) = \eta \qquad
-\ssn(\eta) = s \qquad 
-\id(\eta) = i \qquad
+%\ssn(\eta) = s \qquad 
+%\id(\eta) = i \qquad
 %\{\eff'\} = \EffSoup_{({\sf SessID}=s,\,{\sf SeqNo}=i-1)}\\
 \EffSoup' = \EffSoup \cup \{\eff\} \qquad S \subseteq \EffSoup\\
 \visZ' = \visZ \cup S \times\{\eff\}\qquad
-\soZ' = \soZ \cup \{(\eta',\eta) \,|\, \eta'\in \EffSoup \conj 
-    \ssn(\eta')=s \conj \id(\eta')<i\}\qquad
+\soZ' = \soZ \cup \{(\eta',\eta) \,|\, \eta'\in \EffSoup\}\qquad
 %\soZ' = (\soZ^{-1}(\eff') \cup \eff') \times\{\eff\} \cup \soZ
 }
 {
@@ -70,7 +70,7 @@ F_{op}(S) = \eta \qquad
 \begin{array}{l}
 \RuleTwo
 {
-     V \subseteq E.A \spc  R^{-1}_{V}(\{\eta\}) \subseteq V \spc  (vis \subseteq r_k) \spc 
+     V \subseteq E.A \spc  R^{-1}_{V}(\eta) \subseteq V \spc  (vis \subseteq r_k) \spc 
   V'= \left \lfloor V \right \rfloor_V \\
   \auxred {V'} {(E, op_{<s,i>}))}
     {} {(E',\eta)} 
@@ -90,7 +90,7 @@ F_{op}(S) = \eta \qquad
 \RuleTwo
 {
  
-  V \subseteq E.A \spc  R^{-1}_{V}(\{\eta\}) \subseteq V\spc (vis \nsubseteq r_k )\\
+  V \subseteq E.A \spc  R^{-1}_{V}(\eta) \subseteq V\spc (vis \nsubseteq r_k )\\
   \auxred {V} {(E,op_{<s,i>}))}
     {} {(E',\eta)}
 }

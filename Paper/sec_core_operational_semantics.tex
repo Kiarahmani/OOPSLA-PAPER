@@ -15,9 +15,9 @@ way we can capture the reality of the distributed stores, where some
 effects, carrying the required info about the relation being computed
 might not be present at the moment.
 \begin{smathpar}
-\begin{array}{ccccl}
-   (R;r_k)^{-1}_V (a,b) & \iff & \exists c,r_k^{-1} (a,c) \wedge R^{-1}
-   (c,b) & \wedge & r_k^{-1}(a) \subseteq V 
+\begin{array}{ccc}
+   b \in (R;r_k)^{-1}_V (a) & \iff & \exists c.(c\in r_k^{-1} (a)) \wedge (b \in R^{-1}
+   (c))  \wedge  (r_k^{-1}(a) \subseteq V)
 \end{array}
 \end{smathpar}
 The above definition is based on the following definition of

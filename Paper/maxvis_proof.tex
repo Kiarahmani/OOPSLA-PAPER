@@ -1,12 +1,28 @@
-We have the following:
+By contradiction:
 \begin{smathpar}
 \begin{array}{ll}
 H_0: & (\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E',\eff)\\
 H_1: & (\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E'',\eff)\\
-
-G_0: & V \cup \{\eta\} \; \mathtt{is} \; \psi\mathtt{-consistent}
+H_2: & a \in   (E''.vis^{-1}(\eta)) \\
+H_3: & a \not\in  (E'.vis^{-1}(\eta))\\
+G_0: & \bot 
 \end{array}
 \end{smathpar}
-B
-
-
+By inversion on $H_1$ we have: 
+\begin{smathpar}
+\hspace{-48 mm}
+\begin{array}{lcl}
+&H_4: & \auxred{V''} {(\E,op_{<s,i>})} {} {(\E'',\eff)}\\
+&H_5: &   V''= \left \lfloor V \right \rfloor_V \\
+(\mathtt{by \;inversion \;on\;} H_4 \mathtt{\;and \;from\;} H_2) & H_6: & a \in V''
+\end{array}
+\end{smathpar}
+By inversion on $H_0$ and following a similar argument we can now derive: 
+\begin{smathpar}
+\begin{array}{ll}
+H_7: &  \auxred{V''} {(\E,op_{<s,i>})} {} {(\E',\eff)} \\
+H_8: & V'= \left \lfloor V \right \rfloor_V \\
+H_9: & a \not\in V'\\
+\end{array}
+\end{smathpar}
+However from $H_5$ we know $V''\subseteq V \wedge R_V^{-1}(V'')\subseteq V''$, which results in contradiction because of the maximality of $V'$ defined in $H_8$.

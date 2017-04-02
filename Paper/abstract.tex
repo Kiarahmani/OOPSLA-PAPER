@@ -1,31 +1,32 @@
 \begin{abstract}
-Linearizability and Sequential Consistency are well-understood
-correctness criteria for concurrent applications, for which equally
-well-understood implementation techniques (e.g., 2PL) exist for
-enforcement. These criteria are however too strong for
-distributed applications operating over replicated data. The inherent
-tradeoff between consistency and availability in a distributed setting
-makes it impossible for these applications to enforce strong
-consistency, thus requiring them to adopt weak alternatives.
-Unfortunately, the lack of standardized definitions and enforcement
-techniques for weak consistency has incentivized programmers to adopt
-\emph{ad hoc} implementation techniques for their enforcement, which
-don't lend themselves to a uniform reasoning technique, making it
-hard to reason about their correctness.  
 
-In this paper, we describe a principled approach to derive the
-enforcement mechanisms for various forms of weak consistency. Our
-approach is parametric over the declarative semantics of weak
-consistency, and generates a provably optimal enforcement mechanism
-for any given consistency semantics. We implement our approach in a
-tool called \tool that accepts a declarative specification of a weak
-consistency guarantee, and extends an eventually consistent data store
-with the capability to enforce the guarantee.  Our method thus
-works for  any off-the-shelf key-value store. We demonstrate the
-applicability of our approach by automatically deriving enforcement
-mechanisms for various well-known weak consistency guarantees in the
-literature. Experiments show that the performance of the derived
-mechanisms is comparable to (utmost 100\% worse than) their
-corresponding hand-written implementations, thus attesting to the
-practical utility of \tool.
+  Modern-day distributed systems often use replication to improve
+  communication latency and fault tolerance among geographically
+  distributed servers and clients.  But, replication comes at a steep
+  cost in program reasoning that forces applications to weigh the
+  reasoning benefits of guaranteeing strong consistency among replicas
+  against its potentially significant performance cost.  Because not
+  all operations on a replicated data type require strongly consistent
+  behavior, however, library designers should be able to ideally
+  direct implementations to provide precisely the level of consistency
+  required, eschewing the costs of strong consistency except when
+  absolutely required.
+
+  In this paper, we describe a lightweight runtime system for weakly
+  consistent distributed systems that dynamically customizes a
+  consistency protocol based on a declarative axiomatic specification.
+  The specification reflects necessary constraints that any correct
+  implementation must satisfy.  Our technique generates a provably
+  optimal enforcement mechanism that imposes no additional
+  communication or blocking overhead beyond what is required to
+  satisfy the specification, and works for any off-the-shelf key-value
+  store.
+
+  We demonstrate the applicability of our approach by automatically
+  deriving enforcement mechanisms for various well-known weak
+  consistency guarantees in the literature. Experimental results show
+  that the performance of the automically derived mechanisms is
+  comparable to specialized hand-written protocols, providing strong
+  evidence of its practical utility.
+
 \end{abstract}

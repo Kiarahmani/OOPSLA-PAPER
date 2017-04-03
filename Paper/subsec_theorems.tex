@@ -45,18 +45,18 @@ $\small (\E''.vis^{-1}(\eta)) \subseteq
 \end{proof}
 \end{theorem}
 %%%
-\newpage
 \subsubsection{Minimum Wait (Progress)}
 \begin{theorem}
 For all execution states $E$, and {replica states} ($V\subseteq
 E.A$), if there
 exists ($S\subseteq V$) such that: 
 \begin{smathpar}
-\auxred{S} {(\E,op_{<s,i>})} {} {(\E',\eff)} \spc \wedge \spc (E' \models \psi[\eta / b])  $ 
+\auxred{S} {(\E,op_{<s,i>})} {} {(\E',\eff)} \spc \wedge \spc (\mathtt{S \cup \{\eta\} \; is 
+\;} \psi \mathtt{-consistent \; under \;} E' )  $ 
 \end{smathpar}
-then
+then there exists $E''$ such that:
 \begin{smathpar}
-((\E,op_{<s,i>})\;\xrightarrow{V}\;(\E',\eff))
+((\E,op_{<s,i>})\;\xrightarrow{V}\;(\E'',\eff))
 \end{smathpar}
 
 \end{theorem}

@@ -18,9 +18,6 @@
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{listings}
-
-\input{../Introduction/header_listings.tex}
 
 
 %% Note: Authors migrating a paper from PACMPL format to traditional
@@ -173,7 +170,7 @@
 %% Note: \begin{abstract}...\end{abstract} environment must come
 %% before \maketitle command
 
-\input{abstract}
+\input{Sections/abstract}
 
 %% 2012 ACM Computing Classification System (CSS) concepts
 %% Generate at 'http://dl.acm.org/ccs/ccs.cfm'.
@@ -208,22 +205,29 @@
 %% environment and commands, and keywords command.
 \maketitle
 
-%================================ SECTION ONE
-\input{../Introduction/section_one.tex}
+%================================ SECTION ONE: Introduction
+\input{Sections/section_one}
 
-%================================ SECTION TWO
-%\section{Motivation}
+%================================ SECTION TWO: Motivation
+\input{Sections/section_two}
 
-\newpage
-%================================ SECTION FOUR
-\input{formalization}
+%================================ SECTION THREE: System Model
+\input{Sections/section_three}
 
-%================================ SECTION FIVE
+%================================ SECTION FOUR: Operational Semantics
+\input{Sections/section_four}
 
+%================================ SECTION FIVE: Instrumented Algorithm
+\input{Sections/section_five}
 
+%================================ SECTION SIX: Implementation and Evaluation
+\input{Sections/section_six}
 
+%================================ SECTION SEVEN: Related Works
+\input{Sections/section_seven}
 
-
+%================================ SECTION EIGHT: Conclusion 
+\input{Sections/section_eight}
 
 
 

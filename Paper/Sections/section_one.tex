@@ -1,6 +1,5 @@
 \section{Introduction}
-
-Modern web-based applications are implemented as multiple
+Many of modern web-based applications are implemented as multiple
 agents simultaneously serving users, that work on shared data
 objects replicated across geographically distributed machines. 
 Historically, replication transparency (i.e. requiring distributed
@@ -11,7 +10,6 @@ strongly consistent} distributed stores. Although the strong notions of
 consistency, such as {\bf linearizability} and {\bf serializability}, 
 are ideal for developing and reasoning about distributed applications, they
 come with the price of availability and low response-time. 
-%which are intrinsically crucial for web-based large-scale applications. 
 To liberate the application instances from the extensive
 synchronization required in strong consistency models and allows 
 them to be "always-on" despite of unavoidable
@@ -48,8 +46,8 @@ $\mathtt{read}$ requests from
 a user, would necessarily include prior writes by the same user.  This
 guarantee which is known as {\bf read my writes (RMW)} can be violated in
 eventually consistent stores.  
-\input {../Paper/fig_system_cons_example.tex}
-Here, delopers are forced to come up with their own implementation of
+\input {Figures/fig_system_cons_example}
+Here, developers are forced to come up with their own implementation of
 RMW. They must modify client and server applications to generate, send
 and receive special tokens, to maintain the set of updates available at
 each server, and block user requests, if some necessary updates are
@@ -100,22 +98,24 @@ off of the developer's shoulders.
 \\The paper makes the following contributions:
 \begin{itemize}
 \item Introducing a new specification language that covers all the known consistency guarantees in 
-the context. Our language is arguably simpler than the previous works, and is based on observing 
+the context. Our language is arguably simpler than the previous proposals, and is based on observing 
 similarities of different consistency requirements.
 
 \item Proposing a principled consistency enforcement methodology that is 
 complete for our specification language and allows deriving multi-purpose consistency enforcement 
 tools.
 
-\item Presenting proofs of correctness and optimality of our consistency enforcement methodology 
+\item Presenting proofs of correctness and optimality of our consistency enforcement technique
 and introducing the first ever general reasoning framework for weak consistency guarantees. 
 
-\item Introducing our tool called  \tool that realizes our consistency enforcement methods and 
+\item Introducing a tool called  \tool that realizes our consistency enforcement methods and 
 extends an off-the-shelf eventually consistent data store (Cassandra) to a multi purpose key-value 
-data store with the ability to guarantee any requested consistency level defined by the 
+data store with the ability of guaranteeing any requested consistency level defined by the 
 developers. 
 
-\item Presenting the evaluation results showing the utility of \tool compared to a hard-coded
+\item Presenting the evaluation results showing the necessaity of
+developing fine-grained weak consistency levels and the complexities
+assosiated. Lastly, the utility of our tool shown by comparing it to a hand-written
 implementation of a weak consistency guarantee. 
 \end{itemize}
 

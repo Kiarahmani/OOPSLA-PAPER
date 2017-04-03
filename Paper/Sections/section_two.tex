@@ -1,0 +1,46 @@
+\section{Motivation}
+
+Let's consider the developement of a web-based bulletin board application, where
+users can write their messaeg on a board, or request to read the current
+messages on it.
+In order to make the application scalable and highly
+available, developers implement it as a distributed application, working
+with replicated data items, that runs on top of an off-the-shelf
+eventually consistent data store. 
+
+
+
+
+
+\input{Figures/fig_simple_bulletin_board}
+This is good and fast.
+%--- Consistency requirements
+\subsection{Integrity Anomalies}
+We now want to think about behaviour of the application. There are some
+correctness properties that we should deal with. For example, each user
+must be able to read her or his own messages, in the subsequent reads.
+because it's stupid otherwise.
+These guarantees are not offered in EC. for example,, figure.. 
+alice writes and the reads and does not see her own tweet. 
+%--- Ad hoc approach
+\subsection{Ad-hoc consistency implementation}
+there are methods to prevent the anomalies mentioned above. The
+developers now must record all clients and their sequence numbers and at
+each replica they should make sure the operation is blocked untill all
+the required deps are present. 
+This is as we are going to explain it is awful. 
+Now after everything is done, we relize some other requirements and the
+developer isnow screwd. 
+% Our approach
+\subsection{Multi-Consistent Extension}
+Doing these messy things is unavoidable, since the underlying stores,
+only offer eventual consistency or if we are locky, one or two more
+(such as causal consistency and strong consistency). But developers are
+not interested in unnecessary consistency guaranteees and do it
+themselves. There are so many of consistency known requirements and
+there aren't generic ways of implementing them.
+We are now arguing that all the consistency stuff can be
+completely separated from the application level. We are proposing a
+method that would completely liberate the developers from thinking about
+these awful stuff. We are offering a shim that simply extends the
+keyvalue store and preserves a consistency guarantee by recording

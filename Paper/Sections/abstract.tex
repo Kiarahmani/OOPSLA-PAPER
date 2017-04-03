@@ -2,34 +2,37 @@
 
   Modern-day distributed systems often use replication to improve
   communication latency and fault tolerance among geographically
-  distributed servers and clients.  But, replication comes at a steep
-  cost in simplicity because it forces applications to weigh the
-  correctness benefits of guaranteeing strong consistency against its
-  potentially significant performance cost.  Because not all
-  operations on a replicated data type require strongly consistent
-  behavior, however, library designers should be able to ideally
-  direct implementations to provide only the level of consistency
-  required, eschewing the costs of strong consistency except when
-  absolutely required.  Unfortunately, implementations typically
-  support only a small set of consistency levels, placing the burden
-  of defining new ones, when necessary, to applications.
-  
+  distributed servers and clients.  But, replication compromises
+  simplicity because it forces applications to weigh the correctness
+  benefits of guaranteeing strong consistency against a potentially
+  significant cost in performance.  Because not all operations on a
+  replicated data type require strongly consistent behavior, however,
+  library designers should be able to ideally direct implementations
+  to provide precisely the level of consistency needed, eschewing the
+  costs of strong consistency except when absolutely necessary.
+  Unfortunately, implementations typically support only a small set of
+  consistency levels.  Consequently, developers must either be content
+  with mapping application requirements to a supported consistency
+  level that may well enforce stronger guarantees than required, or
+  hand weave a specialized protocol that more accurately matches
+  application needs.  The former approach sacrifices performance,
+  while the latter entails added complexity.
+
   In this paper, we describe a lightweight runtime system for weakly
   consistent distributed systems that dynamically customizes a
-  consistency protocol based on a declarative axiomatic specification,
-  freeing developers from writing bespoke and complex consistency
-  protocols not already provided.  The
-  specification reflects necessary constraints that any correct
-  implementation must satisfy.  Our technique generates a provably
-  optimal enforcement mechanism that imposes no additional
-  communication or blocking overhead beyond what is required to
-  satisfy the specification, and works for any off-the-shelf key-value
-  store.
+  consistency protocol based on a declarative axiomatic specification
+  that reflects the necessary constraints any correct implementation
+  must satisfy.  Our technique generates a provably optimal runtime
+  enforcement mechanism that imposes no additional communication or
+  blocking overhead beyond what is required to satisfy the
+  specification, thus freeing developers from writing bespoke and
+  complex consistency protocols without having to sacrifice
+  availability and performance by not doing so.
 
   We demonstrate the applicability of our approach by automatically
   deriving enforcement mechanisms for various well-known weak
   consistency instantiations.  Experimental results show that the
-  performance of our automatically derived mechanisms is comparable to
+  performance of our automically derived mechanisms is comparable to
   specialized hand-written protocols, providing strong evidence of its
   practical utility.
 \end{abstract}

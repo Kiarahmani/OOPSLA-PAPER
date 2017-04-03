@@ -1,36 +1,36 @@
 \section{Motivation}
 
 Let's consider the developement of a web-based bulletin board application, where
-users can write their messaeg on a board, or request to read the current
+users can write their messages on a board, or request to read the current
 messages on it.
 In order to make the application scalable and highly
-available, developers implement it as a distributed application, working
+available, developers should implement it as a distributed application, working
 with replicated data items, that runs on top of an off-the-shelf
-eventually consistent data store. 
+eventually consistent data store. In this fashion, client requests are
+sent to geo-replicated servers, where local updates are made, and each
+update is guaranteed to be eventually delivered to all servers. 
+
+\subsection{Ad-hoc Anomaly Prevention Mechanisms}
+Developers cannot solely rely on the eventual consistency guarantee that
+is provided by the stores. There are application integrity anomalies
+that must be thought of at the developement stage and be fixed. For
+example, assume the setting where Alice logs into the system, writes a
+message on the board, and immediately refreshs her browser hoping to see
+her message on the board, which is however not there. As mentioned in
+the previous section, this can occure if
+the write message was sent to a server, and the subsequent read to
+another, where the original update was not available yet. 
+
+To prevent the above anomaly, developers must implement a consistency level known as 
+Read My Writes (RMW), where users are guaranteed to see all their
+previous updates whenever they read from a server. This would
+obviously prevent the above anomaly, since Alice's read opertaion would
+be blocked until her message arrives at the server. 
 
 
 
 
 
-\input{Figures/fig_simple_bulletin_board}
-This is good and fast.
-%--- Consistency requirements
-\subsection{Integrity Anomalies}
-We now want to think about behaviour of the application. There are some
-correctness properties that we should deal with. For example, each user
-must be able to read her or his own messages, in the subsequent reads.
-because it's stupid otherwise.
-These guarantees are not offered in EC. for example,, figure.. 
-alice writes and the reads and does not see her own tweet. 
-%--- Ad hoc approach
-\subsection{Ad-hoc consistency implementation}
-there are methods to prevent the anomalies mentioned above. The
-developers now must record all clients and their sequence numbers and at
-each replica they should make sure the operation is blocked untill all
-the required deps are present. 
-This is as we are going to explain it is awful. 
-Now after everything is done, we relize some other requirements and the
-developer isnow screwd. 
 % Our approach
 \subsection{Multi-Consistent Extension}
 Doing these messy things is unavoidable, since the underlying stores,

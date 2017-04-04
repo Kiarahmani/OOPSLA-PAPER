@@ -29,7 +29,7 @@ consistency that are stronger than EC, but weaker than SC. The term
 application-specific weak consistency guarantees.
 
 Unfortunately, the \emph{ad hoc} nature of weak consistency is
-antithesis to standardization. While there are a few well-defined
+antithesis to its standardization. While there are a few well-defined
 models of weak consistency~\cite{terry-pdis94}, the list is not
 exhaustive as applications often define consistency models to suit
 their needs. Furthermore, unlike the standardized implementation
@@ -60,11 +60,11 @@ consider the scenario shown in Fig.~\ref{fig:rmw-anomaly} where Alice
 changes her password, and subsequently tries to login with the new
 password. This involves a write of new password to the store, followed
 by a read during the authentication.  However, due to the transient
-system properties (e.g., uneven distribution of load, or network
-partitions), Alice's write and the read could be served by different
-replicas of the store, say $R_1$ and $R_2$ (resp.), where $R_2$ may
-not (yet) contain the latest writes from $R_1$. Consequently, Alice
-fails to login, even though she types the correct password.
+system properties (e.g., load balancing, or network partitions),
+Alice's write and the read could be served by different replicas of
+the store, say $R_1$ and $R_2$ (resp.), where $R_2$ may not (yet)
+contain the latest writes from $R_1$. Consequently, Alice fails to
+login, even though she types the correct password.
 
 To preempt the scenario described above, application might want to
 enforce a stronger consistency guarantee that lets reads from a
@@ -73,7 +73,7 @@ guarantee, known as \emph{Read-My-Writes/Read-Your-Writes} (RMW/RYW),
 is one of the well-understood session guarantees~\cite{terry-pdis94},
 yet the methods used for its enforcement are often store- and
 application-dependent. For instance, Oracle's replicated
-implementation of Berkeley DB suggests application developers impement
+implementation of Berkeley DB suggests application developers implement
 RMW by querying the metadata associated with writes~\cite{oracle-ryw}.
 Each successful write to the store returns a commit token, which is
 then passed with the subsequent reads to help the store identify the
@@ -100,11 +100,13 @@ to strong consistency, thereby sacrificing performance and
 availability. Clearly, the state of affairs is not desirable from the
 standpoint of an application developer.
 
-In this paper, we propose an attractive alternative to the approaches
-described above. Our approach is based on the observation that the
-hardness of reasoning about the integrity of a distributed application
-results from conflating application logic with the logic of
-consistency enforcement, and reasoning about both
+In this paper, we propose an alternative to the aforementioned
+approaches that lets application developers take advantage of weak
+consistency without having to re-engineer their applications to
+accommodate the consistency enforcement logic. Our approach is based on
+the observation that the hardness of reasoning about the integrity of
+a distributed application results from conflating application logic
+with the logic of consistency enforcement, and reasoning about both
 \emph{operationally}.  We observe that the reasoning is considerably
 simplified if application's semantics is kept separate from the
 semantics of consistency enforcement, admitting operational reasoning
@@ -112,7 +114,7 @@ for the former, and declarative/axiomatic reasoning for the latter.
 Axiomatic reasoning liberates the programmers from having to worry
 about the implementation details of consistency guarantees, and
 instead focus on reasoning about application semantics under the
-assumption that the required consistency gurantees are already
+assumption that the required consistency guarantees are already
 enforced by the store. Our approach admits axiomatic reasoning for
 consistency enforcement via a declarative specification language that
 lets programmers \emph{declare} the consistency requirements of their
@@ -124,8 +126,9 @@ visible to the read), then read returns a safe value.  For instance,
 RMW marks all previous writes from the same session as dependencies of
 a read operation, so an RMW read succeeds only if all the previous
 writes are visible. A different consistency guarantee (e.g.,
-\emph{Monotonic Reads}) imposes a different set of dependencies. We
-observe that by analyzing the specification of a weak consistency
+\emph{Monotonic Reads} (MR)) imposes a different set of dependencies,
+and so do the combinations of consistency guarantees (e.g., MR+RMW).
+We observe that by analyzing the specification of a weak consistency
 guarantee, it is possible to precisely identify the dependencies of an
 operation. A runtime that satisfies precisely the dependencies of an
 operation thus serves as an generic enforcement framework for
@@ -162,8 +165,6 @@ described in detail in rest of the paper.
 % would clearly make the original correctness proofs obsolete. 
 
 
-
-
 % In this paper, we address these issues by introducing a compositional, principled approach to 
 % derive enforcement mechanisms for various forms of weak consistency 
 % guarantees. 
@@ -198,26 +199,29 @@ described in detail in rest of the paper.
 % Contributions of the paper
 A summary of our contributions is given below:
 \begin{itemize}
-\item Introducing a new specification language that covers all the known consistency guarantees in 
-the context. Our language is arguably simpler than the previous proposals, and is based on observing 
-similarities of different consistency requirements.
+  \item We propose a consistency specification language that lets
+    programmers express the consistency requirements of their
+    applications in terms of the dependencies between operations.
 
-\item Proposing a principled consistency enforcement methodology that is 
-complete for our specification language and allows deriving multi-purpose consistency enforcement 
-tools.
+  \item We describe a generic consistency enforcement runtime that
+    analyzes an operation's consistency specification, and ensures
+    that its dependencies are satisfied before it is executed. We
+    formalize the operational semantics of the runtime, and prove its
+    correctness and optimality guarantees. Optimality includes
+    \emph{minimum wait}, which guarantees that an operation waits (on
+    arriving communication) only until its dependencies are satisfied,
+    and \emph{minimum staleness}, which guarantees that among various
+    states that satisfy an operation's dependencies, operation
+    witnesses the latest state.
+  
+  \item We describe an implementation our specification language and
+    consistency enforcement runtime in a tool called \tool, which
+    works on top of an off-the-shelf EC data store. We evaluate \tool
+    over realistic applications and microbenchmarks, and present
+    results that demonstrate the performance benefits of making
+    fine-grained distinctions between consistency guarantees, and the
+    ease of doing so via our specification language.
 
-\item Presenting proofs of correctness and optimality of our consistency enforcement technique
-and introducing the first ever general reasoning framework for weak consistency guarantees. 
-
-\item Introducing a tool called  \tool that realizes our consistency enforcement methods and 
-extends an off-the-shelf eventually consistent data store (Cassandra) to a multi purpose key-value 
-data store with the ability of guaranteeing any requested consistency level defined by the 
-developers. 
-
-\item Presenting the evaluation results showing the necessaity of
-developing fine-grained weak consistency levels and the complexities
-assosiated. Lastly, the utility of our tool shown by comparing it to a hand-written
-implementation of a weak consistency guarantee. 
 \end{itemize}
 
 Rest of the paper is organized as follows.  In section

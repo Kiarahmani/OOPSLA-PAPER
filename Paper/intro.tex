@@ -73,7 +73,7 @@ guarantee, known as \emph{Read-My-Writes/Read-Your-Writes} (RMW/RYW),
 is one of the well-understood session guarantees~\cite{terry-pdis94},
 yet the methods used for its enforcement are often store- and
 application-dependent. For instance, Oracle's replicated
-implementation of Berkeley DB suggests application developers impement
+implementation of Berkeley DB suggests application developers implement
 RMW by querying the metadata associated with writes~\cite{oracle-ryw}.
 Each successful write to the store returns a commit token, which is
 then passed with the subsequent reads to help the store identify the
@@ -216,7 +216,7 @@ developers.
 
 \item Presenting the evaluation results showing the necessaity of
 developing fine-grained weak consistency levels and the complexities
-assosiated. Lastly, the utility of our tool shown by comparing it to a hand-written
+assosiated. Lastly, the utility of our tool is shown by comparing it to a hand-written
 implementation of a weak consistency guarantee. 
 \end{itemize}
 

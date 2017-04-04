@@ -9,15 +9,18 @@ with replicated data items, that runs on top of an off-the-shelf
 eventually consistent data store. In this fashion, client requests are
 sent to geo-replicated servers, where local updates are made, and each
 update is guaranteed to be eventually delivered to all servers. 
+\input{Figures/fig_simple_bulletin_board}
+
 
 \subsection{Ad-hoc Anomaly Prevention Mechanisms}
 Developers cannot solely rely on the eventual consistency guarantee that
 is provided by the stores. There are application integrity anomalies
 that must be thought of at the developement stage and be fixed. For
-example, assume the setting where Alice logs into the system, writes a
-message on the board, and immediately refreshs her browser hoping to see
-her message on the board, which is however not there. As mentioned in
-the previous section, this can occure if
+example, assume the setting where Alice signs into the system, writes a
+message on the board, and immediately refreshes her browser hoping to see
+her message on the board, which is however not there. This is obviously
+not desirable and as mentioned in
+the previous section,  can occure if
 the write message was sent to a server, and the subsequent read to
 another, where the original update was not available yet. 
 

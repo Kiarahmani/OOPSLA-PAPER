@@ -1,5 +1,0 @@
-\begin{figure}[h]
-    \centering
-        \includegraphics[width=0.66\textwidth]{Figures/BulletinBoardSimple.pdf}
-    \caption{Data Model of a Simple Bulletin Board Application}
-\end{figure}

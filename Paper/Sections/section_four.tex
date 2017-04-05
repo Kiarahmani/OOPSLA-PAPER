@@ -1,14 +1,43 @@
+%
+%=========================================================================
+%
 \section{Operational Semantics}
-\subsection{Core Operational Semantics}
+
+In this section we explain the core operational semantics of our
+consistency enforcement algorithm. 
+Our approach is complete for the specification language defined earlier,
+and extends the key-value store to multiple different consistency
+environments. Here for simplicity reasons, we present the semantics 
+parametrized over a single contract,
+however as we explain in section \ref{subsec:generalization}, it can be easily
+generalized to cover all contracts and multiple consistency levels. In
+the rest of this section we will assume a given contract $\psi$ of the
+following form:
+	\begin{smathpar}
+	\begin{array}{lcc}
+		\psi = \forall (a,b). a \xrightarrow{R} b  \Rightarrow a
+		\xrightarrow{vis} b, & \spc & R=r_1;r_2;...;r_k \\
+	\end{array}
+	\end{smathpar}
+
+%--------- Definitions to be used in the semanrics
+\subsection{Definitions}
 \input{Sections/core_operational_semantics}
+%--------- The operational semantics
+\subsection{Core Operational Semantics}
+In this section we present the operational semantics of our consistency
+enforcement mechanism.
+\input{Sections/core_semantics}
 
-
+%--------- Theorem on correctness of enforcement
 \subsection{Soundness of the Semantics}
-%\input{Sections/subsec_theorems}
 
-
+%--------- Theorem on maxVis and minWait
 \subsection{Optimality of the Semantics}
 
-
+%--------- Explaination of how the approach can be egeneralized for all contracts
+%and for multiple requested levels of consistency
+\subsection{Generalization}
+\label{subsec:generalization}
 
 

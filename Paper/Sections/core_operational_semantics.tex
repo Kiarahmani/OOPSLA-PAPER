@@ -1,56 +1,63 @@
-Here we explain the the core operational semantics of our algorithm, which for simplicity reasons, 
-is parametrized over a single contract $\psi$:
-\begin{smathpar}
-\begin{array}{lcc}
-\psi = \forall (a,b). a \xrightarrow{R} b  \Rightarrow a
-\xrightarrow{vis} b, & \spc & R=r_1;r_2;...;r_k \\
-\end{array}
-\end{smathpar}
-Before intorducing the semantics, let us define the inverse of a
-given relation $R=r_1;r_2;...;r_k$.
-The following definitions are parametrized over an execution $E$ and a set of \emph{available} effects V.
-The idea is to define the inverse only if the \emph{necessary
-information} about the sequence of relations, is available in V; this
-way we can capture the reality of the distributed stores, where some
-effects, carrying the required info about the relation being computed
-might not be present at the moment.
-\begin{smathpar}
-\begin{array}{ccc}
-   b \in (R;r_k)^{-1}_V (a) & \iff & \exists c.(c\in r_k^{-1} (a)) \wedge (b \in R^{-1}
-   (c))  \wedge  (r_k^{-1}(a) \subseteq V)
-\end{array}
-\end{smathpar}
-The above definition is based on the following definition of
-the inverse of a clause :
+Before intorducing the semantics, given an execution state $E$ and a
+set $V$ of \emph{available} effects, we need to define the inverse of a
+relation. In correspondence with real
+distributed replicas, where at any given moment only a subset of all
+effects is present, we want to define the inverse of the relation,
+\emph{only
+if} the necessary information (which is carried by effects themselves) is present.
+To do so, let's first formally define the inverse of a seed relation
+$r$ for a given set of effects $S$:
 \begin{smathpar}
 r^{-1}(S) = 
 \begin{cases}
 \begin{array}{lll}
-\bigcup^{}_{e\in S}. \{\eta|(\eta,e) \in E.r \} & if &r\in\{so,vis\} \\ 
-r_1^{-1}(S)\cup r_2^{-1}(S) & if & r=r_1\cup r_2\\
-G_{r}(S,\emptyset) & if &  r=r^* 
+\bigcup^{}_{\eta\in S}. \{\eta'|(\eta',\eta) \in E.r \} & if &r\in\{so,vis\} \\ 
+r_1^{-1}(S)\cup r_2^{-1}(S) & if & r=r_1\cup r_2
+%\\G_{r}(S,\emptyset) & if &  r=r^* 
 \end{array}
 \end{cases}
 \end{smathpar}
-Where we define the helping function $G$ as follows: 
+Now, using a helping fixpoint function $G_r$, we extend the above
+definition to cover also the closure of a seed relation:
 \begin{smathpar}
-G_r(S,R) =
+(r^{*})^{-1}(S) = G_{r}(S,\emptyset) 
+\end{smathpar}
+where,
+\begin{smathpar}
+G_r(S,P) =
 \begin{cases}
 \begin{array} {lll}
-G_r(r^{-1}(S,R\cup r^{-1}(S))) &if& r^{-1}(S) \neq \emptyset  \\
-R  & &  otherwise
+G_r(r^{-1}(S) , P\cup r^{-1}(S)) &if& r^{-1}(S) \neq \emptyset  \\
+P  & &  otherwise
 \end{array}
 \end{cases}
 \end{smathpar}
-Given a set of effects, we also define its maximal closed subset
-under the relation R as follows: 
+{\bf Definition:} For a given relation $R=r_1;r_2;...;r_k$, we
+recursively define $R^{-1}$ as follows: 
 \begin{smathpar}
-\left \lfloor S \right \rfloor_V = S' \spc \mathtt{iff} \spc S'
+\begin{array}{ccc}
+   \eta' \in (r_1;r_2;...;r_k)^{-1}_V (\eta) & \iff & \exists
+   \eta''.(\eta''\in r_k^{-1}
+   (\eta))\; \wedge \;(\eta' \in (r_1;r_2;...;r_{k-1})^{-1}
+   (\eta''))\;  \wedge \; (r_k^{-1}(\eta) \subseteq V)
+\end{array}
+\end{smathpar}
+Note that the first two conjuncts are the straightforward stepwise definition of
+the closure of relations. However, the last conjunct also require $V$ to include all
+effects of the next step, before going further. This captures the
+reality of the real systems where the dependencies cannot be computed
+when the necessary information is not present at the replica. 
+
+Now, we finish this part, by defining the maximally closed subset of a set
+of effects $S$, given a relation $R$ and a set of available effects $V$
+as follows:
+\begin{smathpar}
+\left \lfloor S \right \rfloor_V = S' \spc \iff \spc S'
 \subseteq S \; \wedge \;
 R_V^{-1}(S') \subseteq S' \; \wedge \; 
 \not\exists
 S''.((R_V^{-1}(S''))\subseteq S''\wedge |S''|>|S'|)
 \end{smathpar}
-\input{Sections/core_semantics}
-\newpage
-
+The above statement, simply requires $\left \lfloor S \right \rfloor_V $
+to be closed under $R_V^{-1}$ and to be the largest among such closed
+subsets.

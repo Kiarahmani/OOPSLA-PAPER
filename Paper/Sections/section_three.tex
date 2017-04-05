@@ -1,3 +1,13 @@
+\newpage
 \section{System Model}
 \subsection{Replicated Data Types}
 \subsection{Specification Language}
+Following is the formal syntax of specification language in our system:
+\input{Sections/syntax}
+\\ The language is general enough to cover all  the known consistency
+levels in the context:
+\input{Figures/fig_contract_examples}
+\\ Specifications written in our language, can be visualized by simple
+graphs. For example, \texttt{(MR)} guarantee from the above figure can
+be represented as:
+\input{Figures/fig_contract_visualize}

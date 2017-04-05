@@ -1,7 +1,7 @@
 %
 %=========================================================================
 %
-\section{Operational Semantics}
+\section{Semantics}
 
 In this section we explain the core operational semantics of our
 consistency enforcement algorithm. 
@@ -21,20 +21,23 @@ following form:
 	\end{smathpar}
 
 %--------- Definitions to be used in the semanrics
-\subsection{Definitions}
+\subsection{Preliminaries}
 \input{Sections/core_operational_semantics}
 %--------- The operational semantics
+\newpage
 \subsection{Core Operational Semantics}
 In this section we present the operational semantics of our consistency
 enforcement mechanism.
 \input{Sections/core_semantics}
 
 %--------- Theorem on correctness of enforcement
+\newpage
 \subsection{Soundness of the Semantics}
-
+\input{Sections/subsec_theorems}
 %--------- Theorem on maxVis and minWait
+\newpage
 \subsection{Optimality of the Semantics}
-
+\input{Sections/subset_maximality}
 %--------- Explaination of how the approach can be egeneralized for all contracts
 %and for multiple requested levels of consistency
 \subsection{Generalization}

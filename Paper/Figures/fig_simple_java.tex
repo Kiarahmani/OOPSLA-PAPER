@@ -3,8 +3,8 @@
         \centering
 	\begin{lstlisting}
 	public Boolean login(String username, String password) {
-		String storedPassword = DB.getPass(username);
-		return (password.equals(storedPassword));
+		String storedPW = DB.getPass(username);
+		return (password.equals(storedPW));
 	}
 	\end{lstlisting}
 	\label{fig:modified_bb}
@@ -14,13 +14,13 @@
         \centering
 	\begin{lstlisting}
 	public Boolean login(int sequence, String username, String password) {
-		int storedSequence = 0; 
-		String storedPassword;
-		while (storedSequence != sequence - 1){
-			storedSequence = DB.getSeq (username);
-			storedPassword = DB.getPass(username);
+		int storedSeq = 0; 
+		String storedPW = DB.getPass(username);
+		while (storedSeq != sequence - 1){
+			storedSeq = DB.getSeq (username);
+			storedPW = DB.getPass(username);
 		}
-		return (password.equals(storedPassword));
+		return (password.equals(storedPW));
 	}
 	\end{lstlisting}
         \label{fig:simple_bb}

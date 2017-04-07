@@ -1,0 +1,47 @@
+%
+% THE MINIIMAL WAIT THEOREM
+%
+
+
+For all execution states $E$, if there
+exists ($S\subseteq E.A$) such that: 
+\begin{smathpar}
+\auxred{S} {(\E,op_{<s,i>})} {} {(\E',\eff)} \spc \wedge \spc (\mathtt{S \cup \{\eta\} \; is 
+\;} \psi \mathtt{-consistent \; under \;} E' )  
+\end{smathpar}
+then there exists an execution state $E''$, $\eff'$ and $V\subseteq E.A$ such that:
+$((\E,op_{<s,i>})\;\xrightarrow{V}\;(\E'',\eff'))$
+
+Before proving the theorem, let's first prove the following lemma: 
+\begin{lemma}
+Under an execution state E and for a given set $S \subseteq E.A$, if
+$S$ is $\psi$-consistent under $E$, then $\forall(x\in S).R_S^{-1}(x)
+\subseteq S$ under $E$.
+\begin{proof}
+From $\psi$-consistency of $S$ we have the following:
+\begin{smathpar}
+\begin{array}{ll}
+H_0: & \forall(x\in S). \forall (y\in E.A). R.(y,x) \in S \\
+\end{array}
+\end{smathpar}
+Now based on the definition of $R$, we have the following: 
+\begin{smathpar}
+\begin{array}{ll}
+H_1: & \forall(x\in S). R_{E.A}^{-1}(x) \subseteq S \\
+\end{array}
+\end{smathpar}
+However, since $S\subseteq E.A$ we have $R_{S}^{-1}(x) \subseteq
+R_{E.A}^{-1}(x)$ and the following will be derived: 
+\begin{smathpar}
+\begin{array}{ll}
+H_2: & \forall(x\in S). R_{S}^{-1}(x) \subseteq S \\
+\end{array}
+\end{smathpar}
+which completes the proof of the lemma.
+
+
+\end{proof}
+\end{lemma}
+\label {lemma1}
+\input{Sections/minimality_proof}
+\newpage

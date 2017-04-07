@@ -2,40 +2,21 @@
 %Subsection of the maximality of the set made visible and liveness
 %properties 
 %
-\begin{theorem}
 For all operation executions of the form: 
-\begin{smathpar}
-(\E,op_{<s,i>}) 
+$(\E,op_{<s,i>}) 
     \;\xrightarrow{V}\;
   (\E',\eff) 
-,\end{smathpar}
-then set of effects made visible to $\eta$ is maximal. i.e. For all
+,$
+the set of effects made visible to $\eta$ is maximal. i.e. for all
 execution states $E''$ such that:
-\begin{smathpar}
-(\E,op_{<s,i>})\;\xrightarrow{V}\;(\E'',\eff)
-\end{smathpar}
+$(\E,op_{<s,i>})\;\xrightarrow{V}\;(\E'',\eff)$
 then    
 $\small (\E''.vis^{-1}(\eta)) \subseteq
 (\E'.vis^{-1}(\eta))$
 \begin{proof}
 \input{Sections/maxvis_proof}
 \end{proof}
-\end{theorem}
 %%%
 
-\begin{theorem}
-For all execution states $E$, and {replica states} ($V\subseteq
-E.A$), if there
-exists ($S\subseteq V$) such that: 
-\begin{smathpar}
-\auxred{S} {(\E,op_{<s,i>})} {} {(\E',\eff)} \spc \wedge \spc (\mathtt{S \cup \{\eta\} \; is 
-\;} \psi \mathtt{-consistent \; under \;} E' )  $ 
-\end{smathpar}
-then there exists $E''$ such that:
-\begin{smathpar}
-((\E,op_{<s,i>})\;\xrightarrow{V}\;(\E'',\eff))
-\end{smathpar}
-
-\end{theorem}
 
 

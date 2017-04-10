@@ -2,19 +2,25 @@
 %Subsection of the maximality of the set made visible and liveness
 %properties 
 %
+\begin{theorem}
+\label{theorem:two}
 For all operation executions of the form: 
 $(\E,op_{<s,i>}) 
     \;\xrightarrow{V}\;
   (\E',\eff) 
 ,$
 the set of effects made visible to $\eta$ is maximal. i.e. for all
-execution states $E''$ such that:
+execution states $\E''$ such that:
 $(\E,op_{<s,i>})\;\xrightarrow{V}\;(\E'',\eff)$
 then    
 $\small (\E''.vis^{-1}(\eta)) \subseteq
 (\E'.vis^{-1}(\eta))$
+\end{theorem}
 \begin{proof}
-\input{Sections/maxvis_proof}
+The proof is directly followed by the fact that the subset of effects
+made visible to each operation is either $V$ itself, or $\left \lfloor V
+\right \rfloor_V$ which is by definition maximal. The detailed proof can be found in appendix
+\ref{appendix:proofs} \\
 \end{proof}
 %%%
 

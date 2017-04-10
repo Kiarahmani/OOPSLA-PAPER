@@ -1,4 +1,50 @@
 \begin{figure*}[h]
+%
+%==================== DEFINITIONS	
+%
+\begin{minipage}{\columnwidth}
+\begin{smathpar}
+\stretcharraybig
+\begin{array}{lclcl}
+  \multicolumn{5}{c}{
+    {\delta} \in \mathtt{Replicated\; Data\; Type} \spc\spc
+    {v} \in \mathtt{Value}\spc\spc
+    {op} \in \mathtt{Operation\; Name}
+  }\\
+  \multicolumn{5}{c}{
+    {s} \in \mathtt{Session\; Id} \spc\spc
+    {i} \in \mathtt{Effect\; Id} \spc\spc
+    {\rho} \in \mathtt{Replica\; Id}
+  }\\
+  \eff & \in & \mathtt{Effect} & \coloneqq &  (s,i,op,v)\\
+   {\Pool} & \in & \mathtt {Pool} & \coloneqq & (v,\set {\eff}) \\
+   {\Cache} & \in & \mathtt {Cache} & \coloneqq & op \mapsto (v,\set{\eff})\\
+   \Avail & \in & \mathtt {Avail} & \coloneqq & op \mapsto (\eff \mapsto
+\{0,1,...,k-1\}) \\
+  F_{op} & \in & \mathtt{Op.\,Def.} & \coloneqq & v \rightarrow \eta\\
+  \EffSoup & \in & \mathtt{Eff\,Soup}	  & \coloneqq & \set{\eff} \\
+  \visZ,\soZ &	\in & \mathtt{Relations} & \coloneqq & \set{(\eff,\eff)} \\
+  {\E} 		& \in & \mathtt{Exec\;State}  & \coloneqq & \Exec \\
+  \Theta  & \in & \mathtt{Store}      & \coloneqq & \rho \mapsto
+  (\Pool, {\Cache}, \Avail) \\
+  {\sigma} 	& \in & \mathtt{Session} 					 	& \coloneqq & \cdot \ALT op::\sigma \\
+  \Sigma 		& \in & \mathtt{Session\;Soup}   	 	& \coloneqq &
+        \langle s, i, \sigma \rangle \pll \Sigma \ALT \emptyset \\
+\end{array}
+\end{smathpar}
+\end{minipage}
+%
+\begin{smathpar}
+\begin{array}{c}
+\ssn(s,\_,\_,\_) = s \spc\spc
+\id(\_,j,\_,\_) = j \spc\spc
+\oper(\_,\_,op,\_) = op \spc\spc
+\rval(\_,\_,\_,n) = n\\
+\end{array}
+\end{smathpar}
+%
+% ==================   rules
+%
 \raggedright
 
 \vspace{5mm}
@@ -65,9 +111,10 @@ F_{op}(v) = \eta \qquad
 {
   \Theta(\rho) = (\Pool,\Cache,\Avail) \spc \eta \in \Pool_e \spc
   \oper(\eta) = op 
-  \\ \Avail_{op}(\eta) < i < k  \spc
-  \Avail_{op}'= \Avail_{op}[\eta \mapsto i] \spc \\ \psi_{i}^{-1}
-  (\eta) \subseteq \Pool_e
+  \\ \Avail_{op}(\eta) = i \spc i >1 \spc
+  \Avail_{op}'= \Avail_{op}[\eta \mapsto i-1] \spc \\
+  \Avail_{op}((R_{op}[i])^{-1}
+  (\eta)) = i+1\\
  \spc  \Theta' = \Theta[\rho \mapsto (\Pool,\Cache,\Avail[op \mapsto
  \Avail'_{op}])]\\
 }
@@ -89,8 +136,8 @@ F_{op}(v) = \eta \qquad
   \Theta(\rho) = (\Pool,\Cache,\Avail) \spc \eta \in \Pool_e \spc
   \oper(\eta) = op 
   \\ \eta \not\in \Cache(op)_e \spc
-  \Cache'=(apply \; \eta \; \Cache(op)_v ,\Cache(op)_e \cup \{\eta\}) \\ \psi^{-1}
-  (\eta) \subseteq \Cache_e
+  \Cache'=(apply \; \eta \; \Cache(op)_v ,\Cache(op)_e \cup \{\eta\}) \\ 
+  \Avail_{op} (R_{op}^{-1} (\eta)) = 1 
  \spc  \Theta' = \Theta[\rho \mapsto (\Pool,\Cache',\Avail)]\\
 }
 {

@@ -3,22 +3,23 @@ We have the following two hypotheses and the goal:
 \begin{array}{ll}
 H_0: & (\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E',\eff)  
 \\
-H_1: & V \; \mathtt{ is }\; \psi\mathtt{-consistent}\\
-G_0: & V \cup \{\eta\} \; \mathtt{is} \; \psi\mathtt{-consistent}
+H_1: & V \; \mathtt{ is }\; \psi\mathtt{-consistent \; under \; \E} \\
+G_0: & V \cup \{\eta\} \; \mathtt{is} \; \psi\mathtt{-consistent \;
+under \; \E'}
 \end{array}
 \end{smathpar}
 Based on the definition of consistency, we should prove the following:
 \begin{smathpar}
 \begin{array}{ll}
-G_1: & \forall(x\in V\cup\{\eta\}).\forall (a\in E.A). R(a,x) \Rightarrow a \in V\cup\{\eta\}
+G_1: & \forall(x\in V\cup\{\eta\}).\forall (a\in E'.A). R(a,x) \Rightarrow a \in V\cup\{\eta\}
 \end{array}
 \end{smathpar}
-By intro we will have the following new hypotheses and goal:
+By intro (and by the fact that $\E'.\EffSoup = \E.\EffSoup \cup \{\eff\}$) we will have the following new hypotheses and goal:
 \begin{smathpar}
 \begin{array}{ll}
 H_2: & x \in V\cup \{\eta\} 
 \\
-H_3: & a \in E.A \\
+H_3: & a \in E.A \cup \{\eff\}\\
 H_4: & R(a,x) \\
 G2: & a \in V \cup \{\eta\}
 \end{array}
@@ -63,4 +64,5 @@ Now from $H_7$, $H_8$ and $H_{11}$ we can derive:
 H_{12}: & a \in R_V^{-1}(\eta)\\
 \end{array}
 \end{smathpar}
-and from $H_{10}$ and $H_{12}$ we have $a \in V$ which proves the final goal $G_2$.
+and from $H_{10}$ and $H_{12}$ we have $a \in V$ which proves the final
+goal $G_2$. \\QED.

@@ -2,7 +2,8 @@
 % THE MINIIMAL WAIT THEOREM
 %
 
-
+\begin{theorem}
+\label{theorem:three}
 For all execution states $E$, if there
 exists ($S\subseteq E.A$) such that: 
 \begin{smathpar}
@@ -11,37 +12,14 @@ exists ($S\subseteq E.A$) such that:
 \end{smathpar}
 then there exists an execution state $E''$, $\eff'$ and $V\subseteq E.A$ such that:
 $((\E,op_{<s,i>})\;\xrightarrow{V}\;(\E'',\eff'))$
-
-Before proving the theorem, let's first prove the following lemma: 
-\begin{lemma}
-Under an execution state E and for a given set $S \subseteq E.A$, if
-$S$ is $\psi$-consistent under $E$, then $\forall(x\in S).R_S^{-1}(x)
-\subseteq S$ under $E$.
+\end{theorem}
 \begin{proof}
-From $\psi$-consistency of $S$ we have the following:
-\begin{smathpar}
-\begin{array}{ll}
-H_0: & \forall(x\in S). \forall (y\in E.A). R.(y,x) \in S \\
-\end{array}
-\end{smathpar}
-Now based on the definition of $R$, we have the following: 
-\begin{smathpar}
-\begin{array}{ll}
-H_1: & \forall(x\in S). R_{E.A}^{-1}(x) \subseteq S \\
-\end{array}
-\end{smathpar}
-However, since $S\subseteq E.A$ we have $R_{S}^{-1}(x) \subseteq
-R_{E.A}^{-1}(x)$ and the following will be derived: 
-\begin{smathpar}
-\begin{array}{ll}
-H_2: & \forall(x\in S). R_{S}^{-1}(x) \subseteq S \\
-\end{array}
-\end{smathpar}
-which completes the proof of the lemma.
-
-
+The proof is given by choosing set $V$ to be equal to $S$, and then
+considering two cases, where either $S$ or $\left \lfloor S \right
+\rfloor_S$ is shown to operations, if the contract is respectively
+waiting and non-waiting.
+A detailed proof can be found in appendix
+\ref{app:proof3}.
+\\
 \end{proof}
-\end{lemma}
-\label {lemma1}
-\input{Sections/minimality_proof}
-\newpage
+

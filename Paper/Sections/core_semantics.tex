@@ -1,6 +1,5 @@
 \begin{figure}[h]
 \raggedright
-%
 \textbf{Auxiliary Definitions}\\
 %
 \begin{minipage}{\columnwidth}
@@ -10,12 +9,12 @@
   \multicolumn{5}{c}{
     \hspace{-8mm}
     {op} \in \mathtt{Operation\; Name} \spc \spc
-    {v} \in \mathtt{Return\; Value} 
- %   {s} \in \mathtt{Session\; Id} \spc\spc
+    {v} \in \mathtt{Return\; Value} \spc \spc
+    {s} \in \mathtt{Session\; Id} \spc\spc
  %   {i} \in \mathtt{Effect\; Id} \spc\spc
   }\\
-  \eff & \in & \mathtt{Effect} & \coloneqq &  (op,v)\\
-  F_{op} & \in & \mathtt{Op.\,Def.} & \coloneqq & \set{\eff} \rightarrow \eta\\
+  \eff & \in & \mathtt{Effect} & \coloneqq &  (s,op,v)\\
+  F_{op} & \in & \mathtt{Op.\,Def.} & \coloneqq & \set{\eff} \mapsto v\\
   \EffSoup & \in & \mathtt{Eff\,Soup}	  & \coloneqq & \set{\eff} \\
   \visZ,\soZ &	\in & \mathtt{Relations} & \coloneqq & \set{(\eff,\eff)} \\
   {\E} 		& \in & \mathtt{Exec\;State}  & \coloneqq & \Exec \\
@@ -24,17 +23,10 @@
 \end{minipage}
 %
 
-%\begin{smathpar}
-%\begin{array}{c}
-%\ssn(s,\_,\_,\_) = s \spc\spc
-%\id(\_,j,\_,\_) = j \spc\spc
-%\oper(\_,\_,op,\_) = op \spc\spc
-%\rval(\_,\_,\_,v) = v\\
-%\end{array}
-%\end{smathpar}
+
 
 \textbf{Auxiliary Reduction} \;
-  \fbox{\(\auxred{S} {(\E,op_{<s,i>})} {} {(\E',\eff)}\)}\\
+\fbox{\(\auxred{S} {(\E,op_{<s,i>})} {} {(\E',\eff)}\)}\\
 
 \begin{minipage}{\textwidth}
 \rulelabel{Oper}
@@ -44,14 +36,15 @@
 \RuleTwo
 {
 %\Theta(\rho \mapsto (v,cache)) \qquad
-F_{op}(S) = \eta \qquad
+S \subseteq \EffSoup \qquad F_{op}(S) = v \qquad
 \eta \not\in S \qquad
-%\ssn(\eta) = s \qquad 
+\eff = (s,op,v) \qquad  \\
 %\id(\eta) = i \qquad
 %\{\eff'\} = \EffSoup_{({\sf SessID}=s,\,{\sf SeqNo}=i-1)}\\
-\EffSoup' = \EffSoup \cup \{\eff\} \qquad S \subseteq \EffSoup\\
+\EffSoup' = \EffSoup \cup \{\eff\}  \qquad
 \visZ' = \visZ \cup S \times\{\eff\}\qquad
-\soZ' = \soZ \cup \{(\eta',\eta) \,|\, \eta'\in \EffSoup\}\qquad
+\soZ' = \soZ \cup \{(\eta',\eta) \,|\, \eta'\in \EffSoup_{({\sf
+SessID}=s)}      \}\qquad
 %\soZ' = (\soZ^{-1}(\eff') \cup \eff') \times\{\eff\} \cup \soZ
 }
 {
@@ -103,8 +96,10 @@ F_{op}(S) = \eta \qquad
 \end{array}
 \end{smathpar}
 \end{minipage}
-
-
+\\
+\vspace{5mm}
+\hrulefill\\
 \caption{Core Operational semantics of a replicated data store.}
+\label{fig:semantics}
 \end{figure}
 

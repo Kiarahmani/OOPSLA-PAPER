@@ -2,7 +2,6 @@
 %=========================================================================
 %
 \section{Semantics}
-
 In this section we explain the core operational semantics of our
 consistency enforcement algorithm. 
 Our approach is complete for the specification language defined earlier,
@@ -20,31 +19,167 @@ following form:
 	\end{array}
 	\end{smathpar}
 
+We now define the execution state $\E$ 
+as a tuple $(\EffSoup,\visZ ,\soZ)$. The \emph{Effect Soup} $\EffSoup$ represents the set of all
+effects produced by all application instances, and  $\visZ$ and
+$\soZ$ respectively stand for the visibility and session order relation
+between them. The reduction that we will define is of the form
+\begin{smathpar}
+(\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E', \eff)
+\end{smathpar}
+which can be interpreted as the step on the execution state $\E$, where a replica
+that contains a local set of effects $V$, executes an operation $op$
+which is the $i$'th request from the session $s$. During this reduction step 
+by producing a new effect $\eff$, the replica has taken the execution to
+a new state $\E'$.
+
+
+%=================================================
 %--------- Definitions to be used in the semanrics
+%=================================================
 \subsection{Preliminaries}
 \input{Sections/core_operational_semantics}
+
+
+%=================================================
 %--------- The operational semantics
-\newpage
+%=================================================
 \subsection{Core Operational Semantics}
-In this section we present the operational semantics of our consistency
-enforcement mechanism.
+
+%--- The Figure Containing the Rules
 \input{Sections/core_semantics}
 
+%--- Section intro
+In this section we present the reduction reules, representing our
+consistency preservation technique.
+Figure \ref{fig:semantics} represents the set of rules defining the
+auxiliary relation ($\hookrightarrow$), and reduction relation 
+($\rightarrow$) over executions. The latter is parametrized over a set $V$,
+that stands for the set of effects that were present at the replica
+taking the step. Obviously $V$ must be a subset of all effects produced
+in the system at any moment, however, there is no other restrictions,
+since we only assume eventual consistency in the underlying store.
+
+%--- The [OPER] rule
+Let's now go over the auxiliary reduction 
+\rulelabel{oper},
+that represtns the procedure of producing a new effect $\eff$, by witnessing a set
+of effects $S$. 
+We formally define an effect to be a tuple $(s,op,v)$, representing the
+session and the operation name that $\eff$ is the result of its execution and the value
+that the replica returned as a responce to the operation.
+The rule explains how the execution state changes after producing an
+effect at a replica. Specifially, in the new state, the effect soup
+$\EffSoup'$ must
+now contain the newly created effect $\eff$, and the relations $\visZ'$
+and $\soZ'$ must capture the fact that the set $S$ was made
+visible to $\eta$, and all effects in the initial state from the same
+sesison, are in session order with $\eff$.
+
+
+%--- Why there is two different rules for (->) relation
+Now we explain the rules for reduction relation $(\xrightarrow{V})$,
+namely  \rulelabel{vis exec} and
+\rulelabel{non-vis exec}, which represent taking a step respectively
+under a waiting and under a non-waiting contract. The seperation in
+these rules, comes from the inherent differences in the enforcement of
+waiting and non-waiting contracts. In waiting contracts, where the last
+($k$'th) edge is $\soZ$, we are simply required to make sure that the
+set of dependency effects, is
+present at the replica, before execution the operation and if not, block
+the operation temporarily. In other words, these contracts only specify
+the \emph{minimum} set of effects that must be made visible to an
+operation. On the other hand, the non-waiting contracts, that end with a
+$\visZ$ edge, allow us to pick any subset of the  effects at the
+replica and make them visible to the operation as long as it does not
+violate the contracts' logical formula. In an extreme case, we can
+always pick the empty set and make it visible to operations, which
+would trivially guarantee the presevation of the contract, since no effect
+would satisfy its left hand side. 
+
+%--- Explaining the operational rules
+The precondition of both reduction rules, include an auxiliary
+reduction, explaining the changes that occur in the execution state $\E$
+when an operation is performed. Note that for non-waiting contracts
+(i.e. when $vis\subseteq r_k$), 
+not all effects available at the replica are shown to the operation, but
+only a subset of it $V'$ is shown, which is defined to be the  maximally
+closed subset of $V$ under $R$.
+Moreover, both rules contain
+$R_V^{-1}(\eff)\subseteq V$ which is basically guarantees the
+preservation of the required consistency level by taking the step. Note
+that for non-waiting executions, this is trivially satisfied, since the
+subset $V'$ that is made visible to the contract, by definition includes
+the inverse of relation $R$. However, conisdering the stepwise
+definition of $R_V^{-1}$, this condition requires the presence of
+$\soZ^{-1}(\eff)$ at the replica for waiting operations, which can be
+interpreted as \emph{blocking} the operation temporarily.
+
+
+
+
+
+
+
+%=================================================
 %--------- Theorem on correctness of enforcement
-\newpage
+%=================================================
 \subsection{Soundness}
+Here, we present a theorem showing that the contract would never be
+violated, if the store is in a consistent state and takes a reduction
+step. We start by defining what we mean a consistent state of the
+execution: 
 \input{Sections/subsec_theorems}
+
+
+%=================================================
 %--------- Theorem on maxVis and minWait
-\newpage
+%=================================================
 \subsection{Optimality}
-\subsubsection{Maximal Visibility Theorem}
+Here we will present two theorems, regarding the optimality of our
+approach. Firstly, we show that there
+cannot be a larger set to be made visible to an operation than what
+our reduction rules specify. Moreover, we also prove the liveness property
+of our semantics, which guarantees that all replicas will take a step,
+given the proper set of effect. Considering the eventual delivery of all
+updates that is guaranteed by the underlying store, the theorem shows that the system would never get
+stuck.
 \input{Sections/subset_maximality}
-\subsubsection{Minimal Wait Theorem}
 \input{Sections/subset_minimalwait}
 
-%--------- Explaination of how the approach can be egeneralized for all contracts
-%and for multiple requested levels of consistency
+
+%=================================================
+%--------- How it can be generalized for all contracts
+%=================================================
 \subsection{Generalization}
 \label{subsec:generalization}
+Here we explain how our idea can be easily extended to cover all
+contracts (we previously omitted the conjunction of props). Moreover, we
+explain how multiple levels of consistency can be maintained
+simultaneously. 
 
+Firstly, we argue that since all props, basically specify the
+dependencies of operations, therefore the dependencies defined by a
+conjunct of props is simply the union of their individual dependencies.
+Therefore, by replacing the single premise $R_V^{-1}(\eta) \subseteq V$
+in the operational rules with the following conjunction, we extend the
+dependency checks, to make sure that ALL contracts are preserved, before
+taking a step:
+\begin{smathpar}
+\bigwedge_{1 \leq i \leq k} (R_i)_V^{-1}
+\end{smathpar}
+
+Moreover, we can extend the visible set $V$ of the rules, to a sequence
+of sets, each corresponding a consistency level: $V_{\psi_i}$. Now by
+simply extending the notion of operations to also include a contract, we
+can derive the following form of execution steps: 
+\begin{smathpar}
+(\E,op_{<s,i,\psi>}) 
+    \;\xrightarrow{V_{\psi}}\;
+  (\E',\eff) 
+\end{smathpar}
+This represents our implementation, in the sense that all operations
+work on a subset of available effects at the replica. The subset, is
+maintained according to the contract assosiated with the operation, and
+the is guaranteed to preserve the consistency requirements. 
 

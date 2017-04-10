@@ -1,3 +1,18 @@
+Here, we explain our detailed operational semantics, to maintain
+multi-consistent replicated stores. We assume a given function from
+operation names, to consistency contracts: $\Psi :  op \mapsto \psi $
+and for simplicity reasons (again, it can be easily generalized) we
+consider contracts made by a single prop:
+\begin{smathpar}
+\Psi(op)=\forall (a,b). a \xrightarrow{R_{op}} \Rightarrow a \xrightarrow{vis} b. 
+\end{smathpar}
+For a given realtion $R$ we also define $R[m]$ to refer to the m'th
+relation seed in $R$:
+\begin{smathpar}
+(r_1;r_2;...;r_m;...;r_k)[m] = r_m
+\end{smathpar}
+
+
 In this section we introduce the complete behavior of our multi-consistenct shim layer as a new set of operational semantics. 
 The rules are parametrized over a given map of operation names to
 contracts, $\Psi :  op
@@ -24,7 +39,6 @@ dependent effects arrive.
 \\
 Following are the formal definitions: 
 \\
-\input {Sections/def_large_semantics}
-\input{Sections/semantics}
+\input{Appendix/semantics}
 
 

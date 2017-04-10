@@ -13,20 +13,23 @@ define: $R(a,b) \iff a \in R_{E.A}^{-1}(b)  $)
 \end{definition}
 
 \begin{theorem}
-For all operation executions of the form,  
-\begin{smathpar}
-(\E,op_{<s,i>}) 
-    \;\xrightarrow{V}\;
-  (\E',\eff) 
-,\end{smathpar}
-
-if $V$ is $\psi$-consistent then $(V\cup\{\eta\})$ is also
-$\psi$-consistent.
-\begin{proof}
-\input{Sections/correctness_proof}
-\end{proof}
+\label{theorem:one}
+For all reduction steps, 
+$
+\; (\E,op_{<s,i>}) 
+    \xrightarrow{V}
+  (\E',\eff)  
+$,
+if $V$ is $\psi$-consistent under $\E$, then $(V\cup\{\eta\})$ is also
+$\psi$-consistent under $\E'$.
 \end{theorem}
-
+\begin{proof}
+The proof is followed by the fact that premise of both execution steps contain 
+$R_V^{-1}(\eta)\subseteq V$, which states that the set made visible to
+the operation, must not violate the contract $\psi$. A more detailed proof can
+be found in appendix \ref{app:proof1}
+\\
+\end{proof}
 
 
 

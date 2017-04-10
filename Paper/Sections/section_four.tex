@@ -17,24 +17,25 @@ following form:
 	\begin{smathpar}
 	\begin{array}{lcc}
 		\psi = \forall (a,b). a \xrightarrow{R} b  \Rightarrow a
-		\xrightarrow{vis} b, & \spc & R=r_1;r_2;...;r_k \\
+		\xrightarrow{\visZ} b, & \spc & R=r_1;r_2;...;r_k \\
 	\end{array}
 	\end{smathpar}
 
 The operational semantics is defined via a small-step relation over \emph{execution
 states}, which are tuples of the form $\E=(\EffSoup,\visZ ,\soZ)$.
-$\EffSoup$ or the \emph{effect soup} represents the set of all
-effects produced in the system, and  $\visZ$,
-$\soZ$ $\subseteq \EffSoup \times \EffSoup$, stand for, respectively the visibility and session order relation
+The \emph{effect soup} $\E.\EffSoup$, represents the set of all
+effects produced in the system, and  $\E.\visZ$,
+$\E.\soZ$ $\subseteq \EffSoup \times \EffSoup$, stand for, respectively the
+visibility and session order relations
 between such effects. The reduction step that will be defined, is of the form
 \begin{smathpar}
 (\E,\op_{<s,i>}) \;\xrightarrow{\V}\; (\E', \eff),
 \end{smathpar}
-which can be interpreted as the reduction caused by a replica containing a local 
+which can be interpreted as a reduction caused by a replica with a local 
 set of effects $\V$, after it executes an operation
 $\op$, which is the $i$'th request from the session $s$. 
 During this reduction step a new effect $\eff$ is produced and added to
-the effect soup, and the relations $\visZ$ and $\soZ$ are also updated
+the effect soup, with new relations $\visZ$ and $\soZ$ that are updated
 accordingly.
 
 
@@ -54,7 +55,7 @@ accordingly.
 \input{Sections/core_semantics}
 
 %--- Section intro
-In this section we present the reduction reules, representing our
+In this part we present the reduction reules, representing our
 consistency preservation technique.
 Figure \ref{fig:semantics} represents the set of rules defining the
 auxiliary relation ($\hookrightarrow$), and reduction relation 

@@ -2,15 +2,17 @@
 %=========================================================================
 %
 \section{Semantics}
-In this section we explain the core operational semantics of our
-consistency enforcement algorithm. 
-Our approach is complete for the specification language defined earlier,
-and extends the key-value store to multiple different consistency
-environments. Here for simplicity reasons, we present the semantics 
-parametrized over a single contract,
-however as we explain in section \ref{subsec:generalization}, it can be easily
-generalized to cover all contracts and multiple consistency levels. In
-the rest of this section we will assume a given contract $\psi$ of the
+In this section we formalize our consistency enforcement algorithm with an
+operational semantics, which is also a high-level abstraction of our
+tool \tool.
+The proposed approach is complete for the specification language defined
+in \ref{subsec:spec_lang}
+and extends the underlying key-value store to a multi-consistent shim
+layer. Here for simplicity reasons we present an operational semantics 
+parametrized over a contract with a single prop. However, as we explain
+in section \ref{subsec:generalization}, the rules can be easily
+generalized to cover multiple consistency levels, each specified by an
+arbitrary contract. Therefore, in the rest of this section we will assume a given contract $\psi$ of the
 following form:
 	\begin{smathpar}
 	\begin{array}{lcc}
@@ -19,19 +21,21 @@ following form:
 	\end{array}
 	\end{smathpar}
 
-We now define the execution state $\E$ 
-as a tuple $(\EffSoup,\visZ ,\soZ)$. The \emph{Effect Soup} $\EffSoup$ represents the set of all
-effects produced by all application instances, and  $\visZ$ and
-$\soZ$ respectively stand for the visibility and session order relation
-between them. The reduction that we will define is of the form
+The operational semantics is defined via a small-step relation over \emph{execution
+states}, which are tuples of the form $\E=(\EffSoup,\visZ ,\soZ)$.
+$\EffSoup$ or the \emph{effect soup} represents the set of all
+effects produced in the system, and  $\visZ$,
+$\soZ$ $\subseteq \EffSoup \times \EffSoup$, stand for, respectively the visibility and session order relation
+between such effects. The reduction step that will be defined, is of the form
 \begin{smathpar}
-(\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E', \eff)
+(\E,\op_{<s,i>}) \;\xrightarrow{\V}\; (\E', \eff),
 \end{smathpar}
-which can be interpreted as the step on the execution state $\E$, where a replica
-that contains a local set of effects $V$, executes an operation $op$
-which is the $i$'th request from the session $s$. During this reduction step 
-by producing a new effect $\eff$, the replica has taken the execution to
-a new state $\E'$.
+which can be interpreted as the reduction caused by a replica containing a local 
+set of effects $\V$, after it executes an operation
+$\op$, which is the $i$'th request from the session $s$. 
+During this reduction step a new effect $\eff$ is produced and added to
+the effect soup, and the relations $\visZ$ and $\soZ$ are also updated
+accordingly.
 
 
 %=================================================

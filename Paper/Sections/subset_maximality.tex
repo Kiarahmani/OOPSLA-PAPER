@@ -4,7 +4,7 @@
 %
 \begin{theorem}
 \label{theorem:two}
-For all operation executions of the form: 
+For all operation executions 
 $(\E,op_{<s,i>}) 
     \;\xrightarrow{V}\;
   (\E',\eff) 
@@ -13,14 +13,16 @@ the set of effects made visible to $\eta$ is maximal. i.e. for all
 execution states $\E''$ such that:
 $(\E,op_{<s,i>})\;\xrightarrow{V}\;(\E'',\eff)$
 then    
-$\small (\E''.vis^{-1}(\eta)) \subseteq
-(\E'.vis^{-1}(\eta))$
+$\small (\E''.\visZ^{-1}(\eta)) \subseteq
+(\E'.\visZ^{-1}(\eta))$
 \end{theorem}
 \begin{proof}
 The proof is directly followed by the fact that the subset of effects
-made visible to each operation is either $V$ itself, or $\left \lfloor V
-\right \rfloor_V$ which is by definition maximal. The detailed proof can be found in appendix
-\ref{appendix:proofs} \\
+made visible to each operation is either $V$ itself (in the case of
+waiting contracts), or $\left \lfloor V
+\right \rfloor_V$ which is by definition maximal (in the case of
+non-waiting contracts). The detailed proof can be found in appendix
+\ref{app:proof2}. \\
 \end{proof}
 %%%
 

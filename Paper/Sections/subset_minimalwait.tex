@@ -10,14 +10,15 @@ exists ($S\subseteq E.A$) such that:
 \auxred{S} {(\E,op_{<s,i>})} {} {(\E',\eff)} \spc \wedge \spc (\mathtt{S \cup \{\eta\} \; is 
 \;} \psi \mathtt{-consistent \; under \;} E' )  
 \end{smathpar}
-then there exists an execution state $E''$, $\eff'$ and $V\subseteq E.A$ such that:
+then there exist  $E''$, $\eff'$ and $V\subseteq E.A$ such that:
 $((\E,op_{<s,i>})\;\xrightarrow{V}\;(\E'',\eff'))$
 \end{theorem}
 \begin{proof}
 The proof is given by choosing set $V$ to be equal to $S$, and then
 considering two cases, where either $S$ or $\left \lfloor S \right
-\rfloor_S$ is shown to operations, if the contract is respectively
-waiting and non-waiting.
+\rfloor_S$ are made visible to operations, if the contract is respectively
+waiting and non-waiting. In both cases, all premises of taking an step
+are satisfied.
 A detailed proof can be found in appendix
 \ref{app:proof3}.
 \\

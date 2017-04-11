@@ -2,6 +2,7 @@
 %=========================================================================
 %
 \section{Semantics}
+\label{sec:semantics}
 In this section we formalize our consistency enforcement algorithm with an
 operational semantics, which is also a high-level abstraction of our
 tool \tool.
@@ -162,8 +163,8 @@ of our semantics, which guarantees that all replicas will take a step,
 given the proper set of local effects. Considering the eventual delivery of all
 updates, which is guaranteed by the underlying store, this theorem
 guarantees  that our system would never get permanently stuck. 
-\input{Sections/subset_maximality}
-\input{Sections/subset_minimalwait}
+\input{Sections/subsec_maximality}
+\input{Sections/subsec_minimalwait}
 
 
 %=================================================
@@ -185,19 +186,43 @@ different operations simultaneously. We assume an arbitrary contract
 $\psi_{op}$ for every user-defined operation $op$, and explain how to
 modify our system model to capture all of them.
 
-Firstly, we argue that since all props in our specification language,
-simply specify a type of
-dependency for  operations, therefore the dependencies defined by a
-conjunct of props, are in fact the union of their individual dependencies.
-Therefore, by replacing the single premise $R_V^{-1}(\eta) \subseteq V$
-in the operational rules with the following conjunction, we extend the
-dependency checks of the system, to make sure that the dependencies
-defined  by {\bf all} props are present, before executing an operation:
+Firstly, as we mentioned earlier, all props in the specification language,
+either put a maximal (when they are non-waiting) or a minimal (when they
+are waiting) bound on the subset of effects to be made visibe to each
+opreation. 
+This simply means that when the system is given a conjunction
+of props, it should define the subset in a way that would not violate
+\emph{any} of them. 
+Therefore, by a few modifications we can extend the system to support
+all contracts. Namely, the single premise $R_V^{-1}(\eta) \subseteq V$
+in the operational rules should be replaced with the following
+conjunction: 
 \begin{smathpar}
-\bigwedge_{1 \leq i \leq m} (R_i)_V^{-1}
+\bigwedge_{1 \leq i \leq m} (R_i)_V^{-1}\subseteq V
 \end{smathpar}
+Similarly, the definition of the maximal closed subset of local effects
+must also be modified to a subset that is closed under \emph{all} given
+relations. Finally, care must be taken when deciding which of the
+reduction steps must be taken on the reduction rule to pick when there
+are multiple props: the \nonvisrule should be taken if \emph{all} the
+given props are waiting, and otherwise \visrule takes place.
 
-Moreover, we can extend the visible set $V$ of the rules, to a sequence
+
+\begin{comment} 
+% I am not sure if we should include the formal definition here. It is
+% unnecessarily complex
+\begin{smathpar}
+\left \lfloor S \right \rfloor_V = S' \spc \iff \spc S'
+\subseteq S \; \wedge \;
+\bigwedge(R_i)_V^{-1}(S') \subseteq S' \; \wedge \; 
+\not\exists
+S''.(\bigwedge ((R_i)_V^{-1}(S''))\subseteq S''\wedge |S''|>|S'|)
+\end{smathpar}
+\end{comment}
+
+
+
+Moreover, we can extend the local effect set $V$ of the rules, to a sequence
 of sets, each corresponding a consistency level for an operation
 $V_{op}$. Now we can define the modified form of execution steps as
 follow:

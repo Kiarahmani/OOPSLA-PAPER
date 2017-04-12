@@ -60,7 +60,7 @@ operation.
 \subsection{Degree of Dependency Presence}
 In the above description of our consistency management tool, the notion
 of \emph{the presence of the depency set} is treated as a true/false
-property, that is checked before allowing an effect to enter the cache.
+property, that is checked before allowing an effect enter the cache.
 However, as an astute reader might have noticed, a naive implementation
 of this idea, could result in poor performance. That is because
 contracts in our specification language can be arbitrarily large and
@@ -75,11 +75,11 @@ marking the effects with a
 number, that represents how far the presence if its dependencies has
 been checked so far. 
 The $DDP$ of an effect according to a relation $R=r_1;r_2;...;r_k$ and a
-given set of local effects $V$ is defined as the length of the longest
+given set of effects $V$ is defined as the length of the longest
 prefix of $R$, under which $V\cup \{\eff\}$ is consistent,
 that is,
 \begin{smathpar}
-DDP_V(\eff) = m \iff (r_{1};r_2;...;r_{m})_V^{-1}(\eff)\subseteq V
+DDP_V(\eff) = m \iff (r_{1};r_2;...;r_{m})^{-1}(\eff)\subseteq V
 \end{smathpar}
 For example, $DDP_V(\eff)=0$  means that $\eff$ has just arrived to the
 replica and no degree of its dependencies are checked yet, and
@@ -90,8 +90,8 @@ $DDP_i$ to refer to the set of all effects whose $DDP$ value is equal to
 $i$.
 
 This way, by periodically refreshing the $DDP$ of effects, the porcess
-of moving the effects from the replica to the cache is recorded as the
-new dependencies arrive, and as we will explain shortly, we can totally avoid 
+of moving effects from the replica to the cache is recorded while the
+the dependencies arrive, and as we will explain shortly, we can totally avoid 
 computing closures of relations and redundant computations at
 replicas by a memoization technique. 
 Finally, note that (following the discussion in the previous section) we require 
@@ -119,7 +119,8 @@ explaining a replicas' behavior when certain events occur:
 \item {\bf Remote Effect Arrival:} When a new remote effect arrives to the
 replica, it is simply added to the set of local effects and 
 its $DDP$ is initially set to 0. Since the length of the
-given contract is 3, as we will see shortly the effect requires two step
+given contract is 3, as we will see shortly the effect requires two
+steps
 of $DDP$ refreshes, before it can enter the cache.
 \item {\bf Operation Submission: } Since the given contract is a waiting
 type, the replica must now make sure that all effects from ealier
@@ -129,8 +130,9 @@ block the operation temporarily. The operation can proceed and
 wtiness \emph{all} effects at the replica, after the mentioned effects enter
 the cache.
 \item {\bf Cache Refresh: } The replica, must periodically perform 
-cache refreshes and move effects whose complete dependencies are present (i.e.
-are in $DDP_2$) to the cache. 
+cache refreshes and move effects from $DDP_2$ to the cache. As explained
+we know that the complete set of dependencies for these effects are
+already present. 
 \item {\bf DDP Refresh: } At this periodic step, $DDP$ of effects are
 updated by checking if they can be given a larger one. 
 At each step the $DDP$ of an effect $\eff$ is increased from $i$ to $i+1$ if
@@ -148,8 +150,8 @@ closure, for example assume the given relation is $\xrightarrow{so;vis^*;so}$,
 we can avoid all recursive computations, by allowing an effect $\eff$
 to go from $DDP_1$ to $DDP_2$, only if $vis^{-1}(\eff)$ is present in
 $DDP_1$ {\bf and} in $DDP_2$. This way, we are sure that the same
-condition was checked for all effects in $vis^{-1}(\eff)$ before they
-entered $DDP_2$, which brings us the desired behavior, whitout any
+condition was also checked for all effects in $vis^{-1}(\eff)$ before they
+entered $DDP_2$, which brings us the desired behavior, without any
 computation involving closures.
 
 

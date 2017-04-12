@@ -67,32 +67,33 @@ contracts in our specification language can be arbitrarily large and
 might contain closures of relations, computing the inverse of which can
 become very large. A naive implementation that drops all the computations
 done for a failed dependency check of an effect, results in redunencies
-the next time the same property is being validated 
-and is not practically reasonable.
+the next time the same property is being validated, which is not practically reasonable.
 
 To address the mentioned difficulties, we introduce the \emph{Degree of
 Dependency Presence}, $DDP$, that extends the above binary property, by
 marking the effects with a
-number, that represents how far the dependencies of that effect are
-present.
-The $DDP$ of an effect accoring to a relation $R=r_1;r_2;...;r_k$ and a
+number, that represents how far the presence if its dependencies has
+been checked so far. 
+The $DDP$ of an effect according to a relation $R=r_1;r_2;...;r_k$ and a
 given set of local effects $V$ is defined as the length of the longest
-suffix subsequence of $R$, under which $V\cup \{\eff\}$ is
-safe to be shown to the oeprations,
-i.e. 
+prefix of $R$, under which $V\cup \{\eff\}$ is consistent,
+that is,
 \begin{smathpar}
-DDP_V(\eff) = m \iff (r_{k-m+1};...;r_{k-1})_V^{-1}(\eff)\subseteq V
+DDP_V(\eff) = m \iff (r_{1};r_2;...;r_{m})_V^{-1}(\eff)\subseteq V
 \end{smathpar}
-For example $DDP_V(\eff)=1$  means $\eff$ has just arrived to the
+For example, $DDP_V(\eff)=0$  means that $\eff$ has just arrived to the
 replica and no degree of its dependencies are checked yet, and
-$DDP_V(\eff)=k$ means that all degrees of $\eff$'s dependencies are
-present and it is safe now to add it to the cache.
+$DDP_V(\eff)=k-1$ means that all of $\eff$'s dependencies according to
+the truncated relation are
+present and it is safe now to add it to the cache. We use the notation
+$DDP_i$ to refer to the set of all effects whose $DDP$ value is equal to
+$i$.
 
 This way, by periodically refreshing the $DDP$ of effects, the porcess
 of moving the effects from the replica to the cache is recorded as the
 new dependencies arrive, and as we will explain shortly, we can totally avoid 
-computing closures of relations and also redundant computations at
-replicas by a simple memoization technique. 
+computing closures of relations and redundant computations at
+replicas by a memoization technique. 
 Finally, note that (following the discussion in the previous section) we require 
 the dependencies to be looked for, in the replica and the cache
 respectively, for the  waiting and non-waiting contracts.
@@ -110,14 +111,14 @@ using an example. The formal operational semantics of this approach can be
 found in appendix \ref{appendix:large_semantics}.
 
 Let's assume we are given a contract $\psi=\forall (a,b). a
-\xrightarrow{\soZ;\visZ*;\soZ}b \Rightarrow a \xrightarrow{\visZ} b$, and
+\xrightarrow{\soZ;\visZ;\soZ}b \Rightarrow a \xrightarrow{\visZ} b$, and
 we want replicas to maintain consistent caches according to this
 contract. We explain our approach by
 explaining a replicas' behavior when certain events occur: 
 \begin{itemize}
 \item {\bf Remote Effect Arrival:} When a new remote effect arrives to the
 replica, it is simply added to the set of local effects and 
-its $DDP$ is initially set to 1. Since the length of the
+its $DDP$ is initially set to 0. Since the length of the
 given contract is 3, as we will see shortly the effect requires two step
 of $DDP$ refreshes, before it can enter the cache.
 \item {\bf Operation Submission: } Since the given contract is a waiting
@@ -125,25 +126,31 @@ type, the replica must now make sure that all effects from ealier
 operations of the same session, are present in the \emph{cache} and if
 not, 
 block the operation temporarily. The operation can proceed and
-wtiness all effects at the replica, after the mentioned effects enter
+wtiness \emph{all} effects at the replica, after the mentioned effects enter
 the cache.
 \item {\bf Cache Refresh: } The replica, must periodically perform 
 cache refreshes and move effects whose complete dependencies are present (i.e.
-their $DDP$ is 3) to the cache. 
+are in $DDP_2$) to the cache. 
 \item {\bf DDP Refresh: } At this periodic step, $DDP$ of effects are
 updated by checking if they can be given a larger one. 
 At each step the $DDP$ of an effect $\eff$ is increased from $i$ to $i+1$ if
-all effects in $r_i^{-1}(\eff)$ already have $DDP$ equal to $i+1$.
-In this example, an effect $\eff$ that has the initial $DDP$ value 1, can get
-the value 2, only if all effects in  $\visZ^{-1}(\eff)$ are already
-present  and have $DDP$ value of 2. 
-By requiring all effects of the set $\visZ^{-1}(\eff)$ 
- to have the $DDP$ value of 2 before update the value of $\eff$, we make sure that
-$\visZ^{-1}$ of all such effects also already have the $DDP$ value 2, a
-property that is recursively satisfied for all effects in $(\visZ^*)^{-1}(\eff)$.
-This way, we achieve the desired behavior, without any computation
-involving the closures of relations.
+all effects in $r_i^{-1}(\eff)$ already have $DDP$ value at least equal to $i$.
+In this example, an effect $\eff$ that has the initial $DDP$ value 0, can get
+the value 1, only if all effects in  $\soZ^{-1}(\eff)$ are already
+present at the replica which means they have $DDP$ value of at least 0.
+Similarly, effects that have the $DDP$ value of 1 can get the value 2,
+if all effects in their $\visZ^{-1}$ set, have the $DDP$ value of
+minimum 1. At this point, effects have reached the value 2, which means
+they can be now moved to the cache at the next cache refresh.
 \end{itemize}
+Note that, in case one of the elements of the given relation is a
+closure, for example assume the given relation is $\xrightarrow{so;vis^*;so}$,
+we can avoid all recursive computations, by allowing an effect $\eff$
+to go from $DDP_1$ to $DDP_2$, only if $vis^{-1}(\eff)$ is present in
+$DDP_1$ {\bf and} in $DDP_2$. This way, we are sure that the same
+condition was checked for all effects in $vis^{-1}(\eff)$ before they
+entered $DDP_2$, which brings us the desired behavior, whitout any
+computation involving closures.
 
 
 

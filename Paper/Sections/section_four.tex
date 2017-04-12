@@ -172,40 +172,40 @@ guarantees  that our system would never get permanently stuck.
 %=================================================
 \subsection{Generalization}
 \label{subsec:generalization}
-We finish this section by explaining how our ideas can be easily
-extended to cover an arbitrary
+We finish this section by extendeding our ideas in two dimentions. 
+We will first explain how to handle an arbitrary
 contract $\psi$ of the following form:  
 \begin{smathpar}
 \psi = \pi_1 \wedge \pi_2 \wedge ... \wedge \pi_m \qquad \qquad 
 \pi_i = \forall (a,b). a \xrightarrow{R_i} b \Rightarrow a
-\xrightarrow{vis} b
+\xrightarrow{\visZ} b
 \end{smathpar}
-Moreover, we also
-explain how multiple levels of consistency, can be maintained for
-different operations simultaneously. We assume an arbitrary contract
-$\psi_{op}$ for every user-defined operation $op$, and explain how to
-modify our system model to capture all of them.
+Later, we will
+explain how to maintain multiple levels of consistency simultaneously,
+each of which is defined for a different operation name. We will assume an arbitrary contract
+$\psi_{\op}$ for every user-defined operation $\op$, and explain how to
+modify our system model to preserve all of them.
 
-Firstly, as we mentioned earlier, all props in the specification language,
+To begin with, as we mentioned earlier, all propositions in our specification language,
 either put a maximal (when they are non-waiting) or a minimal (when they
-are waiting) bound on the subset of effects to be made visibe to each
+are waiting) bound on the subset of local effects to be made visibe to each
 opreation. 
 This simply means that when the system is given a conjunction
-of props, it should define the subset in a way that would not violate
+of propositions, it should define the subset in a way, so it would not violate
 \emph{any} of them. 
 Therefore, by a few modifications we can extend the system to support
-all contracts. Namely, the single premise $R_V^{-1}(\eta) \subseteq V$
-in the operational rules should be replaced with the following
+all contracts. Firstly, the single premise $R_V^{-1}(\eta) \subseteq V$
+in the reduction step rules should be replaced with the following
 conjunction: 
 \begin{smathpar}
 \bigwedge_{1 \leq i \leq m} (R_i)_V^{-1}\subseteq V
 \end{smathpar}
-Similarly, the definition of the maximal closed subset of local effects
+Secondly, the definition of the maximal closed subset of local effects
 must also be modified to a subset that is closed under \emph{all} given
-relations. Finally, care must be taken when deciding which of the
-reduction steps must be taken on the reduction rule to pick when there
+relations and finally, care must be taken when deciding which of the
+reduction steps must be taken when there
 are multiple props: the \nonvisrule should be taken if \emph{all} the
-given props are waiting, and otherwise \visrule takes place.
+given props are waiting and otherwise \visrule must take place.
 
 
 \begin{comment} 
@@ -221,21 +221,22 @@ S''.(\bigwedge ((R_i)_V^{-1}(S''))\subseteq S''\wedge |S''|>|S'|)
 \end{comment}
 
 
-
-Moreover, we can extend the local effect set $V$ of the rules, to a sequence
-of sets, each corresponding a consistency level for an operation
-$V_{op}$. Now we can define the modified form of execution steps as
+Moreover, for modifying the system to handle multiple contracts
+simultaneously, we can
+extend the local effect set $V$, to a sequence
+of sets $V_{\op_i}$, each maintaning  the consistency level for an
+operation type $\op_i$. Now we define the modified form of execution steps as
 follow:
 \begin{smathpar}
-(\E,op_{<s,i>}) 
-    \;\xrightarrow{V_{op}}\;
+(\E,\op_{<s,i>}) 
+    \;\xrightarrow{V_{\op}}\;
   (\E',\eff) 
 \end{smathpar}
-The premises of the rules should also be altered to only consider the
-specific local set of effects $V_{op}$, for each execution of operation
-$op$.
+The local effect set $V$ must also be replaced with $V_{\op_i}$ in the 
+premises of the reduction rules, so each operation of type $\op_i$ would
+only witness the associated subset for its own consistency requirements.
 This abstractly represents our implementation, in the sense that all operations
-work on a subset of available effects at the replica. The subset, is
+work only on a specific subset of available effects at any replica. The subset, is
 maintained according to the contract assosiated with each operation, and
 is guaranteed to preserve the consistency requirements following the
 theorems of sections \ref{subsec:sound} and \ref{subsec:opt}. 

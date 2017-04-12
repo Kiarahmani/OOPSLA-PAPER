@@ -26,8 +26,8 @@
 % \newcommand{\npp}{\thehno \stepcounter{hno}}
 % \newcommand{\mpp}{\thegno \stepcounter{gno}}
 
-\newcommand{\nonvisrule}{\rulelabel{non-vis exec}$\;$}
-\newcommand{\visrule}{\rulelabel{vis exec} $\;$}
+\newcommand{\nonvisrule}{\rulelabel{non-vis exec}\hspace{0.67mm}}
+\newcommand{\visrule}{\rulelabel{vis exec}\hspace{0.67mm}}
 
 \newcommand{\stretcharraybig}{\renewcommand*{\arraystretch}{1.25}}
 \newcommand{\cureff}{\hat{\eta}}
@@ -89,6 +89,7 @@
 \newcommand{\hboZ}{\N{\textsf{hbo}}}
 \newcommand{\txnZ}{\N{\textsf{txn}}}
 \newcommand{\txn}[2]{\txnZ\{#1\}\{#2\}}
+\newcommand{\trunc}[1] {\N{\textsf{trunc\vspace{0.55mm}}}(#1)}
 \newcommand{\sameobj}[2]{\N{\textsf{sameobj}(#1,#2)}}
 \newcommand{\sameobjZ}{\N{\textsf{sameobj}}}
 \newcommand{\sametxn}[2]{\N{\textsf{sametxn}(#1,#2)}}

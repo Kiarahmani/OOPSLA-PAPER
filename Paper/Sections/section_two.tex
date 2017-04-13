@@ -1,7 +1,105 @@
 \newpage
-\section{Motivation}
-\label {sec:motiv}
-\input{Figures/fig_simple_java}
+%==========================================================
+%--- What programs are and how they are written in our tool
+%==========================================================
+\section{System Model}
+In this section, we formally describe our system model, including the
+notions of distributed applications and replicated data objects,
+behavioral properties of eventually consistent data stores and
+consistency guarantees.
+
+
+A data store in our system model is a collection of \emph{replicas}
+(\#1,\#2,...),
+each of which maintains an instance of a set of  replicated \emph{data
+object} ($x$,$y$,...).
+The data objects,
+which are defined by application developers, contain a \emph{state}
+($v$,$v'$,...) and
+are equipped with a set of \emph{operations} ($op$,$op'$,...), whose
+type is either
+read-only or effectful. 
+The former type refers to the operations that just request reads from the
+store, which are responded with an instance of the requested objects' state and the
+latter refers to the operations that modify an objects' state by generating
+an \emph{update effect} ($\eff$,$\eff'$,...).  Update effects or simply effects
+are defined by
+developers and are associated with an \emph{apply} function that enables
+the asynchronous modification of the objects' state at different replicas.
+The effect generated after an operation is submitted to a replica, is
+simply written in the data-store, that guarantees
+their eventual delivery to all the replicas. Each recipient replica then
+uses the apply function to modify its local instance of the objects'
+state  (Fig.\ref{fig:system_model}).
+
+Observe that there is no direct synchronization between replicas when an
+operation is being executed, which means there can be conflicting
+updates on an object, that are generated at different replicas
+concurrently. 
+We do not bound the system to a particular
+conflict resolution strategy but instead require developers to implement
+their own desired approach within the apply function. This system model
+admits all the inconsistencies associated with eventual consistency, and
+as we will explain in section \ref{sec:motiv}, our tool equips users
+with infrastructures to specify and prevent all those inconsistencies.
+
+Clients interact
+with the store by invoking operations on objects, where a \emph{session} is
+the sequence of operations invoked by a particular client. Consequently,
+operations
+(and update effects) can be uniquely identified by
+their invoking \emph{session id} and their \emph{sequence number} in
+that particular session. The data store is typically accessed by a large
+number of clients concurrently and as a result of the load balancing
+regulations of the store, operations might be routed to different replicas,
+even if they are from the same session (Figures \ref{fig:sys_model1} and
+\ref{fig:sys_model3}).
+
+We new define two relation over effects created in the store.
+\emph{Session order} ($\xrightarrow{\soZ}$) is an irreflexive, transitive relation that relates
+effects from the same session following the  integer \emph{smaller than} relation
+over their sequence numbers.
+Finally, \emph {visibility} is an
+irreflexive and assymetric relation, which is written as ($\eff
+\xrightarrow{\visZ} \eff'$) if at the generation time of $\eff'$ in a
+replica, $\eff$ is
+already arrived and applied at that replica (in Fig.\ref{fig:sys_model3} for example, for $\eff'$ (the effect of executing
+op') we will have $\eff \xrightarrow{\visZ} \eff'$, since $\eff$ is
+already present at the replica4, when op' is submitted).
+\input{Figures/fig_system_model}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%==========================================================
+\newpage
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

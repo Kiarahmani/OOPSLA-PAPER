@@ -1,159 +1,243 @@
-\section{Algorithm}
 %
-%----- why we need this section: what we offered is abstract and
-%implementing it is not obvious
-In this section, we present a detailed and practical implementation
-strategy of the operational semantics presented in section \ref{sec:semantics},
-where we introduced an abstract outline of our consistency
-preservation technique. Here we realize our ideas by equipping 
-each replica with a \emph{cache}, that is guaranteed to
-preserve a specified consistency level. This requires a seperation
-between the local effects that are in the replica and effects that have
-been entered the cache, even though the former is a subset of the latter. 
+%=========================================================================
+%
+\section{Semantics}
+\label{sec:semantics}
+In this section we formalize our consistency enforcement algorithm with an
+operational semantics, which is also a high-level abstraction of our
+tool \tool.
+The proposed approach is complete for the specification language defined
+in \ref{subsec:spec_lang}
+and extends the underlying key-value store to a multi-consistent shim
+layer. Here for simplicity reasons we present an operational semantics 
+parametrized over a contract with a single prop. However, as we explain
+in section \ref{subsec:generalization}, the rules can be easily
+generalized to cover multiple consistency levels, each specified by an
+arbitrary contract. Therefore, in the rest of this section we will assume a given contract $\psi$ of the
+following form:
+	\begin{smathpar}
+	\begin{array}{lcc}
+		\psi = \forall (a,b). a \xrightarrow{R} b  \Rightarrow a
+		\xrightarrow{\visZ} b, & \spc & R=r_1;r_2;...;r_k \\
+	\end{array}
+	\end{smathpar}
 
-The necessity for using a cache on top of each replica  can be clearly noted 
-in \visrule step in the core operational
-semantics (Fig. \ref{fig:semantics}), where the set $V$
-represents the local effects at the replica, however the system only
-choses the subset $V'$ to be made visible to the operation. Observe
-that by \emph{maintaining} a consistent cache, the system is liberated from the
-redundant task of generating a consistent subset of effects at each
-operation execution.
-Luckily, the cache maintenance at each replica boils down to only two
-tasks. First, the
-replica must decide if a newly arrived remote effect can enter the
-cache or not, i.e. if its presence in the cache will violate the
-contract or not.  Second, when the operations are submitted, the replica
-must decide if they should proceed or should be blocked temporarily,
-untill more effects become available in the cache.  Here we assume a
-contract of the form  
-$\psi = \forall (a,b). a \xrightarrow{R} b  \Rightarrow a
-\xrightarrow{\visZ} b$ and a replica containg a local set $V$ and explain each task in more detail.
-
-Let's first define a \emph{truncated relation} as the relation derived by
-removing the last element from a given relation: 
+The operational semantics is defined via a small-step relation over \emph{execution
+states}, which are tuples of the form $\E=(\EffSoup,\visZ ,\soZ)$.
+The \emph{effect soup} $\E.\EffSoup$, represents the set of all
+effects produced in the system, and  $\E.\visZ$,
+$\E.\soZ$ $\subseteq \EffSoup \times \EffSoup$, stand for, respectively the
+visibility and session order relations
+between such effects. 
+We also use the notation $\EffSoup_{(condition)}$
+to represent the projection of $\EffSoup$ to a subset
+of effects  in $\EffSoup$, that satisfy the specified condition.
+The reduction step that will be defined, is of the form
 \begin{smathpar}
-\trunc {r_1;r_2;...;r_k} = r_1;r_2;...;r_{k-1}
+(\E,\op_{<s,i>}) \;\xrightarrow{\V}\; (\E', \eff),
 \end{smathpar}
-We now extend the above definition to the given contract, by replacing
-$R$ with $\trunc{R}$ and argue that an effect $\eff$ can only enter the cache, if
-its presence would not violate the truncated contract in the replica,
-i.e. $\eff$'s dependency set $(\trunc{R})_V^{-1}(\eff)$ is already
-present in the cache (replica) for a non-waiting (waiting) contract. Now we consider two cases and explain the
-replicas' behavior when an operation is submitted: 
-\begin{enumerate}
-\item $r_k = \soZ$: In this case, the replica makes sure that the
-operation is blocked until effects of earlier operations from the same
-session, are already present in the cache. This guarantees the presence
-of the dependencies of the effect of the current operation, accoring to the
-\emph{original} contract. Note that in this case, the operation can
-witness \emph{all} effects at the replica.
-\item $r_k = \visZ$: In this case, operations are not blocked, however,
-they should only witness the effects that are already present in the
-cache. This guarantees the preservation of the original contract, which
-puts a maximal bound on the set of effects to be made visible to an
-operation.
-\end{enumerate}
-%
-%--- The memoization technique to avoid redundent computations
-%
-\subsection{Degree of Dependency Presence}
-In the above description of our consistency management tool, the notion
-of \emph{the presence of the depency set} is treated as a true/false
-property, that is checked before allowing an effect enter the cache.
-However, as an astute reader might have noticed, a naive implementation
-of this idea, could result in poor performance. That is because
-contracts in our specification language can be arbitrarily large and
-might contain closures of relations, computing the inverse of which can
-become very large. A naive implementation that drops all the computations
-done for a failed dependency check of an effect, results in redunencies
-the next time the same property is being validated, which is not practically reasonable.
+which can be interpreted as a reduction caused by a replica with a local 
+set of effects $\V$, after it executes an operation
+$\op$, which is the $i$'th request from the session $s$. 
+During this reduction step a new effect $\eff$ is produced and added to
+the effect soup, with new relations $\visZ$ and $\soZ$ that are updated
+accordingly.
 
-To address the mentioned difficulties, we introduce the \emph{Degree of
-Dependency Presence}, $DDP$, that extends the above binary property, by
-marking the effects with a
-number, that represents how far the presence if its dependencies has
-been checked so far. 
-The $DDP$ of an effect according to a relation $R=r_1;r_2;...;r_k$ and a
-given set of effects $V$ is defined as the length of the longest
-prefix of $R$, under which $V\cup \{\eff\}$ is consistent,
-that is,
+
+%=================================================
+%--------- Definitions to be used in the semanrics
+%=================================================
+\subsection{Preliminaries}
+\label{subsec:prelim}
+\input{Sections/core_operational_semantics}
+
+
+%=================================================
+%--------- The operational semantics
+%=================================================
+\subsection{Core Operational Semantics}
+
+%--- The Figure Containing the Rules
+\input{Sections/core_semantics}
+
+%--- Section intro
+In this part we present the reduction rules, representing our
+consistency preservation approach.
+Figure \ref{fig:semantics} presents the set of rules defining the
+auxiliary relation ($\hookrightarrow$) and small-step reduction relation 
+($\rightarrow$) over executions. The latter relation is parametrized
+over a set $V$,
+that represents the set of effects that are present at the replica
+taking the step. Obviously $V$ must be a subset of the initial effect soup 
+of the execution, however, there is no other restrictions,
+since we only assume eventual consistency in the underlying store.
+
+%--- The [OPER] rule
+Let's now go over the auxiliary reduction rule
+\rulelabel{oper},
+that represtns the procedure of producing a new effect $\eff$, by witnessing a set
+of effects $S$. 
+An effect is formally defined as a tuple $\eff=(s,op,v)$, representing the
+session and the operation name 
+whose execution creates $\eff$, and the value
+that the replica returns as the response to that operation.
+The rule explains how the execution state changes after producing an
+effect at a replica. Specifially, in the new state, the effect soup
+$\EffSoup'$ must
+now contain the newly created effect $\eff$, and the relations $\visZ'$
+and $\soZ'$ must capture the fact that the set $S$ was made
+visible to $\eta$, and all effects in the initial state from the same
+session, are in session order with $\eff$.
+
+
+%--- Why there is two different rules for (->) relation
+Now we explain the rules for reduction relation $(\xrightarrow{V})$,
+namely  \rulelabel{vis exec} and
+\rulelabel{non-vis exec}, which represent the execution of operations
+under  respectively, a waiting contract and a non-waiting contract. 
+The necessaity for introducing two separate  rules, comes from the
+inherent differences in the enforcement techniques of
+waiting and non-waiting contracts. In waiting contracts, where the last
+edge is $\soZ$, we are simply required to make sure that the
+specified set of dependency effects, is
+present at the replica before executing the operation.
+In other words, these contracts only specify
+the \emph{minimal} set of effects that must be made visible to an
+operation. On the other hand, the non-waiting contracts, that end with a
+$\visZ$ edge, by only specifying the \emph{maximal} set of visible
+effects, allow the replica to pick \emph{any} subset of its local
+effects and make them visible to the operations as long as it does not
+violate the contracts' logical formula. In an extreme case, replicas can
+always pick the empty set and make it visible to the operations, which
+would trivially guarantee the presevation of the contract, since no effect
+would satisfy its logical premises.
+
+%--- Explaining the operational rules
+The preconditions of both reduction rules, include an auxiliary
+reduction, explaining the changes that occur in the execution state $\E$
+when an operation is performed. Note that for non-waiting contracts
+(i.e. when $\visZ\subseteq r_k$), 
+not all effects available at the replica are shown to the operation, but
+only a subset of it $V'$ is shown, which is defined to be the  maximally
+closed subset of $V$ under $R$.
+Moreover, both rules contain
+$R_V^{-1}(\eff)\subseteq V$ precondition, which basically guarantees the
+preservation of the required consistency level when taking the step. Note
+that for non-waiting executions, this is trivially satisfied, since the
+subset $V'$, by definition includes
+the inverse of relation $R$, and only this subset is made visible to
+$\eff$. However, for waiting contracts,conisdering the stepwise
+definition of $R_V^{-1}$, this condition requires the presence of
+$\soZ^{-1}(\eff)$ at the replica, which can be
+interpreted as temporarily \emph{blocking} the operation.
+
+
+
+
+
+
+
+%=================================================
+%--------- Theorem on correctness of enforcement
+%=================================================
+\subsection{Soundness}
+\label{subsec:sound}
+Here, we present a meta-theoretic property showing that the given contract would never be
+violated, if the execution is in a consistent state and takes a reduction
+step. We start by defining what we mean by a consistent state of the
+execution: 
+\input{Sections/subsec_theorems}
+
+
+%=================================================
+%--------- Theorem on maxVis and minWait
+%=================================================
+\subsection{Optimality}
+\label{subsec:opt}
+Now we will present two theorems, regarding the optimality of our
+approach. Firstly, we show that there
+cannot be a larger subset of local effects in a replica to be made
+visible to an operation, than what
+our reduction rules specify. Next, we will prove the liveness property
+of our semantics, which guarantees that all replicas will take a step,
+given the proper set of local effects. Considering the eventual delivery of all
+updates, which is guaranteed by the underlying store, this theorem
+guarantees  that our system would never get permanently stuck. 
+\input{Sections/subsec_maximality}
+\input{Sections/subsec_minimalwait}
+
+
+%=================================================
+%--------- How it can be generalized for all contracts
+%=================================================
+\subsection{Generalization}
+\label{subsec:generalization}
+We finish this section by extendeding our ideas in two dimentions. 
+We will first explain how to handle an arbitrary
+contract $\psi$ of the following form:  
 \begin{smathpar}
-DDP_V(\eff) = m \iff (r_{1};r_2;...;r_{m})^{-1}(\eff)\subseteq V
+\psi = \pi_1 \wedge \pi_2 \wedge ... \wedge \pi_m \qquad \qquad 
+\pi_i = \forall (a,b). a \xrightarrow{R_i} b \Rightarrow a
+\xrightarrow{\visZ} b
 \end{smathpar}
-For example, $DDP_V(\eff)=0$  means that $\eff$ has just arrived to the
-replica and no degree of its dependencies are checked yet, and
-$DDP_V(\eff)=k-1$ means that all of $\eff$'s dependencies according to
-the truncated relation are
-present and it is safe now to add it to the cache. We use the notation
-$DDP_i$ to refer to the set of all effects whose $DDP$ value is equal to
-$i$.
+Later, we will
+explain how to maintain multiple levels of consistency simultaneously,
+each of which is defined for a different operation name. We will assume an arbitrary contract
+$\psi_{\op}$ for every user-defined operation $\op$, and explain how to
+modify our system model to preserve all of them.
 
-This way, by periodically refreshing the $DDP$ of effects, the porcess
-of moving effects from the replica to the cache is recorded while the
-the dependencies arrive, and as we will explain shortly, we can totally avoid 
-computing closures of relations and redundant computations at
-replicas by a memoization technique. 
-Finally, note that (following the discussion in the previous section) we require 
-the dependencies to be looked for, in the replica and the cache
-respectively, for the  waiting and non-waiting contracts.
-i.e. in the case of waiting contracts  $DDP_{replica}$ 
-should be computed and $DDP_{cache}$
-for non-waiting contracts.
-
-
-
-
-\subsection{Example}
-\input{Figures/fig_availability_degrees.tex}
-In this part, we will explain the behavioral outline of our algorithm
-using an example. The formal operational semantics of this approach can be
-found in appendix \ref{appendix:large_semantics}.
-
-Let's assume we are given a contract $\psi=\forall (a,b). a
-\xrightarrow{\soZ;\visZ;\soZ}b \Rightarrow a \xrightarrow{\visZ} b$, and
-we want replicas to maintain consistent caches according to this
-contract. We explain our approach by
-explaining a replicas' behavior when certain events occur: 
-\begin{itemize}
-\item {\bf Remote Effect Arrival:} When a new remote effect arrives to the
-replica, it is simply added to the set of local effects and 
-its $DDP$ is initially set to 0. Since the length of the
-given contract is 3, as we will see shortly the effect requires two
-steps
-of $DDP$ refreshes, before it can enter the cache.
-\item {\bf Operation Submission: } Since the given contract is a waiting
-type, the replica must now make sure that all effects from ealier
-operations of the same session, are present in the \emph{cache} and if
-not, 
-block the operation temporarily. The operation can proceed and
-wtiness \emph{all} effects at the replica, after the mentioned effects enter
-the cache.
-\item {\bf Cache Refresh: } The replica, must periodically perform 
-cache refreshes and move effects from $DDP_2$ to the cache. As explained
-we know that the complete set of dependencies for these effects are
-already present. 
-\item {\bf DDP Refresh: } At this periodic step, $DDP$ of effects are
-updated by checking if they can be given a larger one. 
-At each step the $DDP$ of an effect $\eff$ is increased from $i$ to $i+1$ if
-all effects in $r_i^{-1}(\eff)$ already have $DDP$ value at least equal to $i$.
-In this example, an effect $\eff$ that has the initial $DDP$ value 0, can get
-the value 1, only if all effects in  $\soZ^{-1}(\eff)$ are already
-present at the replica which means they have $DDP$ value of at least 0.
-Similarly, effects that have the $DDP$ value of 1 can get the value 2,
-if all effects in their $\visZ^{-1}$ set, have the $DDP$ value of
-minimum 1. At this point, effects have reached the value 2, which means
-they can be now moved to the cache at the next cache refresh.
-\end{itemize}
-Note that, in case one of the elements of the given relation is a
-closure, for example assume the given relation is $\xrightarrow{so;vis^*;so}$,
-we can avoid all recursive computations, by allowing an effect $\eff$
-to go from $DDP_1$ to $DDP_2$, only if $vis^{-1}(\eff)$ is present in
-$DDP_1$ {\bf and} in $DDP_2$. This way, we are sure that the same
-condition was also checked for all effects in $vis^{-1}(\eff)$ before they
-entered $DDP_2$, which brings us the desired behavior, without any
-computation involving closures.
+To begin with, as we mentioned earlier, all propositions in our specification language,
+either put a maximal (when they are non-waiting) or a minimal (when they
+are waiting) bound on the subset of local effects to be made visibe to each
+opreation. 
+This simply means that when the system is given a conjunction
+of propositions, it should define the subset in a way, so it would not violate
+\emph{any} of them. 
+Therefore, by a few modifications we can extend the system to support
+all contracts. Firstly, the single premise $R_V^{-1}(\eta) \subseteq V$
+in the reduction step rules should be replaced with the following
+conjunction: 
+\begin{smathpar}
+\bigwedge_{1 \leq i \leq m} (R_i)_V^{-1}\subseteq V
+\end{smathpar}
+Secondly, the definition of the maximal closed subset of local effects
+must also be modified to a subset that is closed under \emph{all} given
+relations and finally, care must be taken when deciding which of the
+reduction steps must be taken when there
+are multiple props: the \nonvisrule should be taken if \emph{all} the
+given props are waiting and otherwise \visrule must take place.
 
 
+\begin{comment} 
+% I am not sure if we should include the formal definition here. It is
+% unnecessarily complex
+\begin{smathpar}
+\left \lfloor S \right \rfloor_V = S' \spc \iff \spc S'
+\subseteq S \; \wedge \;
+\bigwedge(R_i)_V^{-1}(S') \subseteq S' \; \wedge \; 
+\not\exists
+S''.(\bigwedge ((R_i)_V^{-1}(S''))\subseteq S''\wedge |S''|>|S'|)
+\end{smathpar}
+\end{comment}
 
+
+Moreover, for modifying the system to handle multiple contracts
+simultaneously, we can
+extend the local effect set $V$, to a sequence
+of sets $V_{\op_i}$, each maintaning  the consistency level for an
+operation type $\op_i$. Now we define the modified form of execution steps as
+follow:
+\begin{smathpar}
+(\E,\op_{<s,i>}) 
+    \;\xrightarrow{V_{\op}}\;
+  (\E',\eff) 
+\end{smathpar}
+The local effect set $V$ must also be replaced with $V_{\op_i}$ in the 
+premises of the reduction rules, so each operation of type $\op_i$ would
+only witness the associated subset for its own consistency requirements.
+This abstractly represents our implementation, in the sense that all operations
+work only on a specific subset of available effects at any replica. The subset, is
+maintained according to the contract assosiated with each operation, and
+is guaranteed to preserve the consistency requirements following the
+theorems of sections \ref{subsec:sound} and \ref{subsec:opt}. 
 

@@ -1,5 +1,183 @@
 \newpage
 \section{Motivation}
 \label {sec:motiv}
+In this section, we explain the developement process of a highly
+available application in \tool. We discuss a possible  anomily under
+eventual consistency and then explain the difficulties associated 
+with the manual approaches for prevention techniques.
+Lastly we will explain how by automating the process, \tool can liberate
+the developers from all those problems.
+Our ideas mentioned here, are completed in  section
+\ref{sec:ctrt_language}, where we extend the tool with a language, to
+specify \emph{any} kind of anomalies. 
+
+
+%
+%--- What is the application, what are the requirements 
+%
+\subsection{RDTs in Eventually Consistent Stores }
 \input {Figures/fig_simple_haskell}
+Let's now consider a highly available comment
+section management application, as part a photo sharing web site.
+Figure \ref{subfig:comment_code} presnets implementation of such an application
+in our system model. As explained in section \ref{sec:sys_model}, the
+code is consisted of types \effectC{} and \stateC{}. Both types here are
+defined as a strings, the former representing the text of a comment, and
+the latter all the visible comments concatinated together.
+Everytime a user calls the \writeC{} function to add a comment, an
+\effectC{}
+is generated and a \readC{} call simply
+returns the \stateC{} of the object.
+
+The \applyC{} function is given an effect, and is defined by the
+developers to \emph{update} the objects' state.
+Here the \applyC{} function simply pastes the 
+included comment inside of  an effect, to the end of the current \stateC{}. As we mentioned earlier, we
+completely separate the convergence semantics of the application  from the consistency
+requirements. Since our focus is consistency here, we omit any conflict
+resolution strategy in the code, however, developers (using roll-backs,
+etc) can design the \applyC{} function to resolve conflicting
+concurrent updates as they desire. 
+
+Figure \ref{subfig:comment_example}, presents an example of how users
+interact with the application. The example shows two clients, Bob and
+Alice, that invoke operations on a comment section object. In the
+setting Bob first writes a comment, which is routed to the replica A,
+whose effect is then propagated and delivered to the replica B, where Alice's
+first read operation is routed to next. Alice and Bob then keep talking
+through more read and write events, whose order are marked in the
+figure. 
+
+Now let's assume Bob's read opration, instead of replica A, was routed
+to another replica C, where the update from his first operation was not
+present. This is \emph{lost-updates} anomaly, a very well-known
+undesired behavior that is admitted in eventually consistent stores. 
+Now developers are faced with the problem of preventing such an undesired
+behavior, a task that as we will explain shortly, is difficult,
+erorneous and heavily tangled with the application logic.
+%
+%--- What are the challenges implementing those reuquirements manually
+%
+\subsection{Ad-hoc Anomaly Prevention}
+In this part, by referring to the modified code  presented in figure
+\ref{fig:modified_code}, we will
+explain a well-understood approach toward eliminating the lost\_update anomaly in
+our comment manager application running on an EC store.
+
+%tagging effects
+First modification required in this technique is tagging effects with
+unique identifiers, consisting their originating sessions' id, and their
+sequence number in them. This is used by replicas to
+record the set of effects, that are alerady present locally
+($line:1,2,5$). By this simple adjustment, the undesired anomaly would
+be completely avoided, if operations would never be routed to replicas,
+that do not contain all the effects from prior operations on that
+session (let's call these effects the dependencies of
+the operation). 
+
+%blocking
+Since operations do not have any control on which replica they are
+routed to, the above property can be achieved, if operations that are
+routed to a replica that does not contain their dependencies, wait
+before execution until such effects become available at that replica.
+This technique that is called {\bf blocking}, guarantees that the state
+witnessed by oerations, 
+is updated by a set of effects that is a \emph{superset} of the desired
+dependencies.
+
+Moreover, another technique called {\bf filteration} is used to further realize
+the above idea. It basically separates the set off effects that have
+arrived to the replica (available effects), and the effects who have
+arrived and also been applied to the state (filtered effects).
+By this separation, replicas can only apply effects to their state, if all
+effects in session order with them, have already been applied to the
+state. 
+This way, replicas can record only the highest sequence
+numbers from each session that they have applied to the state (since it
+is guaranteed that the smaller ones are also applied)($line:3,6$). 
+Figure \ref{fig:modified_code}, represents the blocking technique in the modified \readC{}
+operation, where the result is only returned if the required
+dependencies have already been applied to the state. Furthermore, the
+filteration technique is used bu tge modified \applyC{} funciton, only
+updates the state, if the sequence number of the given effect is
+larger than the highest previously applied effect to the state precisly
+by 1.
+\input{Figures/fig_modified_haskell}
+
+The above approach although is shown to work correctly, but as our
+example showed, requires fundamentall changes in the code where 90\% of
+the application was rewritten. Additionally, the modifications are
+heavily tangled with the application logic which is problem for
+developement of and reasoning about large
+productions.
+
+However, the major drawback of this approach is the fact that requires
+constant alterations in the state of the application when the sessions
+come and go. The application is now required to make
+sure that a new field is created locally \emph{and} globally when 
+new sessions are connected. This can extremely degrade the performance
+of the system since it requires direct synchronization between replicas.
+We have shown in detail how this adversely effects the performance in section
+\ref{sec:eval}, where  we explain our experience in implementing
+such an ad-hoc approach.
+
+To make the matter worse, in addition to the above difficulties,
+new anomalies are constantly found in the system, which requires
+developers to come-up with non-trivial solutions. For example, in the
+above application, another type of anomaly can occur when a third user
+Chris, uses the application and submits a read, which is routed to a
+replica C, which only contains the write from Alice. Then Chris sees a
+window containing "Chicago" message which does not make any sence.
+{EXAMPLE SHOULD
+BE EDITED *********}
+
+
+
+%
+%--- What is our alternative approach
+%
+\subsection{An Alternative}
+use \tool!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \newpage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

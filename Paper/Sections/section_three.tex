@@ -66,7 +66,7 @@ our comment manager application running on an EC store.
 
 %tagging effects
 First modification required in this technique is tagging effects with
-unique identifiers, consisting their originating sessions' id, and their
+unique identifiers, consisting of their originating sessions' id, and their
 sequence number in them. This is used by replicas to
 record the set of effects, that are alerady present locally
 ($line:1,2,5$). By this simple adjustment, the undesired anomaly would
@@ -126,40 +126,84 @@ new anomalies are constantly found in the system, which requires
 developers to come-up with non-trivial solutions. For example, in the
 above application, another type of anomaly can occur when a third user
 Chris, uses the application and submits a read, which is routed to a
-replica C, which only contains the write from Alice. Then Chris sees a
-window containing "Chicago" message which does not make any sence.
-{EXAMPLE SHOULD
-BE EDITED *********}
-
-
+replica D, that only contains the last write from Bob. Then Chris sees a
+window containing "Me too!", which is an undesirable behavior. Now
+developers are left with two options. First, they can try implementing
+another non-trivial ad-hoc solution, which would further pollute the
+application logic, making all the existing reasonings obsolete. Second,
+they move the application completely to another store, that offers
+stronger forms of consistency, such as causal consistency which would
+prevent such anomalies. However, as we will show in section
+\ref{sec:eval}, this would result in performance loss and potential
+costumer loss.
 
 %
 %--- What is our alternative approach
 %
 \subsection{An Alternative}
-use \tool!
+We are now offering the developers with an alternative to the above
+solutions. 
+\tool, is a generic consistency managaement tool, running on
+top of an off-the-shelf eventually consistent store, extending it to
+a store with multiple configurable consistency levels. 
+Developers can define a seperate environment for each operation at the
+design stage, and configure each of them according to certain types of
+anomalies, prevention of which is guaranteed by the tool. We have
+relized this idea, following our observation that the prevention of basically all
+types of anomalies, can be boiled down to two tasks,
+filterataion and blocking. 
 
 
+Our tool is equipped with a filteration mechanism, that periodically
+refreshes the environments, and allows local effects at the replica to
+enter each environment, if their presence would not cause the associated
+anomaly occur. This way, \tool completely eliminates the
+possibily of operations \emph{seeing effects that they are not supposed
+to}, which is one important type of anomalies in distributed systems
+(for example, in the above example Chris was not supposed to see Bob's
+last comment since some effects were missing).
 
 
+Similarly, the tool contains a blocker mechanism that makes sure all
+operations are executed on their associated environment, only after the
+environemnt contains the necessaity effects for preventing the associated
+anomaly. Consequently, the operations will \emph{always see the effects
+that they are supposed to}. This eliminates another type of anomalies in
+the distributed systems, that the lost\_updates anomaly explained
+previously, is an
+example of. 
 
 
+Using \tool, the developers are only required to configure environments
+for each read operation, using a simple specification language that we
+provide them with. The language is seeded with $\soZ$ $\visZ$ relations and allows
+user to define different anomalous behaviors.  For example the
+followings are the two consistency contracts written in our language,
+regarding the two anomalies mentioned in this section 
+\begin{smathpar}
+\begin{array}{lllll}
+
+1: & \forall (\eff,\eff'). & \eff \xrightarrow{\soZ} \eff' & \Rightarrow
+& \eff
+\xrightarrow {\visZ} \eff'  \\
+2: & \forall(\eff,\eff'). & \eff \xrightarrow{\visZ;\visZ} \eff' &
+\Rightarrow & \eff \xrightarrow {\visZ} \eff' 
+\end{array}
+\end{smathpar}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-\newpage
+The first contract, that eliminates the possibility of lost\_updates,
+tells the \tool to make sure that all effects that are in session order
+to be also in vibility relation. This can be achieved by blocking
+operations as explained above. 
+The second contract, which prevents the second anomaly mentioned,
+requires the system to make sure that if an effect is being made visible
+to an operation, the operation should also witness all effects that were
+visible to that effect.
+In the next section, we will formally introduce our specification
+language, and explain how two types of anomalies mentioned above, can be
+specified in this language with different syntaxes.
+\input{Figures/fig_syncope_outline}
 
 
 

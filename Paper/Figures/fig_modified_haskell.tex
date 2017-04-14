@@ -1,0 +1,37 @@
+\begin{figure}[t]
+	\centering
+	\begin{subfigure}[t]{0.4\textwidth}
+	\begin{lstlisting}
+	type Sess = UUID
+	type Seq = Int
+  type Cursor = Map Sess Seq       
+
+	data Effect = (Sess,Seq,String)
+ 	type State =  (String,Cursor)
+  
+	\end{lstlisting}		  
+	\end{subfigure}
+	\hfill
+        \begin{subfigure}[t]{0.575\textwidth}
+	
+	\begin{lstlisting}[firstnumber=7]
+	read :: (Sess,Seq) -> State -> (String,Maybe Effect)
+	read (id,sq) (st,csr) = 
+     if (m.lookup id) == (sq-1)    (*@\textcolor{gray}{\{-Blocking-\}}@*)
+		 (*@\textcolor{blue}{then}@*) (s,Nothing)
+		 else read (id,sq)(s,m)
+	apply :: State -> Effect -> State 
+	apply (st,csr) (id,sq,cm) = 
+     if (csr.lookup id) == (sq-1)  (*@\textcolor{gray}{\{-Filteration-\}}@*)
+     (*@\textcolor{blue}{then}@*) st ++ " - " ++ cm
+     else st
+
+	\end{lstlisting}		  
+        \end{subfigure}
+
+	\hrulefill
+	\caption{Modified Application to Prevent Lost-updates Anomaly}
+	\label{fig:modified_code}
+\end{figure}
+
+

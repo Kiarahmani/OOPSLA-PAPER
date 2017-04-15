@@ -57,41 +57,21 @@ SessID}=s)}      \}\qquad
 \vspace{4mm}\\
 \textbf{Operational Semantics} \;
   \fbox{\((\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E',\eff)\)}\\
-\begin{minipage}{2.8in}
-\rulelabel{vis Exec}
+\begin{minipage}{\textwidth}
+\rulelabel{Exec}
 \begin{smathpar}
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
 {
-     V \subseteq E.A \spc  R^{-1}_{V}(\eta) \subseteq V \spc  (vis \subseteq r_k) \spc 
-  V'= \left \lfloor V \right \rfloor_V \\
+     V \subseteq E.A \spc  
+  V'= \left \lfloor V \right \rfloor_V \spc
+     R^{-1}_{V}(\eta) \subseteq V' \\
   \auxred {V'} {(E, op_{<s,i>}))}
     {} {(E',\eta)} 
 }
 {
   (\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E', \eff)
-}
-\end{array}
-\end{smathpar}
-\end{minipage}
-\qquad \qquad \qquad
-\begin{minipage}{2.3in}
-\rulelabel{non-vis Exec}
-\begin{smathpar}
-\stretcharraybig
-\begin{array}{l}
-\RuleTwo
-{
- 
-  V \subseteq E.A \spc  R^{-1}_{V}(\eta) \subseteq V\spc (vis \nsubseteq r_k )\\
-  \auxred {V} {(E,op_{<s,i>}))}
-    {} {(E',\eta)}
-}
-{
-  (\E,op_{<s,i>}) 
-    \;\xrightarrow{V}\;
-  (\E',\eff) 
 }
 \end{array}
 \end{smathpar}

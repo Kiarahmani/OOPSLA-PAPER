@@ -7,16 +7,16 @@
   benefits of guaranteeing strong consistency against a potentially
   significant cost in performance.  Because not all operations on a
   replicated data type require strongly consistent behavior, however,
-  library designers should be able to ideally direct implementations
-  to provide precisely the level of consistency needed, eschewing the
-  costs of strong consistency except when absolutely necessary.
-  Unfortunately, implementations typically support only a small set of
-  consistency levels.  Consequently, developers must either be content
-  with mapping application requirements to a supported consistency
-  level that may well enforce stronger guarantees than required, or
-  hand weave a specialized protocol that more accurately matches
+  library designers ought be able to direct implementations to provide
+  precisely the level of consistency needed, eschewing the costs of
+  strong consistency except when absolutely necessary.  Unfortunately,
+  implementations typically support only a small set of consistency
+  levels.  Consequently, developers must either be content with
+  mapping application requirements to a supported consistency level
+  that may well enforce stronger guarantees than required, or hand
+  weave a specialized protocol that more accurately matches
   application needs.  The former approach sacrifices performance,
-  while the latter entails added complexity.
+  while the latter introduces unwanted complexity.
 
   In this paper, we describe a lightweight runtime system for weakly
   consistent distributed systems that dynamically customizes a

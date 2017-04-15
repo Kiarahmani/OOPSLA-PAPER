@@ -1,29 +1,31 @@
 \begin{figure}[t]
         \centering
-	\begin{subfigure}[b]{0.54\textwidth}
-	\includegraphics[scale=0.36]{Figures/comment_application.pdf}
-	\label{comment_example}
-	\end{subfigure} 
 	\begin{subfigure}[b]{0.45\textwidth}
 	\begin{lstlisting}
-	data Effect = Eff String 
+	type Effect  String 
 	type State = String 
 
 	read :: State -> (String, Maybe Effect)
 	read s = (s,Nothing)
 
 	write :: String -> ((), Maybe Effect)
-	write comment = ((), Just (Eff comment))
+	write comment = ((), comment)
 
 	apply :: State -> Effect -> State 
-	apply s eff = let Eff comment = eff
-		        	  in s ++ " - " ++ comment
+	apply s eff = in s ++ " - " ++ comment
 	\end{lstlisting}
+	\caption{Implementation}
 	\label{subfig:comment_code}
 	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.49\textwidth}
+	\includegraphics[scale=0.36]{Figures/comment_application.pdf}
+	\caption{Example}
+	\label{subfig:comment_example}
+	\end{subfigure} 
 \\ \hrulefill
-\caption{A distributed comment section applicataion, serving two clients
-(left) and its implementation in \tool (right)}
+\caption{A distributed application for comment section
+management}
 \label{fig:comment_app}
 \end{figure}
 

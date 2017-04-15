@@ -19,7 +19,7 @@
   \eff & \in & \mathtt{Effect} & \coloneqq &  (s,i,op,v)\\
    {\Pool} & \in & \mathtt {Pool} & \coloneqq & (v,\set {\eff}) \\
    {\Cache} & \in & \mathtt {Cache} & \coloneqq & op \mapsto (v,\set{\eff})\\
-   \Avail & \in & \mathtt {Avail} & \coloneqq & op \mapsto (\eff \mapsto
+   \Avail & \in & \mathtt {Deps. Presence} & \coloneqq & op \mapsto (\eff \mapsto
 \{0,1,...,k-1\}) \\
   F_{op} & \in & \mathtt{Op.\,Def.} & \coloneqq & v \rightarrow \eta\\
   \EffSoup & \in & \mathtt{Eff\,Soup}	  & \coloneqq & \set{\eff} \\
@@ -103,7 +103,7 @@ F_{op}(v) = \eta \qquad
 \end{minipage}
 %
 \begin{minipage}{2.8in}
-\rulelabel{Avail Refresh}
+\rulelabel{DDP Refresh}
 \begin{smathpar}
 \stretcharraybig
 \begin{array}{l}
@@ -111,12 +111,12 @@ F_{op}(v) = \eta \qquad
 {
   \Theta(\rho) = (\Pool,\Cache,\Avail) \spc \eta \in \Pool_e \spc
   \oper(\eta) = op 
-  \\ \Avail_{op}(\eta) = i \spc i >1 \spc
-  \Avail_{op}'= \Avail_{op}[\eta \mapsto i-1] \spc \\
-  \Avail_{op}((R_{op}[i])^{-1}
-  (\eta)) = i+1\\
+  \\ \Avail(op)(\eta) = i \spc i<k \spc
+  \Avail'(op)= \Avail(op)[\eta \mapsto i+1] \spc \\
+  \Avail(op)((R_{op}[i+1])^{-1}
+  (\eta)) \subseteq \Avail^{i}\\
  \spc  \Theta' = \Theta[\rho \mapsto (\Pool,\Cache,\Avail[op \mapsto
- \Avail'_{op}])]\\
+ \Avail'(op)])]\\
 }
 {
   (\E,\Theta,\Sigma) \;\xrightarrow{\eff}\; (\E, \Theta', \Sigma)
@@ -125,7 +125,6 @@ F_{op}(v) = \eta \qquad
 \end{smathpar}
 \end{minipage}
 %
-\vspace{5mm}
 \begin{minipage}{2.8in}
 \rulelabel{Cache Refresh}
 \begin{smathpar}
@@ -137,7 +136,7 @@ F_{op}(v) = \eta \qquad
   \oper(\eta) = op 
   \\ \eta \not\in \Cache(op)_e \spc
   \Cache'=(apply \; \eta \; \Cache(op)_v ,\Cache(op)_e \cup \{\eta\}) \\ 
-  \Avail_{op} (R_{op}^{-1} (\eta)) = 1 
+  \Avail(op) (\eta) = k-1 
  \spc  \Theta' = \Theta[\rho \mapsto (\Pool,\Cache',\Avail)]\\
 }
 {
@@ -147,16 +146,15 @@ F_{op}(v) = \eta \qquad
 \end{smathpar}
 \end{minipage}
 \hspace{22 mm}
-\vspace{3mm}
 \begin{minipage}{2.3in}
-\rulelabel{Exec}
+\rulelabel{LB Exec}
 \begin{smathpar}
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
 {
-  \auxred{\CacheFinder_{\psi}(\Theta(\rho))} {(\E,\langle s,i,op \rangle)} {} {(\E',\eta)}  \\
-  \Theta(\rho) = (\Pool,\Cache) \spc \psi^{-1}(\eta) \subseteq \Pool_e  \spc
+  \auxred{\Theta(\rho)} {(\E,\langle s,i,op \rangle)} {} {(\E',\eta)}  \\
+  \Theta(\rho) = (\Pool,\Cache,\_) \spc \soZ^{-1}(\eta) \subseteq \Cache(op)_e  \spc
 }
 {
   (\E,\Theta,\langle s,i,op::\sigma \rangle \pll \Sigma) 
@@ -166,6 +164,28 @@ F_{op}(v) = \eta \qquad
 \end{array}
 \end{smathpar}
 \end{minipage}
+\begin{minipage}{2.3in}
+\rulelabel{UB Exec}
+\begin{smathpar}
+\stretcharraybig
+\begin{array}{l}
+\RuleTwo
+{
+  \Theta(\rho) = (\Pool,\Cache,\_) \\
+  \auxred{\Cache(\op)} {(\E,\langle s,i,op \rangle)} {} {(\E',\eta)}  
+}
+{
+  (\E,\Theta,\langle s,i,op::\sigma \rangle \pll \Sigma) 
+    \;\xrightarrow{\eff}\;
+  (\E',\Theta,\langle s,i+1,\sigma \rangle \pll \Sigma) 
+}
+\end{array}
+\end{smathpar}
+\end{minipage}
+
+
+
+
 
 
 \caption{Operational semantics of a replicated data store.}

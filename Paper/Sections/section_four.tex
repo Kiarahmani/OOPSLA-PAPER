@@ -1,6 +1,65 @@
-\section {Specification of Anomalies} 
+\section {Specification Language} 
 \label{sec:ctrt_language}
+\input{Sections/syntax}
+In this section we complete the introduction of our tool, by formally
+presenting the specification language used by developers to fine-tune
+the consistency requirements for each \tool's environement.
+
+Formal syntax of our specification language is presented in
+figure \ref{fig:ctrt_syntax}.
+The language allows the definition of  \propS{}s, which are FOL formulae, where a 
+the visibility relation between two effects, is set as a logical
+consequence of a certain dependency relation $\mathtt{R}$ holding between them.
+By a combination of filtering and blocking
+techniques on each environment, \tool guarantees the preservation of any
+given \propS{} in this language.
+The type \relationS{} which is used to define dependencies between
+effects in \propS{}s, is a sequence of \seedS{}s where each of them is a $\visZ$ or 
+$\soZ$ relation or the union of them both over the set of effects. In order to
+configure each environment, the developers are required to write a
+\specS{} for each of them, that is consisted of conjunctions of \propS{}s, which
+simply allows developers to eliminiate multiple types of anomalous
+behavior from each environment. For example, the developers of the
+comment management application, can simply write $\psi_1\wedge \psi_2$
+for their \readC{} operation and prevent \emph{both} anomalies explained
+in the previous section.
+
+Now we syntactically  classify propositions into \emph{lower bound} (LB) and
+\emph{upper bound} (UB) and hybrid types, and show that they completely
+align with types of
+anomalies previously mentioned. 
+\begin{itemize}
+\item {\bf LB}: We define a \propS{} to be of type LB, 
+if its dependency relation $R$, ends with an $\soZ$ relation, i.e. is of
+the following from: $\forall(\eff,\eff'). \eff \xrightarrow{r_1;r_2;...;\soZ} \eff'
+\Rightarrow \eff \xrightarrow{\visZ} \eff'$.
+Observe that these contracts simply put a lower bound on the set of
+effects each operation must witness, by defining a certain set of
+dependency for each effect, that must be visible to it, which makes the
+blocking technique very suitable for easily maintaining them.
+\item {\bf UB}:  These propositions are similarly defined as \propS{}s
+with dependency relations ending with $\visZ$, or of the following form: 
+$\forall(\eff,\eff'). \eff \xrightarrow{r_1;r_2;...;\visZ} \eff'
+\Rightarrow \eff \xrightarrow{\visZ} \eff'$.
+This type of \propS{}s, put an upper bound on the set of effects 
+a replica should make visible to each operation when executing it, by
+enforcing that if an effect is made visible, certain set of dependent
+effects must also be made visible. This clearly resembles the
+filteration technique, where only a subset of available effects can enter
+the consistent environments.
+\item {\bf Hybrid}: The \propS{}s whose dependency relation ends with
+$\visZ\cup \soZ$, which require both blocking and filteration to be
+maintained. 
+\end{itemize}
+We can extend the above definitions to \specS{}s also, by defining an LB
+(UB) \specS{} to contain only LB (UB) \propS{}s. Hybrid \specS{}s are also
+defined as the ones that are neither LB or UB.
+
+We finish this section by presenting weak consistency guarantees from
+Terry et. al. in figure \ref{fig:ctrt_rep}, which shows the generality
+of our simple specification language. We also present a simple way of
+representing contracts as graphs where the left-hand-side of the
+contracts are depicted as the sequence of edges relating two effects,
+and the right-hand-sinde (or what must be enforced by replicas at the
+execution time) is represented as the single dashed $\visZ$ edge.
 \input{Figures/fig_contracts_rep}
-
-
-\newpage

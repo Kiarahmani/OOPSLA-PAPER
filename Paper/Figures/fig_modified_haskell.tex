@@ -1,36 +1,41 @@
 \begin{figure}[t]
 	\centering
-	\begin{subfigure}[t]{0.4\textwidth}
+	\begin{subfigure}[t]{0.53\textwidth}
 	\begin{lstlisting}
-	type Sess = UUID
-	type Seq = Int
-  type Cursor = Map Sess Seq       
-
-	data Effect = (Sess,Seq,String)
- 	type State =  (String,Cursor)
-  
+	data Sess = Bob | Alise
+	type ID = (Sess,Int) 
+	type Effect = (ID,String)
+ 	type State =  (String,Int,Int)
+	
+	read :: ID -> State -> String
+	read (sess,seq) (st,sq1,sq2) = 
+ 	 case sess (*@\textcolor{blue}{of}@*) 
+	   Bob ->   if (seq == sq1+1) (*@\textcolor{blue}{then}@*) st
+              else read (sess,seq) (st,sq1,sq2)
+     Alice -> if (seq == sq2+1) (*@\textcolor{blue}{then}@*) st
+              else read (sess,seq) (st,sq1,sq2)
 	\end{lstlisting}		  
 	\end{subfigure}
+	%
 	\hfill
-        \begin{subfigure}[t]{0.575\textwidth}
-	
-	\begin{lstlisting}[firstnumber=7]
-	read :: (Sess,Seq) -> State -> (String,Maybe Effect)
-	read (id,sq) (st,csr) = 
-     if (m.lookup id) == (sq-1)    (*@\textcolor{gray}{\{-Blocking-\}}@*)
-		 (*@\textcolor{blue}{then}@*) (s,Nothing)
-		 else read (id,sq)(s,m)
+        %
+	\begin{subfigure}[t]{0.42\textwidth}
+	\begin{lstlisting}[firstnumber=13]
 	apply :: State -> Effect -> State 
-	apply (st,csr) (id,sq,cm) = 
-     if (csr.lookup id) == (sq-1)  (*@\textcolor{gray}{\{-Filteration-\}}@*)
-     (*@\textcolor{blue}{then}@*) st ++ " - " ++ cm
-     else st
-
+	apply (st,sq1,sq2) (sess,seq,cm) = 
+	  case sess (*@\textcolor{blue}{of}@*) 
+	    Bob -> if (sq1==seq-1)
+	           then (st++cm,sq1+1,sq2)
+	           else (st,sq1,sq2)
+	    Alice -> if (sq2==seq-1)
+	             then (st++cm,sq1,sq2+1)
+	             else (st,sq1,sq2)
 	\end{lstlisting}		  
         \end{subfigure}
 
 	\hrulefill
-	\caption{Modified Application to Prevent Lost-updates Anomaly}
+	\caption{Guarded Application to Prevent Lost-updates Anomaly
+	When Serving Bob and Alice}
 	\label{fig:modified_code}
 \end{figure}
 

@@ -1,6 +1,35 @@
+\newpage
 \section{Evaluation}
 \label{sec:eval}
-\subsection{Implementation}
-\subsection{Latency and Staleness Comparison}
-\subsection{Case Study: RMW implementation}
+In this section, we present our evaluation study of \tool. The results
+are presented in three parts, where we first present the distribution of
+weak consistency requirements on benchmark programs. Second, we presents
+our studies on the performance of programs running on various
+consistency levels and finally, we present the complexity and
+perforamnce results from our study of implementing 
+a well-understood 
+ad-hoc prevention mechanism for lost-updates anomaly, compared to writing
+the same program in \tool. 
+\subsection{Weak Consistency in Benchmark Programs}
+\input{Figures/fig_dist_table}
+In this section, we present seven different benchmark applications we collected,
+in which various types of anomalous behaviors under eventual consistency have been
+detected. We present these programs and their detected consistency
+requirements, in figure \ref{fig:dist_table}.
 
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+\subsection{Latency and Staleness Comparison}
+\subsection{Ad-hoc vs \tool }
+\newpage

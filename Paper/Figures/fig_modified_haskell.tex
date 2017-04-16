@@ -2,7 +2,7 @@
 	\centering
 	\begin{subfigure}[t]{0.53\textwidth}
 	\begin{lstlisting}
-	data Sess = Bob | Alise
+	data Sess = Bob | Alice
 	type ID = (Sess,Int) 
 	type Effect = (ID,String)
  	type State =  (String,Int,Int)
@@ -22,13 +22,13 @@
 	\begin{subfigure}[t]{0.42\textwidth}
 	\begin{lstlisting}[firstnumber=13]
 	apply :: State -> Effect -> State 
-	apply (st,sq1,sq2) (sess,seq,cm) = 
+	apply (st,sq1,sq2) ((sess,seq),cm) = 
 	  case sess (*@\textcolor{blue}{of}@*) 
-	    Bob -> if (sq1==seq-1)
-	           then (st++cm,sq1+1,sq2)
-	           else (st,sq1,sq2)
+	    Bob ->   if (sq1==seq-1)
+	             (*@\textcolor{blue}{then}@*) (st++cm,sq1+1,sq2)
+	             else (st,sq1,sq2)
 	    Alice -> if (sq2==seq-1)
-	             then (st++cm,sq1,sq2+1)
+	             (*@\textcolor{blue}{then}@*) (st++cm,sq1,sq2+1)
 	             else (st,sq1,sq2)
 	\end{lstlisting}		  
         \end{subfigure}

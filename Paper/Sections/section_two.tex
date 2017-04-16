@@ -4,69 +4,58 @@
 %==========================================================
 \section{System Model}
 \label{sec:sys_model}
-In this section, we formally describe our system model, including the
-notions of distributed applications and replicated data objects,
-behavioral properties of eventually consistent data stores and
-consistency guarantees.
-
 
 A data store in our system model is a collection of \emph{replicas}
-(\#1,\#2,...),
-each of which maintains an instance of a set of  replicated \emph{data
-object} ($x$,$y$,...).
-The data objects,
-which are defined by application developers, contain a \emph{state}
-($v$,$v'$,...) and
-are equipped with a set of \emph{operations} ($op$,$op'$,...), whose
-type is either
-read-only or effectful. 
-The former type refers to the operations that just request reads from the
-store, which are responded with an instance of the requested objects' state and the
-latter refers to the operations that modify an objects' state by generating
-an \emph{update effect} ($\eff$,$\eff'$,...).  Update effects or simply effects
-are defined by
-developers and are associated with an \emph{apply} function that enables
-the asynchronous modification of the objects' state at different replicas.
-The effect generated after an operation is submitted to a replica, is
-simply written in the data-store, that guarantees
-their eventual delivery to all the replicas. Each recipient replica then
-uses the apply function to modify its local instance of the objects'
-state  (Fig.\ref{fig:system_model}).
+(\#1,\#2,...), each of which maintains an instance of a set of
+replicated \emph{data object} ($x$,$y$,...).  These objects, which are
+defined by application developers, contain a \emph{state}
+($v$,$v'$,...) and are equipped with a set of \emph{operations}
+($op$,$op'$,...), each of which are designated as either read-only or
+effectful.  The former characterizes operations that just read from
+the store, and receive an instance of an object's state, while the
+latter characterizes operations that modify an object's state by
+generating \emph{update effects} ($\eff$,$\eff'$,...).  Update effects
+or simply effects are associated with an \emph{apply} function that
+executes asynchronously, and modifies object state on different
+replicas.  An effectful operation is handled by a replica that updates
+the object's state, and guarantees eventual delivery of the effect to
+all other replicas in the system. Each recipient uses the apply
+function to modify its local instance of the object;
+Fig.\ref{fig:system_model} illustrates this behavior.
 
-Observe that there is no direct synchronization between replicas when an
-operation is being executed, which means there can be conflicting
-updates on an object, that are generated at different replicas
-concurrently. 
-We do not bound the system to a particular
-conflict resolution strategy but instead require developers to implement
-their own desired approach within the apply function. This system model
-admits all the inconsistencies associated with eventual consistency, and
-as we will explain in section \ref{sec:motiv}, our tool equips users
-with infrastructures to specify and prevent all those inconsistencies.
+Observe there is no direct synchronization between replicas when an
+operation is executed, which means there can be conflicting updates on
+an object, that are generated at different replicas concurrently.  We
+do not bound the system to a particular conflict resolution strategy
+Consequently, this model admits all inconsistencies and anomalies
+associated with eventual consistency~\cite{quelea}; our goal is equip
+applications and implementations with mechanisms to specify and avoid
+such inconsistencies.
 
-Clients interact
-with the store by invoking operations on objects, where a \emph{session} is
-the sequence of operations invoked by a particular client. Consequently,
-operations
-(and update effects) can be uniquely identified by
-their invoking \emph{session id} and their \emph{sequence number} in
-that particular session. The data store is typically accessed by a large
-number of clients concurrently and as a result of the load balancing
-regulations of the store, operations might be routed to different replicas,
-even if they are from the same session (Figures \ref{fig:sys_model1} and
-\ref{fig:sys_model3}).
+Clients interact with the store by invoking operations on objects.
+A \emph{session} is a sequence of operations invoked by a particular
+client. Consequently, operations (and update effects) can be uniquely
+identified by their invoking \emph{session id} and
+their \emph{sequence number} in that particular session. The data
+store is typically accessed by a large number of clients concurrently
+and as a result of the load balancing regulations of the store,
+operations might be routed to different replicas, even if they are
+from the same session (Figures \ref{fig:sys_model1} and
+\ref{fig:sys_model3}).  Operations belonging to a given session are
+not required to be handled by the same replica.
 
-We new define two relation over effects created in the store.
+We new define two relations over effects created in the store.
 \emph{Session order} ($\xrightarrow{\soZ}$) is an irreflexive, transitive relation that relates
-effects from the same session following the  integer \emph{smaller than} relation
-over their sequence numbers.
-Finally, \emph {visibility} is an
-irreflexive and assymetric relation, which is written as ($\eff
-\xrightarrow{\visZ} \eff'$) if at the generation time of $\eff'$ in a
-replica, $\eff$ is
-already arrived and applied at that replica (in Fig.\ref{fig:sys_model3} for example, for $\eff'$ (the effect of executing
-op') we will have $\eff \xrightarrow{\visZ} \eff'$, since $\eff$ is
-already present at the replica4, when op' is submitted).
+effects from the same session following the integer \emph{smaller
+than} relation over their sequence numbers.  \emph{Visibility} ($\eff
+\xrightarrow{\visZ} \eff'$) is an
+irreflexive and assymetric relation that holds if effect $\eff$ has
+been applied to a replica $R$ before $\eff'$ is applied to $R$.  In
+Fig.\ref{fig:sys_model3} for example, $\eff'$ (the effect of executing
+op') will witness the updates associated with effect $\eff$
+($\eff \xrightarrow{\visZ} \eff'$), since $\eff$ is already present at
+the replica4, when op' is submitted).
+
 \input{Figures/fig_system_model}
 
 

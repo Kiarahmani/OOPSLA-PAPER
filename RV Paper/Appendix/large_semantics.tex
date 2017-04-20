@@ -1,0 +1,25 @@
+Here, we explain our detailed operational semantics, to maintain
+multi-consistent replicated stores. We assume a given function from
+operation names, to consistency contracts: $\Psi :  op \mapsto \psi $
+and for simplicity reasons (again, it can be easily generalized) we
+consider contracts made by a single prop:
+\begin{smathpar}
+\Psi(op)=\forall (a,b). a \xrightarrow{R_{op}} \Rightarrow a \xrightarrow{vis} b. 
+\end{smathpar}
+For a given realtion $R$ we also define $R[m]$ to refer to the m'th
+relation seed in $R$:
+\begin{smathpar}
+(r_1;r_2;...;r_m;...;r_k)[m] = r_m
+\end{smathpar}
+Each replica in this semantics, maintains a $\Pool$ of available
+effects, and a $\Cache$ of filtered effects for each operation, each of
+which is a subset of $\Pool$ that is closed under its associated
+contract, i.e. $\forall \eff \in \Cache(op). (\trunc{R_{op}})_{\Pool}^{-1}(\eff)
+\subseteq \Cache(op) $ 
+We also define $\Avail$ of effects 
+which is  maintained according to section
+\ref{sec:alg}.
+Following is the formal definitions and the operation semantics.
+\input{Appendix/semantics}
+
+

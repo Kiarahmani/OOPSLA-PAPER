@@ -1,0 +1,258 @@
+\newpage
+%==========================================================
+%--- What programs are and how they are written in our tool
+%==========================================================
+\section{System Model}
+\label{sec:sys_model}
+
+A data store in our system model is a collection of \emph{replicas}
+(\#1,\#2,...), each of which maintains an instance of a set of
+replicated \emph{data object} ($x$,$y$,...).  These objects, which are
+defined by application developers, contain a \emph{state}
+($v$,$v'$,...) and are equipped with a set of \emph{operations}
+($op$,$op'$,...), each of which are designated as either read-only or
+effectful.  The former characterizes operations that just read from
+the store, and receive an instance of an object's state, while the
+latter characterizes operations that modify an object's state by
+generating \emph{update effects} ($\eff$,$\eff'$,...).  Update effects
+or simply effects are associated with an \emph{apply} function that
+executes asynchronously, and modifies object state on different
+replicas.  An effectful operation is handled by a replica that updates
+the object's state, and guarantees eventual delivery of the effect to
+all other replicas in the system. Each recipient uses the apply
+function to modify its local instance of the object;
+Fig.\ref{fig:system_model} illustrates this behavior.
+
+Observe there is no direct synchronization between replicas when an
+operation is executed, which means there can be conflicting updates on
+an object, that are generated at different replicas concurrently.  We
+do not bound the system to a particular conflict resolution strategy
+Consequently, this model admits all inconsistencies and anomalies
+associated with eventual consistency~\cite{quelea}; our goal is equip
+applications and implementations with mechanisms to specify and avoid
+such inconsistencies.
+
+Clients interact with the store by invoking operations on objects.
+A \emph{session} is a sequence of operations invoked by a particular
+client. Consequently, operations (and update effects) can be uniquely
+identified by their invoking \emph{session id} and
+their \emph{sequence number} in that particular session. The data
+store is typically accessed by a large number of clients concurrently
+and as a result of the load balancing regulations of the store,
+operations might be routed to different replicas, even if they are
+from the same session (Figures \ref{fig:sys_model1} and
+\ref{fig:sys_model3}).  Operations belonging to a given session are
+not required to be handled by the same replica.
+
+We new define two relations over effects created in the store.
+\emph{Session order} ($\xrightarrow{\soZ}$) is an irreflexive, transitive relation that relates
+effects from the same session following the integer \emph{smaller
+than} relation over their sequence numbers.  \emph{Visibility} ($\eff
+\xrightarrow{\visZ} \eff'$) is an
+irreflexive and assymetric relation that holds if effect $\eff$ has
+been applied to a replica $R$ before $\eff'$ is applied to $R$.  In
+Fig.\ref{fig:sys_model3} for example, $\eff'$ (the effect of executing
+op') will witness the updates associated with effect $\eff$
+($\eff \xrightarrow{\visZ} \eff'$), since $\eff$ is already present at
+the replica4, when op' is submitted).
+
+\input{Figures/fig_system_model}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%==========================================================
+\newpage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{comment}
+
+%
+% Initial Paragraph explaining the running example
+%
+
+Let's consider the developement of a modern-day large scale \emph{Bulletin
+Board} web application, that allows managers to initiate multiple boards for their
+organization, where employees can either write something on the
+board, or request to read all the messages on it.
+In order to achieve high availablity, developers decide to implement the
+application as distributed servers, working
+with replicated data objects on top of an 
+Eventually Consistent Data Store ({ECDS}). The data model here dictates
+each row at the data base level, to include a board identifier
+and a set of messages 
+(Fig. \ref{fig:simple_bb}).
+In this fashion, employees can start a session to send requests to geographically distributed
+servers and make updates to the rows, and the underlying store,
+would guarantee the eventual delivery of all updates at every server.
+\input{Figures/fig_simple_bulletin_board}
+%
+%===========================================================================SUBSECTION
+% Paragraph 2: Explaining the possible anomaly under EC
+%
+\subsection{Ad-hoc Anomaly Prevention Mechanisms}
+
+Developers cannot solely rely on the eventual consistency guarantee that
+is provided by the underlying data stores for application correctness. There are application integrity anomalies
+that must be thought of at the developement stage and be handled. For
+example, assume an employee signs into the system, writes some
+messages on the board, and immediately refreshes her browser hoping to see
+her messages on the board, which are however not there. This is obviously
+not desirable and as mentioned in
+the previous section,  can occure if
+the write messages were sent to a server, and the subsequent read to
+another, where her previous write updates are  not available yet. 
+\input{Figures/fig_meta_data_not_available}
+%
+% Paragraph 3: Ad-hoc prevention methods
+%
+
+To prevent this anomaly, developers must provide RMW consistency
+guarantee for their application, where user requests sent to a server are guaranteed to see
+all the previous updates made by the same client and session. The
+conventional technique for acheiving this,
+is to tag each session and its contained requests, respectively with unique identifiers and
+sequence numbers and to include this meta-data in the database, to
+record what requests have been seen by the server at any time. 
+Moreover, there must be some mechanisms to temporarily block user requests, when the database
+does not include the updates from previous requests.
+Since developers are not interested in synchronized and direct
+communication between servers (which obviously contradics the idea of using
+an ECDS), they have to record the meta data in the key value store and rely on
+the provided delivery mechanisms. 
+%
+%Paragraph 4: The problem with simply adding the metadata on top of the
+%implementation
+%
+
+However, the desired behavior cannot
+be achieved by simply creating meta data "add-ons" to the current implementation.
+The reason is that, in EC stores, no order of delivery is guaranteed,
+and some servers might receive the meta-data regarding some updates that
+are not present at the server yet. 
+Developers need to make sure that the meta-data recording sequence
+number of a request, becomes available at a server, at the same time
+when the corresponding update arrives. This can only be done by
+modifying the low-level initial data models, to also record the sequence
+numbers seen from each client. 
+%
+% Paragraph 5: The difficulties of low-level modifications: complex
+% and redundant
+%
+
+Now developers are inevitebaly required to modify the origianl low level
+data model to also include the required meta data, so the changes in the
+data and meta-data would arrive at servers atomically. Such changes on
+the data model will require rewriting 90\% of application functions from the scratch
+which is extremely inconvinience. 
+Moreover, now developers must face non-trivial problems associated with
+session management and dynamic data models. For example, when a new
+client arrives at a server 
+and initiates a session, the server is required to generate a unique ID
+for that session, and then add a new column to the
+underlying database table, to record the associated meta-data.
+Unfortunately, table alteration in ECDSs is not an atomic task, and forces developers to implement
+appropriate guards to make sure that the new column is available at all servers, before
+allowing the client to move on with the rest of her requests.  
+%
+% Paragraph 6: The problem of new consistency requirements
+%
+
+To make the matter worse, new integrity anomalies are discovered very
+frequently. Assume the bulltin board application with RMW has been
+successfully designed and implemented, however, after the developement
+phase users report a new type of anomaly, where messages seem to be
+disappeared after refreshing the browser. This undesirable behavior is
+allowed under EC and even RMW; since two read operations can go to
+different servers, where the second one does not include all the
+messages read from the first server. This requires another consistency
+level, called Monotonic Reads, that guarantees subsequent reads will
+include everything that has been read before in a session.
+ 
+ 
+ 
+
+
+
+
+
+
+\end{comment}
+
+

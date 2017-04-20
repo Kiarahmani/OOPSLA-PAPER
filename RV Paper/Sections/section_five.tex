@@ -1,0 +1,301 @@
+%========================================================================================================================
+%========================================================================================================================
+%========================================================================================================================
+\section{Semantics}
+\label{sec:semantics}
+In this section we formalize our consistency enforcement algorithm with an
+operational semantics, which is also a high-level abstraction of our
+tool \tool.
+The proposed approach is complete for the specification language defined
+in \ref{sec:ctrt_language}
+and extends the underlying key-value store to a multi-consistent shim
+layer. Here for simplicity reasons we present an operational semantics 
+parametrized over a contract with a single prop. However, as we explain
+in section \ref{subsec:generalization}, the rules can be easily
+generalized to cover multiple consistency levels, each specified by an
+arbitrary contract. Therefore, in the rest of this section we will assume a given contract $\psi$ of the
+following form:
+	\begin{smathpar}
+	\begin{array}{lcc}
+		\psi = \forall (a,b). a \xrightarrow{R} b  \Rightarrow a
+		\xrightarrow{\visZ} b, & \spc & R=r_1;r_2;...;r_k \\
+	\end{array}
+	\end{smathpar}
+
+The operational semantics is defined via a small-step relation over \emph{execution
+states}, which are tuples of the form $\E=(\EffSoup,\visZ ,\soZ)$.
+The \emph{effect soup} $\E.\EffSoup$, represents the set of all
+effects produced in the system, and  $\E.\visZ$,
+$\E.\soZ$ $\subseteq \EffSoup \times \EffSoup$, stand for, respectively the
+visibility and session order relations
+between such effects. 
+We also use the notation $\EffSoup_{(condition)}$
+to represent the projection of $\EffSoup$ to a subset
+of effects  in $\EffSoup$, that satisfy the specified condition.
+The reduction step that will be defined, is of the form
+\begin{smathpar}
+(\E,\op_{<s,i>}) \;\xrightarrow{\V}\; (\E', \eff),
+\end{smathpar}
+which can be interpreted as a reduction caused by a replica with a local 
+set of effects $\V$, after it executes an operation
+$\op$, which is the $i$'th request from the session $s$. 
+During this reduction step a new effect $\eff$ is produced and added to
+the effect soup, with new relations $\visZ$ and $\soZ$ that are updated
+accordingly.
+
+
+%=============================================================================================================
+%--------- Definitions to be used in the semanrics
+%=============================================================================================================
+\subsection{Preliminaries}
+\label{subsec:prelim}
+Before intorducing the operational semantics, 
+we need to formally define the inverse of a relation, \emph{given a set
+of local effects $\V$}.
+In correspondence with real
+distributed replicas, where at any moment there is only a \emph{subset}
+of all produced effects present at a replica, we want to define
+the inverse of a relation,
+only if the necessary information is present at the replica. For example, assume a
+replica wants to compute the set $D$ of all effects satisfying
+$\xrightarrow{r_1;r_2}$
+relation to an effect $\eff$. This is done in two steps, by first finding
+the set $D'$ of all effects satisfying relation $\xrightarrow{r_2}$ to
+$\eff$, and only then finding effects satisfying $\xrightarrow{r_1}$
+relation to any member of set $D'$. We should formalize our definition of the
+inverse relation, so that it captures the fact that the replica cannot
+compute $D$, if some mid-level effects in $D'$ are not locally available yet.
+In order to do so, we first formally define the inverse of a seed relation
+$r$ for a given set of effects $S$ as:
+\begin{smathpar}
+\rel^{-1}(\Set) = 
+\begin{cases}
+\begin{array}{lll}
+\bigcup^{}_{\eta\in \Set}. \{\eta'|(\eta',\eta) \in \E.\rel \} & \myif
+&\rel\in\{\soZ,\visZ\} \\ 
+\rel_1^{-1}(\Set)\cup \rel_2^{-1}(\Set) & \myif & \rel=\rel_1\cup \rel_2
+\end{array}
+\end{cases}
+\end{smathpar}
+Now, using a helping recursive function $G_r$, we extend the above
+definition to also cover the closure of a seed relation:
+\begin{smathpar}
+(r^{*})^{-1}(S) = G_{r}(S,\emptyset) 
+\end{smathpar}
+where,
+\begin{smathpar}
+G_r(S,P) =
+\begin{cases}
+\begin{array} {lll}
+G_r(r^{-1}(S) , P\cup r^{-1}(S)) &if& r^{-1}(S) \neq \emptyset  \\
+P  & &  otherwise
+\end{array}
+\end{cases}
+\end{smathpar}
+Now we are ready to formally define the inverse of the given relation
+$R=r_1;r_2;...;r_k$, according to a set $\V$ of local effects. This is
+done by logically specifying the set of effects satisfying the inverse
+relation with a given effect $\eff$:
+\begin{smathpar}
+\begin{array}{ccc}
+   \eta' \in (r_1;r_2;...;r_k)^{-1}_V (\eta) & \iff & \exists
+   \eta''.(\eta''\in r_k^{-1}
+   (\eta))\; \wedge \;(\eta' \in (r_1;r_2;...;r_{k-1})^{-1}
+   (\eta''))\;  \wedge \; (r_k^{-1}(\eta) \subseteq V)
+\end{array}
+\end{smathpar}
+Note that the first two conjuncts are the straightforward stepwise definition of
+the closure of relations. However, the last conjunct is also added, to
+make sure that before going any further in recursive computation, $V$
+includes all
+effects of the very next step. This is how we capture the
+necessaity of the presence of mid-level effects in real world systems for
+computing the final set of dependencies. We can now capture the blocking
+process in the semantics, by requiring the presence of $R_V^{-1}$ of
+operations under LB contracts at the
+replicas that they are being executed at.
+
+Lastly, we finish this part, by formally defining the \emph{maximally
+closed subset} of a set of effects $S$, given a relation $R$ and a set
+of local effects $V$
+as follows:
+\begin{smathpar}
+\left \lfloor S \right \rfloor_V = S' \spc \iff \spc S'
+\subseteq S \; \wedge \;
+R_V^{-1}(S') \subseteq S' \; \wedge \; 
+\not\exists
+S''.((R_V^{-1}(S''))\subseteq S''\wedge |S''|>|S'|)
+\end{smathpar}
+The above statement, simply requires $\left \lfloor S \right \rfloor_V $
+to be closed under $R_V^{-1}$ and to be the largest among such closed
+subsets. This allows us to introduce filteration process in the
+semantics, which only allows the maximally closed subset of available
+effects to be witnessed by operations with UB contracts.
+
+%=============================================================================================================
+%--------- The operational semantics
+%=============================================================================================================
+\subsection{Core Operational Semantics}
+\input{Sections/core_semantics} %--- The Figure Containing the Rules
+
+%--- Section intro
+In this part we present the reduction rules, representing our
+consistency preservation approach.
+Figure \ref{fig:semantics} presents the set of rules defining the
+auxiliary relation ($\hookrightarrow$) and small-step reduction relation 
+($\rightarrow$) over executions. The latter relation is parametrized
+over a set $V$,
+that represents the set of effects that are available at the replica
+that is 
+taking the step. Obviously $V$ must be a subset of the effect soup 
+of the initial execution, however, there is no other restrictions on $V$,
+since we only assume eventual consistency at the underlying store.
+
+%--- The [OPER] rule
+Let's now go over the auxiliary reduction rule
+\rulelabel{oper},
+that represtns the procedure of producing a new effect $\eff$, by witnessing a set
+of effects $S$. 
+An effect is formally defined as a tuple $\eff=(s,op,v)$, representing the
+session and the operation name 
+whose execution creates $\eff$, and the state value
+that the replica returns as the response to that operation.
+The rule explains how the execution state changes after producing an
+effect at a replica. Specifially, in the new state, the effect soup
+$\EffSoup'$ must
+now contain the newly created effect $\eff$, and the relations $\visZ'$
+and $\soZ'$ must capture the fact that the set $S$ was made
+visible to $\eta$, and all effects from the same session that were
+already presenet in the intial execution state, should be in session
+order with $\eff$ in the final execution state.
+
+
+%--- rule for (->) relation
+Now we explain the rule for reduction relation $(\xrightarrow{V})$,
+namely \rulelabel{exec}, which represents the execution of operations
+in a replica that updates the global state and produces a new
+effect. The rule is crafted so it would only take place, if the
+opertaing replica, contains the necessary effects specified by LB
+contracts, and only allows the operations to witness effects that would
+not violate the UB contracs.
+
+
+
+%--- Explaining the operational rules
+The preconditions of the reduction rules, include an auxiliary
+reduction, explaining the changes that occur in the execution state $\E$
+when an operation is performed. 
+Moreover, the rule contains
+$R_V^{-1}(\eff)\subseteq V'$ precondition, which basically guarantees
+that the operation will witness the set of necessary effects, specified
+by an LB contract. Note that this precondition trivially holds for UB
+contracts, which only put constraints on the effects that are
+\emph{about to} be made
+visible to $\eff$, unlike LB contracts that end with an $\soZ$ relation and
+refer to an \emph{already defined} set of dependencies. 
+
+Moreover, the we have the precondition $V' = \left \lfloor V \right
+\rfloor_V$, which basically filters out the effects from V, that would
+violate a UB contract. Similarly this condition is trivially held for LB
+contracts, since $V'$ is
+already consistent because of the above pre-condition. In this case,
+since $V'$ has
+to be maximal, it should be set equal to $V$. The \rulelabel{exec}
+similarly handles hybrid contracts, by both blocking oprtations and
+filtering updates.
+
+%=============================================================================================================
+%--------- Theorem on correctness of enforcement
+%=============================================================================================================
+\subsection{Soundness}
+\label{subsec:sound}
+Here, we present a meta-theoretic property showing that the given contract would never be
+violated, if the execution is in a consistent state and takes a reduction
+step. We start by defining what we mean by a consistent state of the
+execution: 
+\input{Sections/subsec_theorems}
+
+%=============================================================================================================
+%--------- Theorem on maxVis and minWait
+%=============================================================================================================
+\subsection{Optimality}
+\label{subsec:opt}
+Now we will present two theorems, regarding the optimality of our
+approach. Firstly, we show that there
+cannot be a larger subset of local effects in a replica to be made
+visible to an operation, than what
+our reduction rules specify. Next, we will prove the liveness property
+of our semantics, which guarantees that all replicas will take a step,
+given the proper set of local effects. Considering the eventual delivery of all
+updates, which is guaranteed by the underlying store, this theorem
+guarantees  that our system would never get permanently stuck. 
+\input{Sections/subsec_maximality}
+\input{Sections/subsec_minimalwait}
+
+%=============================================================================================================
+%--------- How it can be generalized for all contracts
+%=============================================================================================================
+\subsection{Generalization}
+\label{subsec:generalization}
+We finish this section by extendeding our ideas in two dimentions. 
+We will first explain how to handle an arbitrary
+contract $\psi$ of the following form:  
+\begin{smathpar}
+\psi = \pi_1 \wedge \pi_2 \wedge ... \wedge \pi_m \qquad \qquad 
+\pi_i = \forall (a,b). a \xrightarrow{R_i} b \Rightarrow a
+\xrightarrow{\visZ} b
+\end{smathpar}
+Later, we will
+explain how to maintain multiple levels of consistency simultaneously,
+each of which is defined for a different operation name. We will assume an arbitrary contract
+$\psi_{\op}$ for every user-defined operation $\op$, and explain how to
+modify our system model to preserve them all.
+
+To begin with, as we mentioned earlier, all propositions in our specification language,
+either put a maximal or a minimal bound on the subset of local effects 
+to be made visibe to each opreation. 
+This simply means that when the system is given a conjunction
+of propositions, it should define the such subsets in a way, so it would not violate
+\emph{any} of them. 
+Therefore, by a few modifications we can extend the system to support
+all contracts. Firstly, the single premise $R_V^{-1}(\eta) \subseteq V$
+in the reduction rule should be replaced with the following
+conjunction: 
+\begin{smathpar}
+\bigwedge_{1 \leq i \leq m} (R_i)_V^{-1}\subseteq V
+\end{smathpar}
+Secondly, the definition of the maximal closed subset of local effects
+must also be modified to a subset that is closed under \emph{all} given
+relations:
+%---------------------------------------------------------------------
+% I am not sure if we should include the formal definition here. It is
+% unnecessarily complex
+\begin{smathpar}
+\left \lfloor S \right \rfloor_V = S' \spc \iff \spc S'
+\subseteq S \; \wedge \;
+\bigwedge(R_i)_V^{-1}(S') \subseteq S' \; \wedge \; 
+\not\exists
+S''.(\bigwedge ((R_i)_V^{-1}(S''))\subseteq S''\wedge |S''|>|S'|)
+\end{smathpar}
+%---------------------------------------------------------------------
+
+Moreover, for modifying the system to handle multiple contracts
+simultaneously, we can
+extend the local effect set $V$, to a sequence
+of sets $V_{\op_i}$, each maintaning  the consistency level for an
+operation type $\op_i$. Now we define the modified form of execution steps as
+follow:
+\begin{smathpar}
+(\E,\op_{<s,i>}) 
+    \;\xrightarrow{V_{\op}}\;
+  (\E',\eff) 
+\end{smathpar}
+The local effect set $V$ must also be replaced with $V_{\op_i}$ in the 
+premises of the reduction rules, so each operation of type $\op_i$ would
+only witness the associated subset for its own consistency requirements.
+This abstractly represents our implementation, in the sense that all operations
+work only on a specific subset of available effects at any replica. The subset, is
+maintained according to the contract assosiated with each operation, and
+is guaranteed to preserve the consistency requirements following the
+theorems of sections \ref{subsec:sound} and \ref{subsec:opt}. 
+

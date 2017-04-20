@@ -1,0 +1,14 @@
+\begin{figure}[h]
+	\centering
+	\begin{minipage}{.75\textwidth}
+		$\eta_h,\eta_t, x \in$ EffVar  \hspace {35.5 mm} $Head    ::=    \eta_h | x \xrightarrow{txso} \eta_h | \eta_h \xrightarrow{txso} x$ \\
+		$R \in $ Relation ::= $vis | so | R \cup R $ \hspace{20 mm}
+		$Tail ::= \eta_t | x \xrightarrow{txso} \eta_t $ \\
+		$C \in $ Clause ::= $[R] | R^*$ \hspace{30 mm}		
+		$\pi \in$ Prop ::= $(H \xrightarrow{C} T) | \pi \vee \pi$ \\
+		$\psi \in$ Contract ::= $ \pi \Rightarrow vis (\eta_h,\eta_t)$ \\
+	\end{minipage}
+	\\
+	\hrulefill
+	\caption{The Contract Language}
+\end{figure}

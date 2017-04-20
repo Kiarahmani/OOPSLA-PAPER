@@ -1,0 +1,186 @@
+\newcommand{\tool}[0]{{\sc syncope}\xspace} % short for SYNthesizing
+% COnsistency Property Enforcement.
+\newcommand{\conj}{~\wedge~}
+
+\newcommand{\HA}{{\sf HA}}
+\newcommand{\SA}{{\sf SA}}
+\newcommand{\UA}{{\sf UA}}
+\newcommand{\scc}{\psi_{\sf sc}}
+\newcommand{\ccc}{\psi_{\sf cc}}
+\newcommand{\ecc}{\psi_{\sf ec}}
+\newcommand{\rcc}{\psi_{\sf rc}}
+\newcommand{\mavc}{\psi_{\sf mav}}
+\newcommand{\rrc}{\psi_{\sf rr}}
+%\newcommand{\coloneqq}{::=}
+\newcommand{\spc}{\quad}
+
+% \newtheorem{theorem}{Theorem}
+% \newtheorem{lemma}[theorem]{Lemma}
+% \newtheorem{proposition}[theorem]{Proposition}
+% \newtheorem{corollary}[theorem]{Corollary}
+% \newtheorem{definition}[theorem]{Definition}
+% \newcounter{hno}
+%   \newcounter{gno}
+% \renewenvironment{proof}{\setcounter{hno}{0}\setcounter{gno}{0}
+%   \emph{Proof.}}{}
+% \newcommand{\npp}{\thehno \stepcounter{hno}}
+% \newcommand{\mpp}{\thegno \stepcounter{gno}}
+
+% ------- the application example commands
+\newcommand{\stateC}{$\mathtt{State}$}
+\newcommand{\effectC}{$\mathtt{Effect}$}
+\newcommand{\writeC}{$\mathtt{write}$}
+\newcommand{\readC}{$\mathtt{read}$}
+\newcommand{\applyC}{$\mathtt{apply}$}
+
+\newcommand{\seedS}{$\mathtt{rel. seed}$}
+\newcommand{\propS}{$\mathtt{prop}$}
+\newcommand{\relationS} {$\mathtt{relation}$}
+\newcommand{\specS}{$\mathtt{spec}$}
+
+
+
+\newcommand{\nonvisrule}{\rulelabel{non-vis exec}\hspace{0.67mm}}
+\newcommand{\visrule}{\rulelabel{vis exec}\hspace{0.67mm}}
+
+\newcommand{\stretcharraybig}{\renewcommand*{\arraystretch}{1.25}}
+\newcommand{\cureff}{\hat{\eta}}
+\newcommand{\eff}{\eta}
+\newcommand{\fresh}{\N{\sf fresh}}
+\newcommand{\cv}{\psi}
+\newcommand{\ALT}{~\mid~}
+\newcommand{\eid}{{\iota}}
+\newcommand{\ObjType}{{\sf ObjType}}
+\newcommand{\AbsType}{{\sf AbsType}}
+\newcommand{\dom}{{\sf dom}}
+\newcommand{\DtLib}[1]{\mathbb{D}(#1)}
+\newcommand{\DtLibZ}{\mathbb{D}}
+\newcommand{\Ops}{\Lambda}
+\newcommand{\Ctrts}{\Psi}
+\newcommand{\true}{\N{\textsf{true}}}
+
+\newcommand{\R}[1]{\textrm{#1}}
+\newcommand{\N}[1]{{\normalfont #1}}
+\newcommand{\ObjZ}{\N{\textsf{Obj}}}
+\newcommand{\Obj}[1]{\N{\textsf{Obj}_{#1}}}
+\newcommand{\ReplID}{\mathtt{ReplID}}
+\newcommand{\SessID}{\mathtt{SessID}}
+\newcommand{\typeFun}[1]{\N{\textsf{type}}(#1)}
+\newcommand{\Op}[1]{\N{\textsf{Op}_{#1}}}
+\newcommand{\set}[1]{\mathcal{P}(#1)}
+\newcommand{\unitVal}{\N{\textsf{unit}}}
+\newcommand{\EffUniv}{\N{\sf Effect}}
+\newcommand{\EffID}{\mathtt{SeqNo}}
+\newcommand{\TransID}{\N{\sf TransID}}
+\newcommand{\AVal}[1]{\N{\textsf{AVal}_{#1}}}
+\newcommand{\RVal}[1]{\N{\textsf{RVal}_{#1}}}
+\newcommand{\Eff}[1]{\N{\textsf{Eff}_{#1}}}
+\newcommand{\loud}[1]{\textbf{\textit{#1}}}
+\newcommand{\dt}[1]{\mathcal{D}_{#1}}
+\newcommand{\vis}[2]{\N{\textsf{vis}(#1,#2)}}
+\newcommand{\visZ}{\N{\textsf{vis}}}
+\newcommand{\depsZ}{\N{\textsf{deps}}}
+\newcommand{\deps}[1]{\N{\textsf{deps}(#1)}}
+\newcommand{\Rvis}{\N{\textsf{vis}}}
+\newcommand{\arZ}{\N{\textsf{ar}}}
+\newcommand{\ar}[2]{\N{\textsf{ar}(#1,#2)}}
+\newcommand{\stxZ}{\sim}
+\newcommand{\stx}[2]{#1\sim#2}
+\newcommand{\nstx}[2]{#1\not\sim#2}
+\newcommand{\comZ}{\N{\textsf{com}}}
+\newcommand{\com}[1]{\comZ(#1)}
+\newcommand{\so}[2]{\N{\textsf{so}(#1,#2)}}
+\newcommand{\soZ}{\N{\textsf{so}}}
+\newcommand{\stZ}{\N{\textsf{st}}}
+\newcommand{\Rso}{\N{\textsf{so}}}
+\newcommand{\Rst}{\N{\textsf{st}}}
+\newcommand{\COM}{\textrm{\sc {\small Commit}}}
+\newcommand{\soo}[2]{\N{\textsf{soo}(#1,#2)}}
+\newcommand{\sooZ}{\N{\textsf{soo}}}
+\newcommand{\hb}[2]{\N{\textsf{hb}(#1,#2)}}
+\newcommand{\hbo}[2]{\N{\textsf{hbo}(#1,#2)}}
+\newcommand{\hbZ}{\N{\textsf{hb}}}
+\newcommand{\hboZ}{\N{\textsf{hbo}}}
+\newcommand{\txnZ}{\N{\textsf{txn}}}
+\newcommand{\txn}[2]{\txnZ\{#1\}\{#2\}}
+\newcommand{\trunc}[1] {\N{\textsf{trunc\vspace{0.55mm}}}(#1)}
+\newcommand{\sameobj}[2]{\N{\textsf{sameobj}(#1,#2)}}
+\newcommand{\sameobjZ}{\N{\textsf{sameobj}}}
+\newcommand{\sametxn}[2]{\N{\textsf{sametxn}(#1,#2)}}
+\newcommand{\sametxnZ}{\N{\textsf{sametxn}}}
+\newcommand{\E}{\N{\textsf{E}}}
+\newcommand{\Pool}{\N{\textsf{pool}}}
+\newcommand{\Cache}{\N{\textsf{cache}}}
+\newcommand{\Avail}{\N{\textsf{DDP}}}
+\newcommand{\CacheFinder}{\N{\textsf{Ctxt}}}
+\newcommand{\EffSoup}{\N{\textsf{A}}}
+\newcommand{\myif}{\mathtt {if}}
+\newcommand{\rel}{\mathtt{r}}
+\newcommand{\V}{\N{\textsf{V}}}
+\newcommand{\Set}{\N{\textsf{S}}}
+\newcommand{\Rel}{\N{\textsf{R}}}
+\newcommand{\op}{\N{\textsf{op}}}
+\newcommand{\obj}{\N{\textsf{obj}}}
+\newcommand{\dep}{\N{\textsf{dep}}}
+\newcommand{\ssn}{\N{\textsf{ssn}}}
+\newcommand{\id}{\N{\textsf{id}}}
+\newcommand{\oper}{\N{\textsf{oper}}}
+\newcommand{\rval}{\N{\textsf{rval}}}
+\newcommand{\repl}{\N{\textsf{repl}}}
+\newcommand{\sess}{\N{\textsf{sess}}}
+\newcommand{\rdtspec}{\Delta}
+\newcommand{\goesto}{\longrightarrow}
+\newcommand{\tuplee}[1]{\langle #1 \rangle}
+\newcommand{\ctxtFn}{\N{\textsf{ctxt}}}
+\newcommand{\rdtredsto}{\N{\leadsto}}
+\newcommand{\Exec}{\N{\textsf{(\EffSoup,\allowbreak \visZ,\allowbreak \soZ)}}}
+\newcommand{\pll}{~\|~}
+\newcommand{\Mod}[1]{\N{\textsf{Mod}}(#1)}
+\newcommand{\De}[1]{#1}
+\newcommand{\Der}[2]{[\![#1,#2]\!]_{r}}
+\newcommand{\msentails}[2]{#1 \models #2}
+\newcommand{\hasTyp}[2]{#1 \vdash #2}
+\newcommand{\auxred}[4]{#1 \vdash #2 \xhookrightarrow{#3} #4 }
+\renewcommand{\qed}{\nobreak \ifvmode \relax \else
+      \ifdim\lastskip<1.5em \hskip-\lastskip
+      \hskip1.5em plus0em minus0.5em \fi \nobreak
+      \vrule height0.75em width0.5em depth0.25em\fi}
+
+
+% Operational semantics rules
+\newcommand{\rulelabel}[1]{\textrm{\sc {\small [#1]}}}
+\newcommand{\RULE}[3]
+{\frac{\begin{array}{c}#1\end{array}}
+		 {\begin{array}{c}#2\end{array}}
+~ \rulelabel{#3}
+}
+
+\newcommand{\RuleTwo}[2]
+{\frac{\begin{array}{c}#1\end{array}}
+		 {\begin{array}{c}#2\end{array}}
+}
+
+\newenvironment{nop}{}{}
+\newenvironment{smathpar}{
+\begin{nop}\small\begin{mathpar}}{
+\end{mathpar}\end{nop}\ignorespacesafterend}
+
+\newenvironment{cmathpar}{
+\vspace{-3mm}
+\renewcommand{\arraystretch}{1.2}
+\begin{nop}\begin{mathpar}}{
+\end{mathpar}\end{nop}\ignorespacesafterend}
+
+\newcommand{\rsf}[1]{\R{\sf #1}}
+\newcommand{\trans}[4]{\N{\textsf{trans}}\{#1,#2\}\{#3,#4\}}
+
+\setlength{\floatsep}{5pt}
+\setlength{\textfloatsep}{10pt}
+\setlength{\dblfloatsep}{5pt}
+\setlength{\dbltextfloatsep}{10pt}
+
+
+\newcommand{\ecds}{ECDS\xspace}
+%\newcommand{\nexists}{\not\exists}
+%\newcommand{\nsucc}{\not\succ}
+%\newcommand{\nsubseteq}{\not\subseteq}

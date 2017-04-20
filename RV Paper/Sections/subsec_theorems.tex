@@ -1,0 +1,37 @@
+%
+%Subsection on the correctness of contract 
+%
+\begin{definition}
+For a given contract ($\psi=\forall(a,b). a
+\xrightarrow{R} b \Rightarrow a \xrightarrow{vis} b $), we define a set
+of effects $S$, to be  $\psi$-consistent under an execution $\E$, if and
+only if: 
+$\forall (\eff \in S). \forall(a\in \E.\EffSoup). R(a,\eta)
+\Rightarrow a \in S$ 
+\\Where the definition of $R(a,b)$ is based on the definition of $R^{-1}$ from
+\ref{subsec:prelim}, as follows: $R(a,b) \iff a \in R_{E.A}^{-1}(b)  $
+\end{definition}
+
+\begin{theorem}
+\label{theorem:one}
+For all reduction steps 
+$
+\; (\E,op_{<s,i>}) 
+    \xrightarrow{V}
+  (\E',\eff)  
+$,
+if $V$ is $\psi$-consistent under $\E$, then $(V\cup\{\eta\})$ is
+$\psi$-consistent under $\E'$.
+\end{theorem}
+\begin{proof}
+The proof is followed by the fact that the premises of the execution
+step, contains $R_V^{-1}(\eta)\subseteq V$, which basically states that the set made visible to
+the operation, must not violate the contract $\psi$. A more detailed proof can
+be found in appendix \ref{app:proof1}.
+\\
+\end{proof}
+
+
+
+
+

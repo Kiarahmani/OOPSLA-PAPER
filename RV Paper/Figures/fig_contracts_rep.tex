@@ -1,0 +1,40 @@
+\begin{figure}[t]
+        \centering
+	\begin{subfigure}[b]{0.3\textwidth}
+	\caption{Read My Writes: \\
+	$\forall(\eff,\eff'). \eff \xrightarrow{\soZ} \eff \Rightarrow
+	\eff \xrightarrow{\visZ} \eff'$}
+	\includegraphics[scale=0.5]{Figures/rmw.pdf}
+	\end{subfigure}
+	%
+	\vrule
+	\hfill
+	\begin{subfigure}[b]{0.3\textwidth}
+	\caption{Monotonic Reads: 
+	\\	$\forall(\eff,\eff'). \eff \xrightarrow{\visZ;\soZ} \eff \Rightarrow
+	\eff \xrightarrow{\visZ} \eff' $}
+	\includegraphics[scale=0.5]{Figures/mr.pdf}
+	\end{subfigure}
+	%
+	\vrule
+	\hfill
+	\begin{subfigure}[b]{0.25\textwidth}
+	\caption{Monotonic Writes:
+	\\	$\forall(\eff,\eff'). \eff \xrightarrow{\soZ;\visZ} \eff \Rightarrow
+	\eff \xrightarrow{\visZ} \eff' $}
+	\includegraphics[scale=0.5]{Figures/mw.pdf}
+	\end{subfigure}
+	%
+%	\begin{subfigure}[b]{0.24\textwidth}
+%	\centering
+%	\includegraphics[scale=0.38]{Figures/wfr.pdf}
+%	\caption{Writes Follow Reads}
+%	\end{subfigure}
+\\ \hrulefill
+
+\caption{Known weak consistency guarantees written in our specification
+language}
+\label{fig:ctrt_rep}
+\end{figure}
+
+

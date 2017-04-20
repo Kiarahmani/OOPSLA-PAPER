@@ -1,0 +1,37 @@
+\begin{figure}[h]
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+	\begin{lstlisting}
+	public Boolean login(String username, String password) {
+		String storedPW = DB.getPass(username);
+		return (password.equals(storedPW));
+	}
+	\end{lstlisting}
+	\label{fig:modified_bb}
+    \end{subfigure}
+    \quad 
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+	\begin{lstlisting}
+	public Boolean login(int sequence, String username, String password) {
+		int storedSeq = 0; 
+		String storedPW = DB.getPass(username);
+		while (storedSeq != sequence - 1){
+			storedSeq = DB.getSeq (username);
+			storedPW = DB.getPass(username);
+		}
+		return (password.equals(storedPW));
+	}
+	\end{lstlisting}
+        \label{fig:simple_bb}
+    \end{subfigure} 
+    \\ \hrulefill \\
+\caption{A simple function in server implementation that responds to client
+requests via database accesses (left), and a modified version that blocks
+requests, until the desired dependencies are locally present}
+\label{fig:haskel_code}
+\end{figure}
+
+
+
+

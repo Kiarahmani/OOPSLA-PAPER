@@ -1,0 +1,43 @@
+Here, we present the detailed proofs of the theorems of the paper. 
+\subsection{Proof of Theorem \ref{theorem:one}}
+\label{app:proof1}
+\input{Sections/correctness_proof}
+
+\subsection{Proof of Theorem \ref{theorem:two}}
+\label{app:proof2}
+\input{Sections/maxvis_proof}
+
+\subsection{Proof of Theorem \ref{theorem:three}}
+\label{app:proof3}
+Before proving the theorem, let's first prove the following lemma: 
+\begin{lemma}
+Under an execution state E and for a given set $S \subseteq E.A$, if
+$S$ is $\psi$-consistent under $E$, then $\forall(x\in S).R_S^{-1}(x)
+\subseteq S$ under $E$.
+\begin{proof}
+From $\psi$-consistency of $S$ we have the following:
+\begin{smathpar}
+\begin{array}{ll}
+H_0: & \forall(x\in S). \forall (y\in E.A). R.(y,x) \in S \\
+\end{array}
+\end{smathpar}
+Now based on the definition of $R$, we have the following: 
+\begin{smathpar}
+\begin{array}{ll}
+H_1: & \forall(x\in S). R_{E.A}^{-1}(x) \subseteq S \\
+\end{array}
+\end{smathpar}
+However, since $S\subseteq E.A$ we have $R_{S}^{-1}(x) \subseteq
+R_{E.A}^{-1}(x)$ and the following will be derived: 
+\begin{smathpar}
+\begin{array}{ll}
+H_2: & \forall(x\in S). R_{S}^{-1}(x) \subseteq S \\
+\end{array}
+\end{smathpar}
+which completes the proof of the lemma.
+
+\end{proof}
+\end{lemma}
+\label {lemma1}
+\input{Sections/minimality_proof}
+

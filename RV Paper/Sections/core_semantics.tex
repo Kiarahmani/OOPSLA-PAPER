@@ -1,0 +1,85 @@
+\begin{figure}[t]
+\raggedright
+\textbf{Auxiliary Definitions}\\
+%
+\begin{minipage}{\columnwidth}
+\begin{smathpar}
+\stretcharraybig
+\begin{array}{lclcl}
+  \multicolumn{5}{c}{
+    \hspace{-8mm}
+    {op} \in \mathtt{Operation\; Name} \spc \spc
+    {v} \in \mathtt{Return\; Value} \spc \spc
+    {s} \in \mathtt{Session\; Id} \spc\spc
+ %   {i} \in \mathtt{Effect\; Id} \spc\spc
+  }\\
+  \eff & \in & \mathtt{Effect} & \coloneqq &  (s,op,v)\\
+  F_{op} & \in & \mathtt{Op.\,Def.} & \coloneqq & \set{\eff} \mapsto v\\
+  \EffSoup & \in & \mathtt{Eff\,Soup}	  & \coloneqq & \set{\eff} \\
+  \visZ,\soZ &	\in & \mathtt{Relations} & \coloneqq & \set{(\eff,\eff)} \\
+  {\E} 		& \in & \mathtt{Exec\;State}  & \coloneqq & \Exec \\
+\end{array}
+\end{smathpar}
+\end{minipage}
+%
+
+
+
+\textbf{Auxiliary Reduction} \;
+\fbox{\(\auxred{S} {(\E,op_{<s,i>})} {} {(\E',\eff)}\)}\\
+
+\begin{minipage}{\textwidth}
+\rulelabel{Oper}
+\begin{smathpar}
+\stretcharraybig
+\begin{array}{l}
+\RuleTwo
+{
+%\Theta(\rho \mapsto (v,cache)) \qquad
+S \subseteq \EffSoup \qquad F_{op}(S) = v \qquad
+\eta \not\in S \qquad
+\eff = (s,op,v) \qquad  \\
+%\id(\eta) = i \qquad
+%\{\eff'\} = \EffSoup_{({\sf SessID}=s,\,{\sf SeqNo}=i-1)}\\
+\EffSoup' = \EffSoup \cup \{\eff\}  \qquad
+\visZ' = \visZ \cup S \times\{\eff\}\qquad
+\soZ' = \soZ \cup \{(\eta',\eta) \,|\, \eta'\in \EffSoup_{({\sf
+SessID}=s)}      \}\qquad
+%\soZ' = (\soZ^{-1}(\eff') \cup \eff') \times\{\eff\} \cup \soZ
+}
+{
+  \auxred {S} {((\EffSoup,\visZ,\soZ), op_{<s,i>}))}
+  {} {((\EffSoup',\visZ',\soZ'),\eta)}
+}
+\end{array}
+\end{smathpar}
+\end{minipage}
+\vspace{4mm}\\
+\textbf{Operational Semantics} \;
+  \fbox{\((\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E',\eff)\)}\\
+\begin{minipage}{\textwidth}
+\rulelabel{Exec}
+\begin{smathpar}
+\stretcharraybig
+\begin{array}{l}
+\RuleTwo
+{
+     V \subseteq E.A \spc  
+  V'= \left \lfloor V \right \rfloor_V \spc
+     R^{-1}_{V}(\eta) \subseteq V' \\
+  \auxred {V'} {(E, op_{<s,i>}))}
+    {} {(E',\eta)} 
+}
+{
+  (\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E', \eff)
+}
+\end{array}
+\end{smathpar}
+\end{minipage}
+\\
+\vspace{5mm}
+\hrulefill\\
+\caption{Core Operational semantics of a replicated data store.}
+\label{fig:semantics}
+\end{figure}
+

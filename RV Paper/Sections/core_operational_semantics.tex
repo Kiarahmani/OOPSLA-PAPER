@@ -1,0 +1,78 @@
+Before intorducing the operational semantics, 
+we need to formally define the inverse of a relation, \emph{given a set
+of local effects $\V$}.
+In correspondence with real
+distributed replicas, where at any moment there is only a \emph{subset}
+of all produced effects present at a replica, we want to define
+the inverse of a relation,
+only if the necessary information is present. For example, assume a
+replica wants to compute the set $D$ of all effects satisfying
+$\xrightarrow{r_1;r_2}$
+relation to an effect $\eff$. This is done in two steps, by first finding
+the set $D'$ of all effects satisfying relation $\xrightarrow{r_2}$ to
+$\eff$, and only then finding effects satisfying $\xrightarrow{r_1}$
+relation to a member of set $D'$. We should formalize our definition of the
+inverse relation, so that it captures the fact that the replica cannot
+compute $D$, if some effects in $D'$ are not locally available yet.
+In order to do so, we first formally define the inverse of a seed relation
+$r$ for a given set of effects $S$:
+\begin{smathpar}
+\rel^{-1}(\Set) = 
+\begin{cases}
+\begin{array}{lll}
+\bigcup^{}_{\eta\in \Set}. \{\eta'|(\eta',\eta) \in \E.\rel \} & \myif
+&\rel\in\{\soZ,\visZ\} \\ 
+\rel_1^{-1}(\Set)\cup \rel_2^{-1}(\Set) & \myif & \rel=\rel_1\cup \rel_2
+%\\G_{r}(S,\emptyset) & if &  r=r^* 
+\end{array}
+\end{cases}
+\end{smathpar}
+Now, using a helping recursive function $G_r$, we extend the above
+definition to also cover the closure of a seed relation:
+\begin{smathpar}
+(r^{*})^{-1}(S) = G_{r}(S,\emptyset) 
+\end{smathpar}
+where,
+\begin{smathpar}
+G_r(S,P) =
+\begin{cases}
+\begin{array} {lll}
+G_r(r^{-1}(S) , P\cup r^{-1}(S)) &if& r^{-1}(S) \neq \emptyset  \\
+P  & &  otherwise
+\end{array}
+\end{cases}
+\end{smathpar}
+Now we are ready to formally define the inverse of the given relation
+$R=r_1;r_2;...;r_k$, according to a set $\V$ of local effects. This is
+done by logically specifying the set of effects satisfying the inverse
+relation with a given effect $\eff$:
+\begin{smathpar}
+\begin{array}{ccc}
+   \eta' \in (r_1;r_2;...;r_k)^{-1}_V (\eta) & \iff & \exists
+   \eta''.(\eta''\in r_k^{-1}
+   (\eta))\; \wedge \;(\eta' \in (r_1;r_2;...;r_{k-1})^{-1}
+   (\eta''))\;  \wedge \; (r_k^{-1}(\eta) \subseteq V)
+\end{array}
+\end{smathpar}
+Note that the first two conjuncts are the straightforward stepwise definition of
+the closure of relations. However, the last conjunct is also added, to
+make sure that before going any further in recursive computation, $V$
+includes all
+effects of the very next step. This is how we capture the
+necessaity of the presence of mid-way effects in real world systems for
+computing the final set of dependencies. 
+
+Lastly, we finish this part, by formally defining the \emph{maximally
+closed subset} of a set of effects $S$, given a relation $R$ and a set
+of local effects $V$
+as follows:
+\begin{smathpar}
+\left \lfloor S \right \rfloor_V = S' \spc \iff \spc S'
+\subseteq S \; \wedge \;
+R_V^{-1}(S') \subseteq S' \; \wedge \; 
+\not\exists
+S''.((R_V^{-1}(S''))\subseteq S''\wedge |S''|>|S'|)
+\end{smathpar}
+The above statement, simply requires $\left \lfloor S \right \rfloor_V $
+to be closed under $R_V^{-1}$ and to be the largest among such closed
+subsets.

@@ -1,0 +1,34 @@
+\begin{figure}[t]
+\centering
+\begin{center}
+\begin{footnotesize}
+\begin{tabular}{||l | c  l  l||} 
+\hline
+ {\bf Benchmark} & {\bf LoC} & {\bf Consistency Reqs.} & {\bf
+ Description}\\ [0.5ex] 
+\hline\hline
+Counter & 65 & MR & Monotonicly increasing counter, e.g.
+YouTubes' watch 
+count\\ \hline
+DynamoDB & 126 & RMW & An integer register that allos different
+types of (conditional) puts and gets \\ \hline
+Online Store & 236 & RMW &  Online store with shopping carts
+and modifiable item prices \\ \hline
+Bankaccount & 85 & 2VIS $\wedge$ RMW & A bankaccount application with
+deposit, withdraw and get balance operations\\ \hline
+Shopping List  & 140  &  MW $\wedge$ RMW & A shopping list with
+concurrent adds and deletes functionality\\ \hline 
+Microblog & 395 &  MW, RMW & A Twitter-like application modeled after
+Twissandra, with posting and replying
+\\ & & & 
+to tweets, following, unfollowing and blocking users, etc.\\ \hline
+Rubis & 417 & RMW, RMW$\wedge$2VIS & eBay-like
+application with browsing, bidding and making payments from a wallet \\  [1ex]
+\hline
+\end{tabular}
+\end{footnotesize}
+\end{center}
+\caption{Usage of weak consistency requirements in benchmark
+applications}
+\label{fig:dist_table}
+\end{figure}

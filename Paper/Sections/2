@@ -37,16 +37,12 @@ $\eff_8$ and $\eff_1$, for better readability.
 We use notation $\EffSoup_{(condition)}$
 to represent a  subset of $\EffSoup$ consisting of effects that
 satisfy the specified condition.
-Note that \tool's contracs are in fact constraints over execution states,
-where the domain of quantification is fixed to the effect soup
-$\EffSoup$, and
+Note that \tool contracs are in fact constraints over execution states,
+where the domain of quantification is fixed to the effect soup and
 interpretation for $\soZ$ and $\visZ$ relations (which occur free in the
-contract formulae) are also provided. Thus, execution states are
-potential
-models for any first-order formula expressable in the contract
-language. If an execution state $\E$ is in fact a valid model for a contract
-$\psi$, we say that $\E$ satisfies $\psi$, written as $\E
-\models \psi$. 
+contract formulae) are provided.
+
+
 
 
 The samentics' reduction step is of the form
@@ -57,13 +53,8 @@ which can be interpreted as a reduction with the initial execution state $\E$, c
 set of effects $\V$, after it executes an operation
 $\op$, which is the $i$'th request from the session $s$. 
 During this reduction step a new effect $\eff$ is produced and added to
-the system, resulting a new execution state $\E'$ with updated effect
+the system, resulting a new execution state $\E'$, with updated effect
 soup and primitive relations.
-
-Before introducing the operational semantics, we will first formally
-present the required definitions in the next section. Namely, we will define  
-notions of the \emph{inverse} of a given relation $R$, and the \emph{maximally
-closed subset} of a given set of effects $V$ under a contract $\psi$. 
 
 
 
@@ -73,149 +64,88 @@ closed subset} of a given set of effects $V$ under a contract $\psi$.
 %=============================================================================================================
 \subsection{Preliminaries}
 \label{subsec:prelim}
-Firstly, we need to define the trancated relation for a given $R \in$
-\relationS{} as a relation derived by removing the last element from the
-sequence in $R$ (if there is any). i.e.
-\begin{smathpar}
-\trunc{R} = 
-\begin{cases}
-\begin{array}{lcl}
-\rel^* & \myif & R = \rel^* \\ 
-R' & \myif & R = R';\rel
-\end{array}
-\end{cases}
-\end{smathpar}
-We now continue by formally defining the inverse of a relation ($\rel \in$
-\seedS{}) given an 
-execution state $\E$:
+Before intorducing the operational semantics, 
+we need to formally define the inverse of a relation, \emph{given a set
+of local effects $\V$}.
+In correspondence with real
+distributed replicas, where at any moment there is only a \emph{subset}
+of all produced effects present at a replica, we want to define
+the inverse of a relation,
+only if the necessary information is present at the replica. For example, assume a
+replica wants to compute the set $D$ of all effects satisfying
+$\xrightarrow{r_1;r_2}$
+relation to an effect $\eff$. This is done in two steps, by first finding
+the set $D'$ of all effects satisfying relation $\xrightarrow{r_2}$ to
+$\eff$, and only then finding effects satisfying $\xrightarrow{r_1}$
+relation to any member of set $D'$. We should formalize our definition of the
+inverse relation, so that it captures the fact that the replica cannot
+compute $D$, if some mid-level effects in $D'$ are not locally available yet.
+In order to do so, we first formally define the inverse of a seed relation
+$r$ for a given set of effects $S$ as:
 \begin{smathpar}
 \rel^{-1}(\Set) = 
 \begin{cases}
-\begin{array}{lcl}
-\bigcup_{\eta\in \Set}. \{\eta'|(\eta',\eta) \in \E.\rel \} & \myif
-&\rel\in\{\soZ,\visZ\}\ \\ 
+\begin{array}{lll}
+\bigcup^{}_{\eta\in \Set}. \{\eta'|(\eta',\eta) \in \E.\rel \} & \myif
+&\rel\in\{\soZ,\visZ\} \\ 
 \rel_1^{-1}(\Set)\cup \rel_2^{-1}(\Set) & \myif & \rel=\rel_1\cup \rel_2
 \end{array}
 \end{cases}
 \end{smathpar}
-Note that when the input set of an inversed relation is a singleton
-$\{\eta\}$, we drop the brackets and simply write it as
-$\rel^{-1}(\eta)$.
-Now, using a recursive function $G^\rel$, we extend the above definition to
-the closure of $\rel$ as follows:
+Now, using a helping recursive function $G_r$, we extend the above
+definition to also cover the closure of a seed relation:
 \begin{smathpar}
-(\rel^{*})^{-1}(\Set) = G^{\rel}(\Set,\emptyset) 
+(r^{*})^{-1}(S) = G_{r}(S,\emptyset) 
 \end{smathpar}
 where,
 \begin{smathpar}
-G^\rel(\Set,P) =
-\begin{cases}
-\begin{array} {ll}
-G^\rel(\rel^{-1}(\Set) , P\cup \rel^{-1}(\Set)) &\myif \; \rel^{-1}(\Set) \neq \emptyset  \\
-P  &   \mathtt{otherwise} 
-\end{array}
-\end{cases}
-\end{smathpar}
-For example, in figure \ref{subfig:inverse_example} (where the inverse
-of various different relations are presented),
-$(\visZ^*)^{-1}(\eta_1)$ is computed by first calling
-$G^{\visZ}(\{\eta_1\},\emptyset)$ which returns
-$G^{\visZ}(\{\eta_2,\eta_3\},\{\eta_2,\eta_3\}) $,
-since $\visZ^{-1}(\eta_1) = \{\eta_2,\eta_3\} \neq \emptyset$.
-Similarly, the second recursive call will result in
-$G^{\visZ}(\{\eta_4,\eta_5,\eta_6\},\{\eta_2,\eta_3,\eta_4,\eta_5,\eta_6\})
-$ where the computation reaches its fixed point, since  $\visZ^{-1}(\{\eta_4,\eta_5,\eta_6\}) =
-\emptyset$, and final result of $\{\eta_2,\eta_3,\eta_4,\eta_5,\eta_6\}$ is returned.
-
-We now present the definition of the inverse of 
-a sequence (of size larger than 1) of \seedS{} and their clousres as follows:
-\begin{smathpar}
-\begin{array}{lllllrr}
-\eta' \in  (R';r)^{-1}(\eta) & \iff & \exists \eta''. \eta'' \in r^{-1}(\eta)
-& \wedge & \eta' \in (R')^{-1}(\eta'') & \qquad & (1)
-\end{array}
-\end{smathpar}
-Note that, since $R\in$ \relationS{} in our specification language is
- either a \seedS{}, its clousre or a sequence of them, we are
-now ready to formally define the inverse of any given relation $R$.
-However, the above definitions do not capture the reality of distributed
-systems, where the inverse of the relations are used by replicas, which
-might have access to only a \emph{subset of all effects} at any given
-moment. For example, consider  $(\soZ;\visZ)^{-1}(\eta_1)$ of the
-execution state in figure
-\ref{fig:execution_state}. In order to compute this set, based on the
-recursive defintion of (1) we have: 
-\begin{smathpar}
-\begin{array}{lllll}
-\eta' \in  (\soZ;\visZ)^{-1}(\eta_1) & \iff & \exists \eta''. \eta'' \in
-\visZ^{-1}(\eta_1)
-& \wedge & \eta' \in (\soZ)^{-1}(\eta'')
-\end{array}
-\end{smathpar}
-Since
-there exist \emph{mid-level} effects $\eta_2$ and $\eta_3$, such that satisfy the above
-definition respectively 
-for $\eta_7$ and $\eta_9$, we have: $(\soZ;\visZ)^{-1}(\eta_1) =
-\{\eta_7,\eta_9\}$.
-Now assume a replica only contains $\{\eta_1, \eta_6, \eta_7, \eta_8,
-\eta_9\}$ and wants to check if the dependencies of $\eta_1$ are present
-at the replica or not. Even though based on the above definitions the
-answer is yes (since the replica contains $\{\eta_7,\eta_9\}$), but in
-reality the replica is unable to verify that, since the mid-level
-effects $\eta_2$ and $\eta_3$ are not present at the replica yet. 
-
-To avoid the above problem, we now partially define the inverse of a given relation $R \in$
-\relationS{} \emph{according to a set of available effects $V$}, only if all the required mid-level effects are
-also present in $V$. We present a new version of the 
-definition (1), based on a slightly modified helping function $G^\rel_V$.
-\begin{smathpar}
-\eta' \in (R)^{-1}_V(\eta) \iff
-\begin{cases}
-\begin{array} {lllll}
-\eta' \in \rel^{-1}(\eta) & \myif & R=\rel & & \\
-\eta' \in G^{\rel}_V(\{\eta\},\emptyset)  & \myif & R=\rel^* & & \quad
-\qquad (2)  \\
-\exists \eta''. \eta'' \in
-\rel^{-1}(\eta) \wedge \eta' \in (R')^{-1}(\eta'') \wedge
-\rel^{-1}(\eta) \subseteq V   & \myif & R=R';\rel & & 
-\end{array}
-\end{cases}
-\end{smathpar}
-Note that the last conjunct is the only difference between the third
-line above and definition (1) which assures the presence of mid-level
-effects before performing the next recursive call.  Simliarly, We define
-$G_V^{\rel}$ as follows:
-\begin{smathpar}
-G_V^\rel(\Set,P) =
+G_r(S,P) =
 \begin{cases}
 \begin{array} {lll}
-G^\rel(\rel^{-1}(\Set) , P\cup \rel^{-1}(\Set)) &\myif & \rel^{-1}(\Set)
-\neq \emptyset  \wedge \rel^{-1}(\Set) \subseteq V \\
-\emptyset & \myif & \rel^{-1}(\Set) \neq \emptyset \wedge
-\rel^{-1}(\Set) \not\subseteq V     \\
-P  &   \myif & \rel^{-1}(\Set) = \emptyset 
-\empty
+G_r(r^{-1}(S) , P\cup r^{-1}(S)) &if& r^{-1}(S) \neq \emptyset  \\
+P  & &  otherwise
 \end{array}
 \end{cases}
 \end{smathpar}
-
-
-Fainally, we define closed subsets of a given set of
-effects $V$ under the contract $\psi$, which will be used to define the
-the maximal of such subsets  (We will abuse the notation slightly
-and use a \emph{set} as the input to the inverse relation, which simply is
-the union of the inverse of the relation on all the elements in the
-set):
+Now we are ready to formally define the inverse of the given relation
+$R=r_1;r_2;...;r_k$, according to a set $\V$ of local effects. This is
+done by logically specifying the set of effects satisfying the inverse
+relation with a given effect $\eff$:
 \begin{smathpar}
-\begin{array}{rlllll}
-\mathtt{closed \; subsets:} &  V' \in \left \lfloor  V \right \rfloor & \iff & V' \subseteq V & \wedge &
-(\trunc R)_V^{-1}(V') \subseteq V'   \\
-\mathtt{maximally \; closed \; subset:} & V' = \left \lfloor  V \right
-\rfloor_{\mathtt{max}} & \iff & V' \in \left \lfloor  V \right \rfloor &
-\wedge & \not\exists V'' \in \left \lfloor  V \right \rfloor. |V''|>|V'|
+\begin{array}{ccc}
+   \eta' \in (r_1;r_2;...;r_k)^{-1}_V (\eta) & \iff & \exists
+   \eta''.(\eta''\in r_k^{-1}
+   (\eta))\; \wedge \;(\eta' \in (r_1;r_2;...;r_{k-1})^{-1}
+   (\eta''))\;  \wedge \; (r_k^{-1}(\eta) \subseteq V)
 \end{array}
 \end{smathpar}
+Note that the first two conjuncts are the straightforward stepwise definition of
+the closure of relations. However, the last conjunct is also added, to
+make sure that before going any further in recursive computation, $V$
+includes all
+effects of the very next step. This is how we capture the
+necessaity of the presence of mid-level effects in real world systems for
+computing the final set of dependencies. We can now capture the blocking
+process in the semantics, by requiring the presence of $R_V^{-1}$ of
+operations under LB contracts at the
+replicas that they are being executed at.
 
+Lastly, we finish this part, by formally defining the \emph{maximally
+closed subset} of a set of effects $S$, given a relation $R$ and a set
+of local effects $V$
+as follows:
+\begin{smathpar}
+\left \lfloor S \right \rfloor_V = S' \spc \iff \spc S'
+\subseteq S \; \wedge \;
+R_V^{-1}(S') \subseteq S' \; \wedge \; 
+\not\exists
+S''.((R_V^{-1}(S''))\subseteq S''\wedge |S''|>|S'|)
+\end{smathpar}
+The above statement, simply requires $\left \lfloor S \right \rfloor_V $
+to be closed under $R_V^{-1}$ and to be the largest among such closed
+subsets. This allows us to introduce filteration process in the
+semantics, which only allows the maximally closed subset of available
+effects to be witnessed by operations with UB contracts.
 
 %=============================================================================================================
 %--------- The operational semantics

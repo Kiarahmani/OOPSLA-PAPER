@@ -80,8 +80,10 @@ sequence in $R$ (if there is any). i.e.
 \trunc{R} = 
 \begin{cases}
 \begin{array}{lcl}
+\nullR & \myif & R = \rel \quad \vee \quad R = \nullR \\
 \rel^* & \myif & R = \rel^* \\ 
-R' & \myif & R = R';\rel
+R' & \myif & R = R';\rel \\
+R';\rel^* & \myif & R = R';\rel^*
 \end{array}
 \end{cases}
 \end{smathpar}
@@ -92,7 +94,7 @@ execution state $\E$:
 \rel^{-1}(\Set) = 
 \begin{cases}
 \begin{array}{lcl}
-\bigcup_{\eta\in \Set}. \{\eta'|(\eta',\eta) \in \E.\rel \} & \myif
+\bigcup\limits_{\eta\in \Set}. \{\eta'|(\eta',\eta) \in \E.\rel \} & \myif
 &\rel\in\{\soZ,\visZ\}\ \\ 
 \rel_1^{-1}(\Set)\cup \rel_2^{-1}(\Set) & \myif & \rel=\rel_1\cup \rel_2
 \end{array}
@@ -171,7 +173,8 @@ definition (1), based on a slightly modified helping function $G^\rel_V$.
 \begin{smathpar}
 \eta' \in (R)^{-1}_V(\eta) \iff
 \begin{cases}
-\begin{array} {lllll}
+\begin{array} {lllll} 
+\bot & \myif & R = \nullR& & \\
 \eta' \in \rel^{-1}(\eta) & \myif & R=\rel & & \\
 \eta' \in G^{\rel}_V(\{\eta\},\emptyset)  & \myif & R=\rel^* & & \quad
 \qquad (2)  \\
@@ -183,7 +186,11 @@ definition (1), based on a slightly modified helping function $G^\rel_V$.
 \end{smathpar}
 Note that the last conjunct is the only difference between the third
 line above and definition (1) which assures the presence of mid-level
-effects before performing the next recursive call.  Simliarly, We define
+effects before performing the next recursive call.  
+%COMMENTCOMMENTCOMMENTCOMMENT
+%
+\begin{comment}
+Simliarly, We define
 $G_V^{\rel}$ as follows:
 \begin{smathpar}
 G_V^\rel(\Set,P) =
@@ -198,7 +205,8 @@ P  &   \myif & \rel^{-1}(\Set) = \emptyset
 \end{array}
 \end{cases}
 \end{smathpar}
-
+\end{comment}
+%COMMENTCOMMENTCOMMENTCOMMENT
 
 Fainally, we define closed subsets of a given set of
 effects $V$ under the contract $\psi$, which will be used to define the

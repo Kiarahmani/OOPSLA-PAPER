@@ -3,10 +3,13 @@
 \centering
   \begin{smathpar}
   \begin{array}{lclcl}
-		r & \in & \texttt{rel.seed} & \coloneqq & \visZ \ALT \soZ \ALT r \cup r \\
-               R & \in & \texttt{relation} & \coloneq &  r \ALT r^*  \ALT r;R \ALT r^*;R   \\
-	     \pi & \in & \texttt{prop} & \coloneqq & \forall(\eff,\eff').
-      ~\eff \xrightarrow{R} \eff' ~\Rightarrow~ \eff \xrightarrow{\visZ} \eff'\\
+		\rel & \in & \texttt{rel.seed} & \coloneqq & \visZ \ALT
+		\soZ \ALT \rel \cup \rel \\
+               \Rel & \in & \texttt{relation} & \coloneqq &  \rel
+	       \ALT \Rel;\rel  \ALT \nullR  \\
+	     \pi & \in & \texttt{prop} & \coloneqq & \forall a.
+      ~a \xrightarrow{R} \hat{\eff} ~\Rightarrow~ a \xrightarrow{\visZ}
+      \hat{\eff}\\
 		\psi & \in & \texttt{spec} & \coloneqq & \pi \ALT \pi \conj \pi\\
   \end{array}
   \end{smathpar}

@@ -38,6 +38,7 @@
 \newcommand{\relationS} {$\mathtt{relation}$}
 \newcommand{\specS}{$\mathtt{spec}$}
 
+\newcommand{\nullR}{\mathtt{null}}
 
 
 \newcommand{\nonvisrule}{\rulelabel{non-vis exec}\hspace{0.67mm}}
@@ -148,7 +149,7 @@
 
 
 % Operational semantics rules
-\newcommand{\rulelabel}[1]{\textrm{\sc {\small [#1]}}}
+\newcommand{\rulelabel}[1]{\textrm{\sc {\small \scriptsize [#1]}}}
 \newcommand{\RULE}[3]
 {\frac{\begin{array}{c}#1\end{array}}
 		 {\begin{array}{c}#2\end{array}}
@@ -164,6 +165,10 @@
 \newenvironment{smathpar}{
 \begin{nop}\small\begin{mathpar}}{
 \end{mathpar}\end{nop}\ignorespacesafterend}
+\newenvironment{fmathpar}{
+\begin{nop}\scriptsize \begin{mathpar}}{
+\end{mathpar}\end{nop}\ignorespacesafterend}
+
 
 \newenvironment{cmathpar}{
 \vspace{-3mm}

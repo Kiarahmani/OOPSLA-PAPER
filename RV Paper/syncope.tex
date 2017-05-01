@@ -21,16 +21,14 @@
 \usepackage{color}
 \usepackage{pifont}
 \usepackage{amssymb}
-
+\usepackage{moresize}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \definecolor{pblue}{rgb}{0.13,0.13,1}
 \definecolor{pgreen}{rgb}{0,0.5,0}
 \definecolor{pred}{rgb}{0.9,0,0}
-\definecolor{pgrey}{rgb}{0.46,0.45,0.48}
+\definecolor{pgrey}{rgb}{0.9,0.9,0.91}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
-
-
 \usepackage{listings}
 \lstset{language=Java,
   showspaces=false,
@@ -41,10 +39,10 @@
   commentstyle=\color{pgreen},
   keywordstyle=\color{pblue},
   stringstyle=\color{pred},
-  basicstyle=\footnotesize\tt,
-  tabsize=2,
+  basicstyle=\fontsize{6.5}{7}\tt,
+  tabsize=1,
   numbers=left,
-  numbersep=0pt,
+  numbersep=2pt,
   numberstyle=\tiny\color{mygray},
   moredelim=[il][\textcolor{pgrey}]{$$},
   moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
@@ -105,85 +103,50 @@ Jagannathan\inst{1}}
 %================================ SECTION TWO: System Model
 \input{Sections/section_two}
 
-\begin{comment}
 %================================ SECTION THREE: Motivation
 \input{Sections/section_three}
 
-%================================ SECTION FOUR: Operational Semantics
+%================================ SECTION FOUR: Specification Language
 \input{Sections/section_four}
 
-%================================ SECTION FIVE: Instrumented Algorithm
+%================================ SECTION FIVE: Semantics
 \input{Sections/section_five}
 
-%================================ SECTION SIX: Implementation and Evaluation
+%================================ SECTION SIX: Algorithm
 \input{Sections/section_six}
 
-%================================ SECTION SEVEN: Related Works
+%================================ SECTION SEVEN: Evaluation
 \input{Sections/section_seven}
 
-%================================ SECTION EIGHT: Conclusion 
+%================================ SECTION EIGHT: Related works 
 \input{Sections/section_eight}
 
+%================================ SECTION NINE: Conclusion
 \input{Sections/section_nine}
-\end{comment}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 %
 % ---- Bibliography ----
 %
-\begin{thebibliography}{5}
-%
-\bibitem {clar:eke}
-Clarke, F., Ekeland, I.:
-Nonlinear oscillations and
-boundary-value problems for Hamiltonian systems.
-Arch. Rat. Mech. Anal. 78, 315--333 (1982)
+\nocite{*}
+\bibliographystyle{unsrt}
+\bibliography{ref}
 
-\bibitem {clar:eke:2}
-Clarke, F., Ekeland, I.:
-Solutions p\'{e}riodiques, du
-p\'{e}riode donn\'{e}e, des \'{e}quations hamiltoniennes.
-Note CRAS Paris 287, 1013--1015 (1978)
 
-\bibitem {mich:tar}
-Michalek, R., Tarantello, G.:
-Subharmonic solutions with prescribed minimal
-period for nonautonomous Hamiltonian systems.
-J. Diff. Eq. 72, 28--55 (1988)
+%% Appendix
+\appendix
+\newpage
+\section{Proofs}
+\label{appendix:proofs}
+\input{Appendix/proofs}
 
-\bibitem {tar}
-Tarantello, G.:
-Subharmonic solutions for Hamiltonian
-systems via a $\bbbz_{p}$ pseudoindex theory.
-Annali di Matematica Pura (to appear)
+\newpage
+\section{Operational Semantics of the Augmented algorithm}
+\label{appendix:large_semantics}
+\input{Appendix/large_semantics}
 
-\bibitem {rab}
-Rabinowitz, P.:
-On subharmonic solutions of a Hamiltonian system.
-Comm. Pure Appl. Math. 33, 609--633 (1980)
 
-\end{thebibliography}
+
+
+
+
 \end{document}

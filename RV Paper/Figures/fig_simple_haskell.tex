@@ -1,26 +1,26 @@
 \begin{figure}[t]
         \centering
-	\begin{subfigure}[b]{0.48\textwidth}
+	\begin{subfigure}[b]{0.489\textwidth}
 	\begin{lstlisting}
-	type Effect = String 
-	type State =  String 
+type Effect = String 
+type State =  String 
 
-	read :: State -> (String, Maybe Effect)
-	read s = (s,Nothing)
+read :: State -> (String,Maybe Effect)
+read s = (s,Nothing)
 
-	write :: String -> ((), Maybe Effect)
-	write comment = ((), comment)
+write :: String -> ((),Maybe Effect)
+write comment = ((),comment)
 
-	apply :: State -> Effect -> State 
-	apply s eff = in s ++ " - " ++ comment
+apply :: State -> Effect -> State 
+apply s eff = in s ++ " - " ++ comment
 	\end{lstlisting}
-	\caption{A simple implementation.}
+	\caption{A simple implementation}
 	\label{subfig:comment_code}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.49\textwidth}
-	\includegraphics[scale=0.36]{Figures/comment_application.pdf}
-	\caption{Example execution.}
+	\begin{subfigure}[b]{0.475\textwidth}
+	\includegraphics[scale=0.282]{Figures/comment_application.pdf}
+	\caption{Example execution}
 	\label{subfig:comment_example}
 	\end{subfigure} 
 \\ \hrulefill

@@ -1,34 +1,44 @@
 %
 %Subsection on the correctness of contract 
 %
-\begin{definition}
-For a given contract ($\psi=\forall(a,b). a
-\xrightarrow{R} b \Rightarrow a \xrightarrow{vis} b $), we define a set
-of effects $S$, to be  $\psi$-consistent under an execution $\E$, if and
-only if: 
-$\forall (\eff \in S). \forall(a\in \E.\EffSoup). R(a,\eta)
-\Rightarrow a \in S$ 
-\\Where the definition of $R(a,b)$ is based on the definition of $R^{-1}$ from
-\ref{subsec:prelim}, as follows: $R(a,b) \iff a \in R_{E.A}^{-1}(b)  $
-\end{definition}
+In order to prove a meta-theoretic correctness property for our
+semantics, we first define a $\psi$-consistent set of effects $S$ given
+a execution state $\E$ as follows:
 
+\begin{equation}
+\scriptsize
+S \mathtt{\;is\;} \psi \mathtt{-consistent} \iff \forall (\eff \in S). \forall(a\in \E.\EffSoup). R(a,\eta)
+\Rightarrow a \in S
+\end{equation}
+Where the definition of $R$ is based on the definition of $R^{-1}$ from
+subsection 
+\ref{subsec:prelim}:
+\begin{equation}
+\scriptsize
+R(a,b) \iff a \in R_{E.A}^{-1}(b)  
+\end{equation}
 \begin{theorem}
 \label{theorem:one}
 For all reduction steps 
 $
+\scriptsize
 \; (\E,op_{<s,i>}) 
     \xrightarrow{V}
   (\E',\eff)  
 $,
-if $V$ is $\psi$-consistent under $\E$, then $(V\cup\{\eta\})$ is
-$\psi$-consistent under $\E'$.
+if $V$ is $\psi$-consistent under $\E$, then:
+\begin{fmathpar}
+\begin{array}{ll}
+(i) & V \cup \{\eta\} \mathtt{\;is\;} \psi\mathtt{-consistent \; under\;} E'  \\
+(ii) & E' \models \psi[\eta/\hat{\eta}]
+\end{array}
+\end{fmathpar}
+
+
+
 \end{theorem}
 \begin{proof}
-The proof is followed by the fact that the premises of the execution
-step, contains $R_V^{-1}(\eta)\subseteq V$, which basically states that the set made visible to
-the operation, must not violate the contract $\psi$. A more detailed proof can
-be found in appendix \ref{app:proof1}.
-\\
+Appendix \ref{app:proof1}
 \end{proof}
 
 

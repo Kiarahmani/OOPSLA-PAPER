@@ -28,16 +28,17 @@ anomalies previously mentioned.
 \begin{itemize}
 \item {\bf LB}: We define a \propS{} to be of type LB, 
 if its dependency relation $R$, ends with an $\soZ$ relation, i.e. is of
-the following from: $\forall(\eff,\eff'). \eff \xrightarrow{r_1;r_2;...;\soZ} \eff'
-\Rightarrow \eff \xrightarrow{\visZ} \eff'$.
+the following from: $\scriptsize \forall a. a
+\xrightarrow{r_1;r_2;...;\soZ} \hat{\eff}
+\Rightarrow a \xrightarrow{\visZ} \hat{\eff}$.
 Observe that these contracts simply put a lower bound on the set of
 effects each operation must witness, by defining a certain set of
 dependency for each effect, that must be visible to it, which makes the
 blocking technique very suitable for easily maintaining them.
 \item {\bf UB}:  These propositions are similarly defined as \propS{}s
 with dependency relations ending with $\visZ$, or of the following form: 
-$\forall(\eff,\eff'). \eff \xrightarrow{r_1;r_2;...;\visZ} \eff'
-\Rightarrow \eff \xrightarrow{\visZ} \eff'$.
+$\scriptsize \forall a. a\xrightarrow{r_1;r_2;...;\visZ} \hat{\eff}
+\Rightarrow a \xrightarrow{\visZ} \hat{\eff}$.
 This type of \propS{}s, put an upper bound on the set of effects 
 a replica should make visible to each operation when executing it, by
 enforcing that if an effect is made visible, certain set of dependent
@@ -59,4 +60,4 @@ representing contracts as graphs where the left-hand-side of the
 contracts are depicted as the sequence of edges relating two effects,
 and the right-hand-sinde (or what must be enforced by replicas at the
 execution time) is represented as the single dashed $\visZ$ edge.
-\input{Figures/fig_contracts_rep}
+%\input{Figures/fig_contracts_rep}

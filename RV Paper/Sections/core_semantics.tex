@@ -1,36 +1,35 @@
 \begin{figure}[t]
 \raggedright
-\textbf{Auxiliary Definitions}\\
+\textbf{Auxiliary Definitions}\\ \vspace{-2mm}
 %
-\begin{minipage}{\columnwidth}
-\begin{smathpar}
-\stretcharraybig
+\begin{minipage}{0.5\textwidth}
+\begin{fmathpar}
 \begin{array}{lclcl}
   \multicolumn{5}{c}{
-    \hspace{-8mm}
     {op} \in \mathtt{Operation\; Name} \spc \spc
     {v} \in \mathtt{Return\; Value} \spc \spc
     {s} \in \mathtt{Session\; Id} \spc\spc
- %   {i} \in \mathtt{Effect\; Id} \spc\spc
-  }\\
+  } 
+  \\ 
   \eff & \in & \mathtt{Effect} & \coloneqq &  (s,op,v)\\
   F_{op} & \in & \mathtt{Op.\,Def.} & \coloneqq & \set{\eff} \mapsto v\\
   \EffSoup & \in & \mathtt{Eff\,Soup}	  & \coloneqq & \set{\eff} \\
   \visZ,\soZ &	\in & \mathtt{Relations} & \coloneqq & \set{(\eff,\eff)} \\
-  {\E} 		& \in & \mathtt{Exec\;State}  & \coloneqq & \Exec \\
+  {\E} 	& \in & \mathtt{Exec\;State}  & \coloneqq & \Exec \\
 \end{array}
-\end{smathpar}
+\end{fmathpar}
 \end{minipage}
 %
 
+\vspace {3mm}
 
-
-\textbf{Auxiliary Reduction} \;
-\fbox{\(\auxred{S} {(\E,op_{<s,i>})} {} {(\E',\eff)}\)}\\
-
-\begin{minipage}{\textwidth}
+\textbf{Auxiliary Reduction} \; \\
+\fcolorbox{black}{pgrey}{\scriptsize \(\auxred{S} {(\E,op_{<s,i>})} {} {(\E',\eff)}\)}\\
+\begin{minipage}{0.9\textwidth}
+\vspace{2mm}
 \rulelabel{Oper}
-\begin{smathpar}
+\vspace{-2mm}
+\begin{fmathpar}
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
@@ -52,21 +51,24 @@ SessID}=s)}      \}\qquad
   {} {((\EffSoup',\visZ',\soZ'),\eta)}
 }
 \end{array}
-\end{smathpar}
+\end{fmathpar}
 \end{minipage}
 \vspace{4mm}\\
-\textbf{Operational Semantics} \;
-  \fbox{\((\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E',\eff)\)}\\
-\begin{minipage}{\textwidth}
-\rulelabel{Exec}
-\begin{smathpar}
+\textbf{Operational Semantics} \; \\
+  \fcolorbox{black}{pgrey}{\scriptsize \((\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E',\eff)\)}\\
+\vspace{2mm}
+\begin{minipage}{0.45\textwidth}
+\rulelabel{UB Exec}
+\vspace{-2mm}
+\begin{fmathpar}
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
 {
-     V \subseteq E.A \spc  
+  \visZ \subseteq r_k \spc
+  V \subseteq E.A \spc  
   V'= \left \lfloor V \right \rfloor_V \spc
-     R^{-1}_{V}(\eta) \subseteq V' \\
+  \\ %   R^{-1}_{V}(\eta) \subseteq V' \\
   \auxred {V'} {(E, op_{<s,i>}))}
     {} {(E',\eta)} 
 }
@@ -74,7 +76,28 @@ SessID}=s)}      \}\qquad
   (\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E', \eff)
 }
 \end{array}
-\end{smathpar}
+\end{fmathpar}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+\rulelabel{LB Exec}
+\vspace{-2mm}
+\begin{fmathpar}
+\stretcharraybig
+\begin{array}{l}
+\RuleTwo
+{
+     \visZ \not\subseteq r_k \spc
+     V \subseteq E.A \spc  
+     R^{-1}_{V}(\eta) \subseteq V \\
+  \auxred {V} {(E, op_{<s,i>}))}
+    {} {(E',\eta)} 
+}
+{
+  (\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E', \eff)
+}
+\end{array}
+\end{fmathpar}
 \end{minipage}
 \\
 \vspace{5mm}

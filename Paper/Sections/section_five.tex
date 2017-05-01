@@ -81,9 +81,7 @@ sequence in $R$ (if there is any). i.e.
 \begin{cases}
 \begin{array}{lcl}
 \nullR & \myif & R = \rel \quad \vee \quad R = \nullR \\
-\rel^* & \myif & R = \rel^* \\ 
-R' & \myif & R = R';\rel \\
-R';\rel^* & \myif & R = R';\rel^*
+R' & \myif & R = R';\rel 
 \end{array}
 \end{cases}
 \end{smathpar}
@@ -103,32 +101,6 @@ execution state $\E$:
 Note that when the input set of an inversed relation is a singleton
 $\{\eta\}$, we drop the brackets and simply write it as
 $\rel^{-1}(\eta)$.
-Now, using a recursive function $G^\rel$, we extend the above definition to
-the closure of $\rel$ as follows:
-\begin{smathpar}
-(\rel^{*})^{-1}(\Set) = G^{\rel}(\Set,\emptyset) 
-\end{smathpar}
-where,
-\begin{smathpar}
-G^\rel(\Set,P) =
-\begin{cases}
-\begin{array} {ll}
-G^\rel(\rel^{-1}(\Set) , P\cup \rel^{-1}(\Set)) &\myif \; \rel^{-1}(\Set) \neq \emptyset  \\
-P  &   \mathtt{otherwise} 
-\end{array}
-\end{cases}
-\end{smathpar}
-For example, in figure \ref{subfig:inverse_example} (where the inverse
-of various different relations are presented),
-$(\visZ^*)^{-1}(\eta_1)$ is computed by first calling
-$G^{\visZ}(\{\eta_1\},\emptyset)$ which returns
-$G^{\visZ}(\{\eta_2,\eta_3\},\{\eta_2,\eta_3\}) $,
-since $\visZ^{-1}(\eta_1) = \{\eta_2,\eta_3\} \neq \emptyset$.
-Similarly, the second recursive call will result in
-$G^{\visZ}(\{\eta_4,\eta_5,\eta_6\},\{\eta_2,\eta_3,\eta_4,\eta_5,\eta_6\})
-$ where the computation reaches its fixed point, since  $\visZ^{-1}(\{\eta_4,\eta_5,\eta_6\}) =
-\emptyset$, and final result of $\{\eta_2,\eta_3,\eta_4,\eta_5,\eta_6\}$ is returned.
-
 We now present the definition of the inverse of 
 a sequence (of size larger than 1) of \seedS{} and their clousres as follows:
 \begin{smathpar}
@@ -176,8 +148,6 @@ definition (1), based on a slightly modified helping function $G^\rel_V$.
 \begin{array} {lllll} 
 \bot & \myif & R = \nullR& & \\
 \eta' \in \rel^{-1}(\eta) & \myif & R=\rel & & \\
-\eta' \in G^{\rel}_V(\{\eta\},\emptyset)  & \myif & R=\rel^* & & \quad
-\qquad (2)  \\
 \exists \eta''. \eta'' \in
 \rel^{-1}(\eta) \wedge \eta' \in (R')^{-1}(\eta'') \wedge
 \rel^{-1}(\eta) \subseteq V   & \myif & R=R';\rel & & 
@@ -229,7 +199,6 @@ set):
 %--------- The operational semantics
 %=============================================================================================================
 \subsection{Core Operational Semantics}
-\input{Sections/core_semantics} %--- The Figure Containing the Rules
 
 %--- Section intro
 In this part we present the reduction rules, representing our
@@ -262,6 +231,7 @@ visible to $\eta$, and all effects from the same session that were
 already presenet in the intial execution state, should be in session
 order with $\eff$ in the final execution state.
 
+\input{Sections/core_semantics} %--- The Figure Containing the Rules
 
 %--- rule for (->) relation
 Now we explain the rule for reduction relation $(\xrightarrow{V})$,

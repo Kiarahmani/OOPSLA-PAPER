@@ -1,19 +1,19 @@
 \begin{figure}[t]
 	\centering
-	\begin{subfigure}[t]{0.53\textwidth}
+	\begin{subfigure}[t]{0.5\textwidth}
 	\begin{lstlisting}
-	data Sess = Bob | Alice
-	type ID = (Sess,Int) 
-	type Effect = (ID,String)
- 	type State =  (String,Int,Int)
+data Sess = Bob | Alice
+type ID = (Sess,Int) 
+type Effect= (ID,String)
+type State = (String,Int,Int)
 	
-	read :: ID -> State -> String
-	read (sess,seq) (st,sq1,sq2) = 
- 	 case sess (*@\textcolor{blue}{of}@*) 
-	   Bob ->   if (seq == sq1+1) (*@\textcolor{blue}{then}@*) st
-              else read (sess,seq) (st,sq1,sq2)
-     Alice -> if (seq == sq2+1) (*@\textcolor{blue}{then}@*) st
-              else read (sess,seq) (st,sq1,sq2)
+read :: ID -> State -> String
+read (sess,seq) (st,sq1,sq2) = 
+	case sess (*@\textcolor{blue}{of}@*) 
+		Bob ->   if (seq==sq1+1) (*@\textcolor{blue}{then}@*) st
+		         else read (sess,seq)(st,sq1,sq2)
+		Alice -> if (seq==sq2+1) (*@\textcolor{blue}{then}@*) st
+		         else read (sess,seq)(st,sq1,sq2)
 	\end{lstlisting}		  
 	\end{subfigure}
 	%

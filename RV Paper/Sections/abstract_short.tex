@@ -1,37 +1,29 @@
 
-  Designing reliable and highly available large-scale applications, unavoidably
-  requires replication of data over geo-distributed systems, which
-  compromises the simplicity of developing libraries, because
-  it forces designers to weigh the correctness
-  benefits of guaranteeing strong data consistency, against a potentially
-  significant cost in performance. 
-  %
-  Unfortunately, anomalies possible under weak consistency guarantees
-  can endanger operational correctness of the libraries and
-  forces designers to either implement
-  ad-hoc mechanisms for every operation to avoid these anomalies, or
-  choose to run applications on store-offered stronger levels of
-  consistency, that may well enforce stronger guarantees than
-  required. The former approach introduces unwanted complexity,
-  while the latter sacrifices performance.
+  Designing reliable and highly available distributed applications
+  typically requires data to be replicated over geo-distributed
+  stores.  But, such architectures force application developers to
+  make an undesirable tradeoff between ease of reasoning, possible
+  when replicated data is required to be strongly consistent, and
+  performance, possible only when such guarantees are weakened.
 
+  Unfortunately, undesirable behaviors may arise under weak
+  consistency that can violate application correctness, forcing
+  designers to either implement ad-hoc mechanisms to avoid these
+  anomalies, or choose to run applications using stronger levels of
+  consistency than necessary. The former approach introduces unwanted
+  complexity, while the latter sacrifices performance.
 
+  In this paper, we describe a lightweight runtime verification system
+  that relieves developers from having to make such tradeoffs.
+  Instead, our approach leverages declarative axiomatic specifications
+  that reflect the necessary constraints any correct implementation
+  must satisfy to guide a runtime consistency enforcement mechanism.
+  This mechanism guarantees a \emph{provably optimal} strategy that
+  imposes no additional communication or blocking overhead beyond what
+  is required to satisfy the specification, allowing distributed
+  operations to run in a \emph{provably safe} environment.
 
-  In this paper, we describe a lightweight runtime system that is
-  based on declarative axiomatic specifications, 
-  which reflect the necessary constraints any 
-  correct implementation of anomaly avoidance mechanism
-  must satisfy.  
-  %
-  Our runtime enforcement mechanism realizes a \emph{provably optimal} approach
-  that imposes no additional communication or
-  blocking overhead beyond what is required to satisfy the
-  specification and allows each operation to run in a \emph{provably
-  safe} environment
-  without witnessing any of the specified anomalies. 
-  %
-  Experimental results show that the
-  performance of our automatically derived mechanisms are  better than
-  both specialized hand-written protocols, and common store-offered
-  consistency guarantees, providing strong evidence of its
-  practical utility.
+  Experimental results show that the performance of our automatically
+  derived mechanisms is better than both specialized hand-written
+  protocols and common store-offered consistency guarantees, providing
+  strong evidence of its practical utility.

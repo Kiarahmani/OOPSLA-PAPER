@@ -1,7 +1,7 @@
-\begin{wrapfigure}{r}{0.48\textwidth}
-\begin{minipage}{0.5\textwidth}
+\begin{figure}[t]
+\begin{subfigure}{0.43\textwidth}
 \centering
-  \begin{smathpar}
+  \begin{fmathpar}
   \begin{array}{lclcl}
 		\rel & \in & \texttt{rel.seed} & \coloneqq & \visZ \ALT
 		\soZ \ALT \rel \cup \rel \\
@@ -10,10 +10,37 @@
 	     \pi & \in & \texttt{prop} & \coloneqq & \forall a.
       ~a \xrightarrow{R} \hat{\eff} ~\Rightarrow~ a \xrightarrow{\visZ}
       \hat{\eff}\\
-		\psi & \in & \texttt{spec} & \coloneqq & \pi \ALT \pi \conj \pi\\
+		\psi & \in & \texttt{spec} & \coloneqq & \pi \ALT \pi \conj \pi
   \end{array}
-  \end{smathpar}
-\caption{Syntax of the Specification Language}
+  \end{fmathpar}
+\caption{\scriptsize syntax}
 \label{fig:ctrt_syntax}
-\end{minipage}
-\end{wrapfigure}
+\end{subfigure}
+\hfill \vline \hfill
+\begin{subfigure}{0.43\textwidth}
+\centering
+\begin{scriptsize}
+\begin{tabular}{|l | c |} 
+\hline
+ { \texttt Guarantee} & {\texttt Contract} \\ [0.5ex] 
+\hline 
+RMW & $\forall a. a ~  ~\xrightarrow{\soZ}  ~ ~
+\hat{\eta} \Rightarrow a \xrightarrow{\visZ} \hat{\eta} $ \\ 
+MW & $\forall a. a \xrightarrow{\soZ;\visZ}
+\hat{\eta} \Rightarrow a \xrightarrow{\visZ} \hat{\eta} $ \\ 
+MR & $\forall a. a \xrightarrow{\visZ;\soZ}
+\hat{\eta} \Rightarrow a \xrightarrow{\visZ} \hat{\eta} $ \\ 
+\hline
+\end{tabular}
+\end{scriptsize}
+\caption{\scriptsize examples 
+%({\bf R}ead {\bf M}y {\bf W}rites, {\bf M}onotonic
+%{\bf W}rites and
+%{\bf M}onotonic {\bf R}eads)
+}
+\label{fig:ctrt_syntax}
+\end{subfigure}
+
+
+\caption{\tool Specification Language}
+\end{figure}

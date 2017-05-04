@@ -5,7 +5,6 @@
   make an undesirable tradeoff between ease of reasoning, possible
   when replicated data is required to be strongly consistent, and
   performance, possible only when such guarantees are weakened.
-
   Unfortunately, undesirable behaviors may arise under weak
   consistency that can violate application correctness, forcing
   designers to either implement ad-hoc mechanisms to avoid these
@@ -22,7 +21,6 @@
   imposes no additional communication or blocking overhead beyond what
   is required to satisfy the specification, allowing distributed
   operations to run in a \emph{provably safe} environment.
-
   Experimental results show that the performance of our automatically
   derived mechanisms is better than both specialized hand-written
   protocols and common store-offered consistency guarantees, providing

@@ -259,16 +259,13 @@ the operation witnesses all effects in set $V$.
 %--------- Theorem on maxVis and minWait
 %=============================================================================================================
 \subsection{Optimality}
-\label{subsec:opt}
-Now we will present two theorems, regarding the optimality of our
-approach. Firstly, we show that there
-cannot be a larger subset of local effects in a replica to be made
-visible to an operation, than what
-our reduction rules specify. Next, we will prove the liveness property
-of our semantics, which guarantees that all replicas will take a step,
-given the proper set of local effects. Considering the eventual delivery of all
-updates, which is guaranteed by the underlying store, this theorem
-guarantees  that our system would never get permanently stuck. 
+Now we will present theorems 2 and 3, the former showing that the set of effects made visible during each
+operation execution is the largest one possible, and the later
+presenting the liveness property of the semantics, which states that the
+store will take a step, if the required dependencies are locally
+present. This guarantees that the store would never get stuck, since the
+eventual delivery of all updates to all replicas is guaranteed 
+by the underlying ECDS.
 \input{Sections/subsec_maximality}
 \input{Sections/subsec_minimalwait}
 

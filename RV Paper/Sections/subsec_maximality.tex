@@ -5,22 +5,22 @@
 \begin{theorem}
 \label{theorem:two}
 For all operation executions 
-$(\E,op_{<s,i>}) 
-    \;\xrightarrow{V}\;
+{\scriptsize $
+(\E,op_{<s,i>}) 
+    \xrightarrow{V}
   (\E',\eff) 
-,$
+$},
 the set of effects made visible to $\eta$ is maximal. i.e. for all
-execution states $\E''$ such that:
-$(\E,op_{<s,i>})\;\xrightarrow{V}\;(\E'',\eff)$
-then    
-$\small (\E''.\visZ^{-1}(\eta)) \subseteq
-(\E'.\visZ^{-1}(\eta))$
+ $a \in V$:
+\begin{fmathpar}
+(a,\eta) \not\in \E'.\visZ \Rightarrow 
+(\E'.A,\E'.\visZ \cup \{a,\eta\}, \E'.so) \not\models \psi[\eta/\hat{\eta}]
+\end{fmathpar}
 \end{theorem}
+
+
 \begin{proof}
-The proof is directly followed by the fact that the subset of effects
-made visible to each operation is  $\left \lfloor V
-\right \rfloor_V$ which is by definition maximal. The detailed proof can be found in appendix
-\ref{app:proof2}. \\
+Appendix \ref{app:proof2}. 
 \end{proof}
 %%%
 

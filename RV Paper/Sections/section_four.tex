@@ -1,6 +1,5 @@
 \section {Specification Language} 
 \label{sec:ctrt_language}
-\input{Sections/syntax}
 
 The formal syntax of our specification language is presented in
 Fig.~\ref{fig:ctrt_syntax}.  The language allows the definition of
@@ -12,7 +11,14 @@ terms of a composition of
 The type \relationS{} which is used to define dependencies between
 effects in \propS{}s, is a sequence of \seedS{}s where each of them is
 a $\visZ$ or $\soZ$ relation or the union of them both over the set of
-effects. In order to configure each environment, the developers are
+effects. 
+We use the following interpretation for the sequence of relations: 
+\begin{equation} \scriptsize
+a \xrightarrow{R;r_k} b \iff \exists c. a \xrightarrow{R} c
+\wedge c \xrightarrow {r_k} b
+\end{equation}
+
+In order to configure each environment, the developers are
 required to write a \specS{} for each of them, that is consisted of
 conjunctions of \propS{}s, which simply allows developers to
 eliminiate multiple types of anomalous behavior from each
@@ -20,6 +26,7 @@ environment. For example, the developers of the comment management
 application, can simply write $\psi_1\wedge \psi_2$ for their \readC{}
 operation and prevent \emph{both} anomalies explained in the previous
 section.
+\input{Sections/syntax}
 
 Now we syntactically  classify propositions into \emph{lower bound} (LB) and
 \emph{upper bound} (UB) and hybrid types, and show that they completely

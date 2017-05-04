@@ -1,6 +1,127 @@
 \section{Introduction}
 \label{sec:intro}
+Historically, ACID\footnote{Atomicity, Consistency, Isolation and
+Durability} properties, have been included in the \emph{de facto} system
+abstraction for developing distributed programs. 
+These properties, guarantee \emph{replication transparency}  (i.e. requiring distributed
+systems to \emph{appear} as a single compute and storage server to
+users), and have resulted in development of standardized implementation and
+reasoning techniques around \emph{strongly consistent} (SC) distributed
+stores.
+Although strong notions of consistency, are ideal for developement and
+reasoning about distributed applications, 
+they require extensive synchronization overhead which is unacceptable
+for web-scale applications that wish to be ``always-on'' despite network
+partitionings. Applications are therefore usually designed to tolerate
+certain \emph{inconsistencies}, in exchange for availability and
+low-latency. 
+An extreme example is \emph{eventual consistency} (EC), where
+the local state of each node at all time,
+only represents an \emph{unspecified order} of an \emph{unspecified
+subset} of the set of all updates submitted to the system globally.
+Applications that  cannot tolerate the anomalous behaviors allowed under
+EC, may chose to use various stronger (than EC) instantiations, that are
+collectively refered to as \emph{weak consistency} guarantees. 
+Unfotunately, weak notions of consistency, are closely tied to 
+specific data-store implementations, and in very few cases, such as 
+\emph{causal consistency} (CC), even though there exists
+relatively standard definitions and known implementation techniques,
+users are usually offered with unnecessary levels of consistency and potental
+performance loss (in fact, CC is the
+strongest consistency guarantee that remains available under network
+partitioning). In order to solve this problem, developers are forced to
+inject their code with \emph{ad-hoc} anomaly tolerance mechanisms that are closely
+tied to the application logic and conflates it with concerns orthogonal
+to its semantics.
+To illustrate this problem, we will present an example in section
+\ref{sec:motiv}, where we introduce a simple distributed application
+developed on top of an off-the-shelf eventually consistent data-store
+(ECDS), and explain how it must be re-engineered from the scratch in
+order to preempt certain undesired behaviors (i.e. enforce fine-grained
+weak consistency requirements). As we will see, the ad-hoc
+nature of such mechanisms confounds standardization, and complicates
+reasoning, maintainability and reusability of the applications.
 
+In this paper, we propose an alternative to the aforementioned
+approaches that overcomes their weaknesses.  \tool is a lightweight
+runtime system for Haskell that allows application developers to take
+advantage of weak consistency without having to re-engineer their code
+to accommodate anomaly preemption mechanisms.  The key insight that
+drives \tool's design is that the hardness of reasoning about the
+integrity of a distributed application stems from conflating
+application logic with the consistency enforcement logic, reasoning
+about both \emph{operationally}.  By separating application semantics
+from consistency enforcement semantics, admitting operational
+reasoning for the former, and declarative reasoning for the latter
+programmers are liberated from having to worry about implementation details of
+preemption mechanisms, and instead focus on reasoning about
+application semantics under the assumption that specified consistency
+requirements are automatically enforced by the data store at runtime.  
+%
+Our approach admits declarative reasoning for consistency enforcement via
+a specification language that allows programmers formally specify the
+consistency requirements of their application. 
+The design of our
+specification language is based on the observation that all forms of
+anomalous behaviors under EC, are caused when operations are executed at replicas
+that do not contain \emph{some necessary} updates, which we call
+them the \emph{dependencies} of the operation. Users in \tool, can
+specify arbitary dependence relations between updates, and the 
+runtime monitoring system working on top of each replica, guarantees that an 
+operation will only proceed if it can witness all of its dependencies. 
+For example, \emph{lost updates}, which is a very well known anomaly
+under EC, occures when an operation from a session
+is routed to a replica different than the replica serving the earlier
+operaitons from the same session (because of transient system
+properties, such as load balancing or network partitions)
+and is successfully executed, without witnessing the update from those operations.
+In this case, the dependency of the operations can be defined as the
+updates from \emph{all previous operations from the same sessions}, and
+rely on \tool to temporarily block operations untill all such
+dependencies become available at a replica.
+
+To summarize contributions of this paper:
+\begin{enumerate*}[label=(\roman*)]  
+\item We propose a specification language to
+    express the fine-grained consistency requirements of applications 
+    in terms of the dependencies between operations.
+
+\item We describe a generic consistency enforcement runtime that
+    analyzes each operation's consistency specification, and ensures
+    that its dependencies are satisfied before it is executed.    
+    We formalize the operational semantics of the runtime, and prove its
+    correctness and optimality (including \emph{minimum blocking} and
+    \emph {minimum staleness}) guarantees. 
+    
+  \item We describe an implementation of our specification language and
+    consistency enforcement runtime in a tool called \tool, which
+    works on top of an off-the-shelf EC data store. We evaluate \tool
+    over realistic applications and microbenchmarks, and present
+    results that demonstrate the performance benefits of making
+    fine-grained distinctions between consistency guarantees, and the
+    ease of doing so via our specification language.
+
+\end{enumerate*}
+
+The remainder of the paper is organized as follows. A system model that describes key notions of consistency and
+replication is presented in Sec.~\ref{sec:sys_model}.  In
+Sec.~\ref{sec:motiv} we provide a detailed example to further motivate
+the problem.  In Sec.~\ref{sec:ctrt_language} and
+Sec.~\ref{sec:semantics}, we formally present our specification language
+the high level operational semantics of the runtime system, with
+correctness and optimality theorems. Sec.~\ref{sec:alg}
+elaborates on the algorithmic aspects of our runtime that is key to
+its efficient realization. Sec.~\ref{sec:eval} describes
+implementation of \tool, and evaluates its applicability and practical utility.
+Related works and conclusion are presented in
+Sec.~\ref{sec:rel_works} and Sec.~\ref{sec:conclusion}
+
+
+
+
+
+%================================================
+\begin{comment}
 Modern web-based applications are typically implemented as multiple
 agents simultaneously serving clients, operating over shared data
 objects replicated across geographically distributed machines.
@@ -79,166 +200,5 @@ respective properties \emph{in conjunction with} the application
 state. This is clearly an onerous task.  Other alternatives such as
 forgoing application integrity, or resorting to strong consistency,
 sacrifice correctness or availability, both unappealing options.
+\end{comment}
 
-In this paper, we propose an alternative to the aforementioned
-approaches that overcomes their weaknesses.  \tool is a lightweight
-runtime system for Haskell that allows application developers to take
-advantage of weak consistency without having to re-engineer their code
-to accommodate consistency enforcement logic.  The key insight that
-drives \tool's design is that the hardness of reasoning about the
-integrity of a distributed application stems from conflating
-application logic with the consistency enforcement logic, reasoning
-about both \emph{operationally}.  By separating application semantics
-from consistency enforcement semantics, admitting operational
-reasoning for the former, and declarative reasoning for the latter
-frees programmers from having to worry about implementation details of
-consistency guarantees, and instead focus on reasoning about
-application semantics under the assumption that specified consistency
-guarantees are automatically enforced by the data store runtime.  Our
-approach admits declarative reasoning for consistency enforcement via
-a specification language that lets programmers formally specify the
-consistency requirements of their application. The design of our
-specification language is based on the observation that various forms
-of weak consistency guarantees differ only in terms of how and what
-they mark as \emph{dependencies} among operations.  When all
-dependencies are present on a replica to an operation, then the effect
-of the operation is guaranteed to be correct with respect to the
-specification.  For example, RMW marks all previous writes from the
-same session as dependencies of subsequent read operations, so an RMW
-read succeeds only if all the previous writes are visible (i.e.,
-present on the replica on which the read is performed) . A different
-consistency guarantee (e.g., \emph{Monotonic Reads} (MR)) imposes a
-different set of dependencies, as do various combinations of (e.g.,
-MR+RMW).  By allowing a runtime system to monitor dependencies defined
-by consistency specifications, we realize a generic weak consistency
-enforcement mechanism framework.  Such a runtime, working in tandem
-with a consistency specification language, contributes to the novelty
-of our approach.
-
-
-% here users send requests to a cloud of servers
-% to post a message or
-% to read the current messages on the board. Each user request is sent
-% to an available server, which itself is working on top of an instance
-% of an off-the-shelf data store (e.g. Facebook's Cassandra).  Since the
-% underlying stores, usually satisfy the {\bf eventual consistency}
-% model, developers are guaranteed  that every write to a local instance
-% of the data store will eventually  be delivered at all other
-% instances. However, most of the desirable application-level properties
-% are not met under this model.          For example, assume the
-% developers wants to make sure that all the $\mathtt{read}$ requests
-% from a user, would necessarily include prior writes by the same user.
-% This guarantee which is known as {\bf read my writes (RMW)} can be
-% violated in eventually consistent stores.  
-% \input {Figures/fig_system_cons_example}
-% Here, developers are forced to come up with their own implementation of
-% RMW. They must modify client and server applications to generate, send
-% and receive special tokens, to maintain the set of updates available at
-% each server, and block user requests, if some necessary updates are
-% still missing. Now, in order to have a correct application, the
-% developer must prove certain non-trivial safety and liveness
-% properties for this implementation. To make the matter worse, the
-% proof will becmoe obsolete after each modification in the application or
-% the consistency requirements. For example, after users reporting some unaccepatble
-% behaviors, in order to disallow those executions, developers 
-% implement and add another consistency guarantee to RMW; a task that
-% would clearly make the original correctness proofs obsolete. 
-
-
-% In this paper, we address these issues by introducing a compositional, principled approach to 
-% derive enforcement mechanisms for various forms of weak consistency 
-% guarantees. 
-% We offer developers with a tool that generates a shim layer that works
-% with an eventually consistent store and extends it to a key-value store
-% with multiple environment, each of which shows a certain level of
-% consistency, specified by the developers. 
-% We also introduce a language for specifying application-level consistency 
-% requirements as logical formulae that express legal execution states of the distributed store. 
-% Our consistency enforcement methodology is independent of the underlying store 
-% and only assumes the well-established guarantee of "eventual delivery". 
-% Moreover, our enforcement tool is complete for the specification
-% language, which itself is powerful enough to express all the known consistency 
-% guarantees in the literature.
-
-% We argue that all the consistency guarantees basically specify, \emph{when} an 
-% application instance should block a user request and for arrival of 
-% \emph{what} remote updates it should wait. For obvious reasons, any implementation of these 
-% consistency guarantees must be \emph{correct} and \emph{optimal}. The former property states that 
-% all possible behaviors of the implementation are allowed by the given specification and the later 
-% ensures that application instances do not engage in 
-% any unnecessary synchronization before responding to a user request (i.e. users are only blocked if 
-% it is absolutely necessary).
-% \\ Our technique is based on tracking relationships between update effects, and maintaining multiple 
-% (logical) caches at the shim layer, each of which is enforced to satisfy a specific level of consistency, 
-% derived from the given specifications. We believe that our approach is the first ever principled 
-% reasoning and implementation framework for weak consistency enforcement techniques which 
-% is also proven to be \emph{correct} and \emph{optimal}. 
-% By separating all the consistency management procedures from the application level, we are taking 
-% the non-trivial task of proving soundness criteria for ad-hoc consistency enforcement techniques 
-% off of the developer's shoulders. 
-% Contributions of the paper
-A summary of our contributions is given below:
-\begin{itemize}
-  \item We propose a consistency specification language that lets
-    programmers express the consistency requirements of their
-    applications in terms of the dependencies between operations.
-
-  \item We describe a generic consistency enforcement runtime that
-    analyzes an operation's consistency specification, and ensures
-    that its dependencies are satisfied before it is executed. We
-    formalize the operational semantics of the runtime, and prove its
-    correctness and optimality guarantees. Optimality includes
-    \emph{minimum wait}, which guarantees that an operation waits (on
-    arriving communication) only until its dependencies are satisfied,
-    and \emph{minimum staleness}, which guarantees that among various
-    states that satisfy an operation's dependencies, operation
-    witnesses the latest state.
-  
-  \item We describe an implementation of our specification language and
-    consistency enforcement runtime in a tool called \tool, which
-    works on top of an off-the-shelf EC data store. We evaluate \tool
-    over realistic applications and microbenchmarks, and present
-    results that demonstrate the performance benefits of making
-    fine-grained distinctions between consistency guarantees, and the
-    ease of doing so via our specification language.
-
-\end{itemize}
-
-The remainder of the paper is organized as follows.  The next section
-presents a system model that describes key notions of consistency and
-replication.  Sec.~\ref{sec:motivation} provides additional
-motivation.  Sec.~\ref{sec:contract-lang} introduces an abstract store
-model that forms the basis of our specification language, along with
-the language itself. We describe the semantis of our consistency
-enforcement runtime, and formalize its correctness and optimality
-guarantees in Sec.~\ref{sec:formalization}.  Sec.~\ref{sec:algorithm}
-elaborates on the algorithmic aspects of our runtime that is key to
-its efficient realization.  Sec.~\ref{sec:evaluation} describes \tool,
-an implementation of the specification language and enforcement
-mechanism, and evaluates its applicability and practical utility.
-Related work and conclusions are presented in
-Sec.~\ref{sec:related-work}.
-
-
-%% . While there are a few well-defined
-%% models of weak consistency~\cite{terry-pdis94}, the list is not
-%% exhaustive as applications often define consistency models to suit
-%% their needs. Furthermore, unlike the standardized implementation
-%% techniques, such as 2PL~\cite{2pl}, to enforce strong consistency,
-%% enforcement of weak consistency guarantees, including the well-defined
-%% ones, is often done via \emph{ad hoc} implementation techniques that
-%% are strongly coupled with the the application logic. 
-% weak consitency is often enforced using \emph{ad hoc} implementation
-% techniques that are tailor-made Even though weak models of
-% consistency (e.g. session guarantees from Terry et. al.) have been
-% known for more than two decades, they suffer from the lack of
-% standardized definitions and enforcement methodologies, which forces
-% developers to modify their applications with ad-hoc fixes in order
-% to enforce their desired levels of consistency. The lack of a
-% general reasoning framework for weak consistency models, has
-% resulted in the difficulty of proving correctness and optimality
-% properties of such highly error-prone implementations. To make the
-% matter worse, many of distributed applications require different
-% \emph{combinations} of known consistency guarantees, or might even
-% face new consistency requirements after the developement phase is
-% over.

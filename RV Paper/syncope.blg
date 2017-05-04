@@ -3,14 +3,11 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: syncope.aux
 The style file: unsrt.bst
 Database file #1: ref.bib
-Warning--I didn't find a database entry for "cassandra"
-Warning--I didn't find a database entry for "terry-pdis94"
-Warning--I didn't find a database entry for "oracle-ryw"
 Warning--I didn't find a database entry for "quelea"
 Warning--empty booktitle in bibtexkey
 You've used 18 entries,
             1791 wiz_defined-function locations,
-            583 strings with 7623 characters,
+            580 strings with 7592 characters,
 and the built_in function-call counts, 5081 in all, are:
 = -- 462
 > -- 250
@@ -49,4 +46,4 @@ warning$ -- 1
 while$ -- 51
 width$ -- 20
 write$ -- 207
-(There were 5 warnings)
+(There were 2 warnings)

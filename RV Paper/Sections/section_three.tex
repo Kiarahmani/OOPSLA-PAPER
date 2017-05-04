@@ -1,4 +1,3 @@
-\newpage
 \section{Motivation}
 \label {sec:motiv}
 %% In this section, we explain the developement process of a highly
@@ -129,7 +128,7 @@ performance.
 %--- What is our alternative approach
 %
 \subsection{An Alternative}
-\input{Figures/fig_syncope_outline}
+%\input{Figures/fig_syncope_outline}
 To overcome these issues, we consider the design of a generic
 consistency management tool.  Our goal is to have developers define a
 consistency level for each operation \emph{a priori}, ensuring their
@@ -173,7 +172,7 @@ language is seeded with $\soZ$ $\visZ$ relations and allows users to
 proscribe different anomalous behaviors.  For example, the followings
 are the two constraints that prevent the anomalies described above:
 the two anomalies mentioned in this section:
-\begin{smathpar}
+\begin{fmathpar}
 \begin{array}{lllll}
 
 \psi_1: & \forall (\eff,\eff'). & \eff \xrightarrow{\soZ} \eff' & \Rightarrow
@@ -182,7 +181,7 @@ the two anomalies mentioned in this section:
 \psi_2: & \forall(\eff,\eff'). & \eff \xrightarrow{\visZ;\visZ} \eff' &
 \Rightarrow & \eff \xrightarrow {\visZ} \eff' 
 \end{array}
-\end{smathpar}
+\end{fmathpar}
 
 The specification of the first constraint eliminates the possibility
 of lost updates by mandating that any operation \emph{op} with effect

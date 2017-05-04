@@ -1,5 +1,6 @@
-We have the following two hypotheses and the goal:
-\begin{smathpar}
+\begin{footnotesize}
+{\bf (Part i)} We have the following two hypotheses and the goal:
+\begin{fmathpar}
 \begin{array}{ll}
 H_0: & (\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E',\eff)  
 \\
@@ -7,62 +8,345 @@ H_1: & V \; \mathtt{ is }\; \psi\mathtt{-consistent \; under \; \E} \\
 G_0: & V \cup \{\eta\} \; \mathtt{is} \; \psi\mathtt{-consistent \;
 under \; \E'}
 \end{array}
-\end{smathpar}
-Based on the definition of consistency, we should prove the following:
-\begin{smathpar}
+\end{fmathpar}
+Rewriting the definition in $G_0$ results in:
+\begin{fmathpar}
 \begin{array}{ll}
-G_1: & \forall(x\in V\cup\{\eta\}).\forall (a\in E'.A). R(a,x) \Rightarrow a \in V\cup\{\eta\}
+G_1: & \forall (b\in V\cup \{\eta\}).\forall (a \in E'.A). R(a,b)
+\Rightarrow a \in V \cup \{\eta\}
 \end{array}
-\end{smathpar}
-By intro (and by the fact that $\E'.\EffSoup = \E.\EffSoup \cup \{\eff\}$) we will have the following new hypotheses and goal:
-\begin{smathpar}
+\end{fmathpar}
+By intros we have: 
+\begin{fmathpar}
 \begin{array}{ll}
-H_2: & x \in V\cup \{\eta\} 
-\\
-H_3: & a \in E.A \cup \{\eff\}\\
-H_4: & R(a,x) \\
-G2: & a \in V \cup \{\eta\}
+H_2: & b \in V \cup \{\eta\} \\
+H_3: & a \in E'.A \\
+H_4: & R (a,b)\\
+G_2: & a \in V \cup \{\eta\}
 \end{array}
-\end{smathpar}
-By destructing $H_2$ we have two cases:
-\\{ (i)} $\; x \in V$: Since $V$ is $\psi$-consistent, from $H_4$ we have $a \in V$ which proves the goal $G_2$ 
-\\{ (ii)} $x = \eta$: By replacing $x$ with $\eta$ in $H_4$ we will have the following:
-\begin{smathpar}
+\end{fmathpar}
+by inversion on $H_0$, there is two cases, in case one (UB reduction) we
+have the 
+following:
+\begin{fmathpar}
 \begin{array}{ll}
-H_5: & R(a,\eta) \\
+T_1: &  \auxred{V'} {(\E,op_{<s,i>})} {} {(\E',\eff)}\
 \end{array}
-\end{smathpar}
-Based on definitions, we will have the following:
-\begin{smathpar}
+\end{fmathpar}
+by inversion on $T_5$ we will have the following:
+\begin{fmathpar}
 \begin{array}{ll}
-H_6: & a \in R_{E.A}^{-1}(\eta) \\
+T_2: & E'.A = E.A \cup \{\eta\}
 \end{array}
-\end{smathpar}
-We can now assume $R=r_1;r_2;...;r_k$, and derive from $H_6$ that there exists $c$ such that:
-\begin{smathpar}
+\end{fmathpar}
+Since the other case (LB reduction) also includes similar premises which
+yields $T_2$, we can add it to the hypothesis:
+\begin{fmathpar}
 \begin{array}{ll}
-H_7: & c \in r_k^{-1}(\eta) \\
-H_8: & a \in (r_1;...;r_{k-1})_{E.A}^{-1}(c)  \\
-H_9: & r_k^{-1}(\eta) \subseteq E.A\\
+H_5: & E'.A = E.A \cup \{\eta\}
 \end{array}
-\end{smathpar}
-Now by inversion on $H_0$ we will have the following:
-\begin{smathpar}
+\end{fmathpar}
+by rewriting $H_5$ in $H_3$ in doing inversion, we get two cases:
+$a=\eta$ and $a \in E.A$. The first case immediatly proves $G_2$, so we
+only consider the second case where we have: 
+\begin{fmathpar}
 \begin{array}{ll}
-H_{10}: & R_V^{-1}(\eta) \subseteq V\\
+H_6: & a \in E.A
 \end{array}
-\end{smathpar}
-which by definition will result:
-\begin{smathpar}
+\end{fmathpar}
+Now, by inversion on $H_2$, we have two cases: 
+\begin{itemize}
+\item {\bf Case 1:} \\
+\begin{fmathpar}
 \begin{array}{ll}
-H_{11}: & r_k^{-1}(\eta) \subseteq V\\
+H_7: & b \in V 
 \end{array}
-\end{smathpar}
-Now from $H_7$, $H_8$ and $H_{11}$ we can derive: 
-\begin{smathpar}
+\end{fmathpar}
+by inversion in $H_1$ we have:
+\begin{fmathpar}
 \begin{array}{ll}
-H_{12}: & a \in R_V^{-1}(\eta)\\
+H_8: & \forall (x \in V). \forall (y \in E.A). R(y,x) \Rightarrow y \in
+V
 \end{array}
-\end{smathpar}
-and from $H_{10}$ and $H_{12}$ we have $a \in V$ which proves the final
-goal $G_2$. \\QED.
+\end{fmathpar}
+by instantiation with a and b: 
+\begin{fmathpar}
+\begin{array}{ll}
+H_8: & R(a,b) \Rightarrow a \in V
+\end{array}
+\end{fmathpar}
+which proves the goal after $H_4$ is applied to it. 
+
+\item {\bf Case 2:} \\
+\begin{fmathpar}
+\begin{array}{ll}
+H_9: & b = \eta \\
+H_{10}: & R(a,\eta)
+\end{array}
+\end{fmathpar}
+Now we use inversion on $H_0$ and get two cases: (LB exec) and (UB exec)
+\subitem {\bf \footnotesize SCase (LB exec):}
+We have $H_{11}$ and $H_{12}$ from the premises:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{11}: & R^{-1}_V(\eta) = R^{-1}_{E'.A}(\eta)   \\ \vspace{-2mm}\\
+H_{12}: & R_V^{-1}(\eta) \subseteq V
+\end{array}
+\end{fmathpar}
+now from $H_{10}$ we have $H_{13}$ which can be rewritten by $H_{11}$ to
+get $H_{H14}$:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{13}: & a \in R^{-1}_{E'.A}(\eta)\\
+H_{14}: & a \in R^{-1}_{V}(\eta)
+\end{array}
+\end{fmathpar}
+The goal $G_2$ is now proved from $H_{12}$ and $H_{14}$.
+
+\subitem {\bf \footnotesize SCase (UB exec):}
+We have the following from the premises: 
+\begin{fmathpar}
+\begin{array}{ll}
+H_{15}: & V' = \left \lfloor V  \right \rfloor_{\mathtt{max}}\\
+H_{16}: & V' \subseteq V
+\end{array}
+\end{fmathpar}
+now destruct $R$, the only non-trivial cases are
+$(R=R';\visZ)$ and 
+($R=\visZ$):
+
+
+{\bf SSCase }($R=R';\visZ$):  \\
+From $H_{10}$ we get $H_{17}$ which based on the definition, yields that
+there exists $c$ such that $H_{18}$, $H_{19}$ and $H_{20}$ hold:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{17}: & a \in R^{-1}_{E'.A}(\eta)\\
+H_{18}: & c \in \visZ^{-1}(\eta)\\
+H_{19}: & a \in R'^{-1}(c)\\
+H_{20}: & \visZ^{-1}(\eta) \subseteq E'.A \\
+\end{array}
+\end{fmathpar}
+from $H_{15}$ we have:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{21}: & (R')^{-1}_V(V') \subseteq V'
+\end{array}
+\end{fmathpar}
+Now from $H_{18}$ is straightforward to get:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{22}: & c \in V'
+\end{array}
+\end{fmathpar}
+which from $H_{19}$ and $H_{21}$ it yields the following, which proves
+the goal $G_2$:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{23}: & a \in V'
+\end{array}
+\end{fmathpar}
+
+{\bf SSCase }($R=\visZ$): 
+From $H_{10}$ we get that $vis (a,\eta)$, which -with a similar
+argument to the previous subcase- yields the following and the goal is
+proved: 
+\begin{fmathpar}
+\begin{array}{ll}
+H_{24}: & a \in V'
+\end{array}
+\end{fmathpar}
+\end{itemize} 
+QED.  \vspace {10mm} \\ 
+
+
+
+
+
+
+
+{\bf (Part ii)}  \\
+For this part we have the  following hypothesis and the goal:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{0}: & (\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E',\eff) \\ 
+G_{0}: & E' \models [\eta/\hat{\eta}]
+\end{array}
+\end{fmathpar}
+By inversion on $H_0$, we have two cases: \\
+{\footnotesize \bf Case1} (UB exec):\\
+\begin{fmathpar}
+\begin{array}{ll}
+H_{1}: & r_k = \visZ\\ 
+H_{2}: & V \subseteq E.A \\
+H_{3}: & V'= \left \lfloor V  \right \rfloor_{\mathtt{max}}\\
+H_{4}: & \auxred{V'} {(\E,op_{<s,i>})} {} {(\E',\eff)}\\
+\end{array}
+\end{fmathpar}
+The goal $G_0$ can be rewritten as: 
+\begin{fmathpar}
+\begin{array}{ll}
+G_{1}: & E' \models \forall a. a \xrightarrow{R} \eta \Rightarrow a
+\xrightarrow{vis} \eta 
+\end{array}
+\end{fmathpar}
+Since the $E'.A$ gives the interpretation for the universe of
+quantification:
+\begin{fmathpar}
+\begin{array}{ll}
+G_{2}: & \forall (a\in E'.A). E' \models a \xrightarrow{R} \eta \Rightarrow a
+\xrightarrow{vis} \eta 
+\end{array}
+\end{fmathpar}
+by intros: 
+\begin{fmathpar}
+\begin{array}{ll}
+H_{5}: & a \in E'.A\\
+G_{3}: & E' \models a \xrightarrow{R} \eta \Rightarrow a
+\xrightarrow{vis} \eta 
+\end{array}
+\end{fmathpar}
+Now since ({\scriptsize $(\mathcal{M} \models A \Rightarrow B) \Leftrightarrow
+(\mathcal{M} \models A   \Rightarrow  \mathcal{M} \models B)$}) we can rewrite $G_3$ as:
+\begin{fmathpar}
+\begin{array}{ll}
+G_{4}: & (E' \models a \xrightarrow{R} \eta) \Rightarrow (E' \models a
+\xrightarrow{vis} \eta) 
+\end{array}
+\end{fmathpar}
+intros: 
+\begin{fmathpar}
+\begin{array}{ll}
+H_{6}: & E' \models a \xrightarrow{R} \eta \\
+G_{5}: & E' \models a \xrightarrow{vis} \eta 
+\end{array}
+\end{fmathpar}
+Now we use the interpretation given by $E'$, to rewrite the relations as
+follows. Note that we denote the interpretation of $R$ under $E'$ as
+$R'$ and $E.\visZ$ as $\visZ'$.
+\begin{fmathpar}
+\begin{array}{ll}
+H_{7}: & R'(a,\eta) \\
+G_{6}: & \visZ'(a,\eta)
+\end{array}
+\end{fmathpar}
+by inversion on $H_4$:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{8}: & \visZ' = \visZ \cup V' \times \{\eta\}
+\end{array}
+\end{fmathpar}
+Now since $\eta$ is a fresh effect, we get that $a \in V' \Rightarrow
+\visZ'(a,\eta)$ which can be applied to $G_6$ to get the following:
+\begin{fmathpar}
+\begin{array}{ll}
+G_{7}: & a \in V'
+\end{array}
+\end{fmathpar}
+destruct R, which yileds multiple cases, only one of which is
+non-trivial:  
+$\scriptsize R=\trunc{R};\visZ$, which can be rewritten in $H_7$ to get:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{8}: & (\trunc{R};\visZ)'(a,\eta)
+\end{array}
+\end{fmathpar}
+Now we can rewrite the definition in $H_8$, and derive that there exists
+$b$ such that:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{9}: & \trunc{R}'(a,b)\\
+H_{10}: & \visZ'(b,\eta)\\
+\end{array}
+\end{fmathpar}
+Now using a similat argument, from $H_8$ and $H_{10}$ we get: 
+\begin{fmathpar}
+\begin{array}{ll}
+H_{11}: & b \in V'\\
+\end{array}
+\end{fmathpar}
+Now by applying the lemma on $H_9$ we get: 
+\begin{fmathpar}
+\begin{array}{ll}
+H_{12}: & \trunc{R}(a,b)
+\end{array}
+\end{fmathpar}
+since we have {\scriptsize $V' \in \left \lfloor V  \right \rfloor$}, 
+we get the following: 
+\begin{fmathpar}
+\begin{array}{ll}
+H_{13}: & \forall (x\in V'). (\trunc{R})_{E.A}^{-1}(V') \Rightarrow x \in V'
+\end{array}
+\end{fmathpar}
+which yields the following from $H_{11}$ and $H_{12}$:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{14}: & a \in V'
+\end{array}
+\end{fmathpar}
+which proves the goal $G_7$.\\ \vspace{3 mm} \\
+{\footnotesize \bf Case2} (LB exec):\\
+We prove this case by induction on the length of the given relation $R$.
+\begin{fmathpar}
+\begin{array}{ll}
+H_{1}: & r_k = \soZ\\ 
+H_{2}: & V \subseteq E.A \\
+H_{3}: & R^{-1}_V(\eta) = R^{-1}_{E.A}(\eta)\\
+H_{4}: & R^{-1}_V(\eta) \subseteq V \\
+H_{5}: & \auxred{V} {(\E,op_{<s,i>})} {} {(\E',\eff)}\\
+\end{array}
+\end{fmathpar}
+Using the same argument as the previous section, we get the following
+new goal and hypotheses:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{6}: & a \in E'.A\\ 
+H_{7}: & R'(a,\eta) \\
+G_{1}: & \visZ'(a,\eta)
+\end{array}
+\end{fmathpar}
+destruct R to get $H_8$ and rewrite the definition in it to get the next
+two hypotheses:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{8}: & (\trunc{R};\soZ)'(a,\eta) \\ 
+H_{9}: & \trunc{R}'(a,b)\\
+H_{10}: & \soZ'(b,\eta)
+\end{array}
+\end{fmathpar}
+From the previous section we know that $(so')^{-1}(\eta) \subseteq V$
+which yields the following from $H_10$:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{11}: & b \in V
+\end{array}
+\end{fmathpar}
+The goal is proved by the induction hypothesis, $H_9$ and $H_11$.
+\\QED.
+
+
+\end{footnotesize}
+
+
+
+
+\newpage 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

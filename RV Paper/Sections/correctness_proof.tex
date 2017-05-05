@@ -1,18 +1,21 @@
 \begin{footnotesize}
+
 {\bf (Part i)} We have the following two hypotheses and the goal:
 \begin{fmathpar}
 \begin{array}{ll}
 H_0: & (\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E',\eff)  
 \\
 H_1: & V \; \mathtt{ is }\; \psi\mathtt{-consistent \; under \; \E} \\
+\hline
 G_0: & V \cup \{\eta\} \; \mathtt{is} \; \psi\mathtt{-consistent \;
 under \; \E'}
 \end{array}
 \end{fmathpar}
-Rewriting the definition in $G_0$ results in:
+Rewriting the definition in $G_0$ results in the following. We denote
+the interpretation of $R$ under $E'$ as $R'$:
 \begin{fmathpar}
 \begin{array}{ll}
-G_1: & \forall (b\in V\cup \{\eta\}).\forall (a \in E'.A). R(a,b)
+G_1: & \forall (b\in V\cup \{\eta\}).\forall (a \in E'.A). R'(a,b)
 \Rightarrow a \in V \cup \{\eta\}
 \end{array}
 \end{fmathpar}
@@ -21,7 +24,8 @@ By intros we have:
 \begin{array}{ll}
 H_2: & b \in V \cup \{\eta\} \\
 H_3: & a \in E'.A \\
-H_4: & R (a,b)\\
+H_4: & R' (a,b)\\
+\hline
 G_2: & a \in V \cup \{\eta\}
 \end{array}
 \end{fmathpar}
@@ -33,7 +37,7 @@ following:
 T_1: &  \auxred{V'} {(\E,op_{<s,i>})} {} {(\E',\eff)}\
 \end{array}
 \end{fmathpar}
-by inversion on $T_5$ we will have the following:
+by inversion on $T_1$ we will have the following:
 \begin{fmathpar}
 \begin{array}{ll}
 T_2: & E'.A = E.A \cup \{\eta\}
@@ -46,7 +50,7 @@ yields $T_2$, we can add it to the hypothesis:
 H_5: & E'.A = E.A \cup \{\eta\}
 \end{array}
 \end{fmathpar}
-by rewriting $H_5$ in $H_3$ in doing inversion, we get two cases:
+by rewriting $H_5$ in $H_3$  and by inversion, we get two cases:
 $a=\eta$ and $a \in E.A$. The first case immediatly proves $G_2$, so we
 only consider the second case where we have: 
 \begin{fmathpar}
@@ -59,13 +63,13 @@ Now, by inversion on $H_2$, we have two cases:
 \item {\bf Case 1:} \\
 \begin{fmathpar}
 \begin{array}{ll}
-H_7: & b \in V 
+& b \in V 
 \end{array}
 \end{fmathpar}
 by inversion in $H_1$ we have:
 \begin{fmathpar}
 \begin{array}{ll}
-H_8: & \forall (x \in V). \forall (y \in E.A). R(y,x) \Rightarrow y \in
+H_7: & \forall (x \in V). \forall (y \in E.A). R(y,x) \Rightarrow y \in
 V
 \end{array}
 \end{fmathpar}
@@ -75,18 +79,23 @@ by instantiation with a and b:
 H_8: & R(a,b) \Rightarrow a \in V
 \end{array}
 \end{fmathpar}
-which proves the goal after $H_4$ is applied to it. 
-
+Now by applying the lemma 1 on $H_4$ we get that $R(a,b)$ holds (since
+$a,b \neq \eta$), which can be applied on $H_8$ to get $a \in V$ which
+proves the goal $G_2$.
+%
+%
+%
+%
 \item {\bf Case 2:} \\
 \begin{fmathpar}
-\begin{array}{ll}
-H_9: & b = \eta \\
-H_{10}: & R(a,\eta)
+\begin{array}{lll}
+& H_9: & b = \eta \\
+\hspace{-35 mm} \mathtt{(by \; rewriting \;} H_9 \mathtt{\;in\; } H_4) & H_{10}: & R'(a,\eta)
 \end{array}
 \end{fmathpar}
 Now we use inversion on $H_0$ and get two cases: (LB exec) and (UB exec)
 \subitem {\bf \footnotesize SCase (LB exec):}
-We have $H_{11}$ and $H_{12}$ from the premises:
+we have $H_{11}$ and $H_{12}$ from the reduction rule premises:
 \begin{fmathpar}
 \begin{array}{ll}
 H_{11}: & R^{-1}_V(\eta) = R^{-1}_{E'.A}(\eta)   \\ \vspace{-2mm}\\
@@ -112,25 +121,25 @@ H_{16}: & V' \subseteq V
 \end{array}
 \end{fmathpar}
 now destruct $R$, the only non-trivial cases are
-$(R=R';\visZ)$ and 
+$(R=\trunc{R};\visZ)$ and 
 ($R=\visZ$):
 
 
-{\bf SSCase }($R=R';\visZ$):  \\
+{\bf SSCase }($R=\trunc{R};\visZ$):  \\
 From $H_{10}$ we get $H_{17}$ which based on the definition, yields that
 there exists $c$ such that $H_{18}$, $H_{19}$ and $H_{20}$ hold:
 \begin{fmathpar}
 \begin{array}{ll}
-H_{17}: & a \in R^{-1}_{E'.A}(\eta)\\
-H_{18}: & c \in \visZ^{-1}(\eta)\\
-H_{19}: & a \in R'^{-1}(c)\\
-H_{20}: & \visZ^{-1}(\eta) \subseteq E'.A \\
+H_{17}: & a \in (\trunc{R}';\visZ')_{E'.A}^{-1}(\eta)\\
+H_{18}: & c \in \visZ'^{-1}(\eta)\\
+H_{19}: & a \in \trunc{R}'^{-1}(c)\\
+H_{20}: & \visZ'^{-1}(\eta) \subseteq E'.A \\
 \end{array}
 \end{fmathpar}
 from $H_{15}$ we have:
 \begin{fmathpar}
 \begin{array}{ll}
-H_{21}: & (R')^{-1}_V(V') \subseteq V'
+H_{21}: & (\trunc{R})^{-1}_V(V') \subseteq V'
 \end{array}
 \end{fmathpar}
 Now from $H_{18}$ is straightforward to get:
@@ -139,7 +148,7 @@ Now from $H_{18}$ is straightforward to get:
 H_{22}: & c \in V'
 \end{array}
 \end{fmathpar}
-which from $H_{19}$ and $H_{21}$ it yields the following, which proves
+which after appying the lemma 1 on $H_{19}$, and by $H_{21}$ yields the following, which proves
 the goal $G_2$:
 \begin{fmathpar}
 \begin{array}{ll}
@@ -148,7 +157,7 @@ H_{23}: & a \in V'
 \end{fmathpar}
 
 {\bf SSCase }($R=\visZ$): 
-From $H_{10}$ we get that $vis (a,\eta)$, which -with a similar
+From $H_{10}$ we get that $\visZ' (a,\eta)$, which -with a similar
 argument to the previous subcase- yields the following and the goal is
 proved: 
 \begin{fmathpar}
@@ -157,14 +166,14 @@ H_{24}: & a \in V'
 \end{array}
 \end{fmathpar}
 \end{itemize} 
-QED.  \vspace {10mm} \\ 
-
-
-
-
-
-
-
+\fcolorbox{red}{white}{\color{black} \footnotesize QED.}  \vspace {10mm} \\ 
+%
+%
+%
+%
+%
+%
+%
 {\bf (Part ii)}  \\
 For this part we have the  following hypothesis and the goal:
 \begin{fmathpar}
@@ -243,50 +252,51 @@ Now since $\eta$ is a fresh effect, we get that $a \in V' \Rightarrow
 G_{7}: & a \in V'
 \end{array}
 \end{fmathpar}
-destruct R, which yileds multiple cases, only one of which is
+Now, destructing R yileds multiple cases, only one of which is
 non-trivial:  
 $\scriptsize R=\trunc{R};\visZ$, which can be rewritten in $H_7$ to get:
 \begin{fmathpar}
 \begin{array}{ll}
-H_{8}: & (\trunc{R};\visZ)'(a,\eta)
+H_{9}: & (\trunc{R};\visZ)'(a,\eta)
 \end{array}
 \end{fmathpar}
-Now we can rewrite the definition in $H_8$, and derive that there exists
+Now we can rewrite the definition in $H_9$, and derive that there exists
 $b$ such that:
 \begin{fmathpar}
 \begin{array}{ll}
-H_{9}: & \trunc{R}'(a,b)\\
-H_{10}: & \visZ'(b,\eta)\\
+H_{10}: & \trunc{R}'(a,b)\\
+H_{11}: & \visZ'(b,\eta)\\
 \end{array}
 \end{fmathpar}
-Now using a similat argument, from $H_8$ and $H_{10}$ we get: 
+Now using a similar argument, from $H_8$ and $H_{11}$ we get: 
 \begin{fmathpar}
 \begin{array}{ll}
-H_{11}: & b \in V'\\
+H_{12}: & b \in V'\\
 \end{array}
 \end{fmathpar}
-Now by applying the lemma on $H_9$ we get: 
+Now by applying the lemma 1 on $H_{10}$ we get: 
 \begin{fmathpar}
 \begin{array}{ll}
-H_{12}: & \trunc{R}(a,b)
+H_{13}: & \trunc{R}(a,b)
 \end{array}
 \end{fmathpar}
 since we have {\scriptsize $V' \in \left \lfloor V  \right \rfloor$}, 
 we get the following: 
 \begin{fmathpar}
 \begin{array}{ll}
-H_{13}: & \forall (x\in V'). (\trunc{R})_{E.A}^{-1}(V') \Rightarrow x \in V'
+H_{14}: & \forall (x\in V'). (\trunc{R})_{E.A}^{-1}(V') \Rightarrow x \in V'
 \end{array}
 \end{fmathpar}
-which yields the following from $H_{11}$ and $H_{12}$:
+which yields the following from $H_{12}$ and $H_{13}$:
 \begin{fmathpar}
 \begin{array}{ll}
-H_{14}: & a \in V'
+H_{15}: & a \in V'
 \end{array}
 \end{fmathpar}
 which proves the goal $G_7$.\\ \vspace{3 mm} \\
 {\footnotesize \bf Case2} (LB exec):\\
 We prove this case by induction on the length of the given relation $R$.
+We have the followings, from the premises of the reduction rule:
 \begin{fmathpar}
 \begin{array}{ll}
 H_{1}: & r_k = \soZ\\ 
@@ -305,8 +315,11 @@ H_{7}: & R'(a,\eta) \\
 G_{1}: & \visZ'(a,\eta)
 \end{array}
 \end{fmathpar}
-destruct R to get $H_8$ and rewrite the definition in it to get the next
-two hypotheses:
+We now destruct R to get $H_8$ from $H_7$, and rewrite the definition in it to get the next
+two hypotheses.
+Note that by destructing $R$, there are only two non-trivial cases
+$R=\trunc{R};\soZ$ and $R=\soZ$, which we are only consideing the
+former, since the latter can be proved similarly.
 \begin{fmathpar}
 \begin{array}{ll}
 H_{8}: & (\trunc{R};\soZ)'(a,\eta) \\ 
@@ -314,17 +327,15 @@ H_{9}: & \trunc{R}'(a,b)\\
 H_{10}: & \soZ'(b,\eta)
 \end{array}
 \end{fmathpar}
-From the previous section we know that $(so')^{-1}(\eta) \subseteq V$
-which yields the following from $H_10$:
+Now, from the previous section we know that $(so')^{-1}(\eta) \subseteq V$
+which yields the following from $H_{10}$:
 \begin{fmathpar}
 \begin{array}{ll}
 H_{11}: & b \in V
 \end{array}
 \end{fmathpar}
-The goal is proved by the induction hypothesis, $H_9$ and $H_11$.
-\\QED.
-
-
+The goal is proved by the induction hypothesis, $H_9$ and $H_{11}$.
+\\ \fcolorbox{red}{white}{\color{black} \footnotesize QED.}
 \end{footnotesize}
 
 

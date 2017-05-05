@@ -1,28 +1,224 @@
-By contradiction:
-\begin{smathpar}
+\begin{footnotesize}
+We prove the theorem by contradiction:
+\begin{fmathpar}
 \begin{array}{ll}
-H_0: & (\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E',\eff)\\
-H_1: & (\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E'',\eff)\\
-H_2: & a \in   (E''.vis^{-1}(\eta)) \\
-H_3: & a \not\in  (E'.vis^{-1}(\eta))\\
-G_0: & \bot 
+H_0: & (\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E',\eff) \\
+H_1: & a \in V \\ 
+H_2: & (a,\eta) \not\in E'.\visZ\\
+H_3: & (E'.A,E'.\visZ \cup \{(a,\eta)\},E'.\soZ) \models  \psi[\eta/\hat{\eta}]\\
+H_4: & (\trunc{R}^{-1}_V(a) = \trunc{R}^{-1}_{E.A}(a)) \\
+G_0: & \bot
 \end{array}
-\end{smathpar}
-By inversion on $H_1$ we have: 
-\begin{smathpar}
-\hspace{-48 mm}
-\begin{array}{lcl}
-&H_4: & \auxred{V''} {(\E,op_{<s,i>})} {} {(\E'',\eff)}\\
-&H_5: &   V''= \left \lfloor V \right \rfloor_V \\
-(\mathtt{by \;inversion \;on\;} H_4 \mathtt{\;and \;from\;} H_2) & H_6: & a \in V''
-\end{array}
-\end{smathpar}
-By inversion on $H_0$ and following a similar argument we can now derive: 
-\begin{smathpar}
+\end{fmathpar}
+Now we call {\scriptsize $(E'.A,E'.\visZ \cup \{(a,\eta)\},E'.\soZ)$} as
+{\scriptsize $E'$} and derive
+the following from $H_3$:
+\begin{fmathpar}
 \begin{array}{ll}
-H_7: &  \auxred{V''} {(\E,op_{<s,i>})} {} {(\E',\eff)} \\
-H_8: & V'= \left \lfloor V \right \rfloor_V \\
-H_9: & a \not\in V'\\
+H_5: & E'' \models \forall x. x\xrightarrow{R}\eta \Rightarrow x
+\xrightarrow{\visZ} \eta
 \end{array}
-\end{smathpar}
-However from $H_5$ we know $V''\subseteq V \wedge R_V^{-1}(V'')\subseteq V''$, which results in contradiction because of the maximality of $V'$ defined in $H_8$.
+\end{fmathpar}
+because $E''$ defines the universe of quantification (and since
+$E''.A=E'.A$), we get the
+following:
+\begin{fmathpar}
+\begin{array}{ll}
+H_6: & \forall (x\in E'.A). E'' \models x\xrightarrow{R}\eta \Rightarrow x
+\xrightarrow{\visZ} \eta
+\end{array}
+\end{fmathpar}
+and is rewritten as the following:
+\begin{fmathpar}
+\begin{array}{ll}
+H_7: & \forall (x\in E'.A). (E'' \models x\xrightarrow{R}\eta) \Rightarrow
+(E'' \models x
+\xrightarrow{\visZ} \eta)
+\end{array}
+\end{fmathpar}
+Now by inversion on $H_0$ we get two cases, one of which is trivial. We
+skip the formal proof for it but it is easy to see that in [LB exec]
+case, ALL effects in $V$ are made visible to $\eta$, so the set is
+trivially 
+maximal, i.e. $H_1$ and $H_2$ yield $\bot$. For the other case (UB
+exec), we get the following:
+\begin{fmathpar}
+\begin{array}{ll}
+H_8: & V' = \left \lfloor V  \right \rfloor_{\mathtt{max}}\\
+H_9: & \auxred{V'} {(\E,op_{<s,i>})} {} {(\E',\eff)}
+\end{array}
+\end{fmathpar}
+by inversion on $H_9$ we get $H_{10}$ and from that and from $H_2$, following a similar argument from the proof of
+theorem 1, we get $H_{11}$: 
+\begin{fmathpar}
+\begin{array}{ll}
+H_{10}: & \visZ' = \visZ \cup V \times \{\eta\}\\
+H_{11}: & a \not\in V'
+\end{array}
+\end{fmathpar}
+Now by denoting the interpretation of $R$ under $E''$ as $R''$,
+$H_7$ can be rewritten as follows: 
+\begin{fmathpar}
+\begin{array}{ll}
+H_{12}: &  \forall(x\in E'.A). R''(x,\eta) \Rightarrow \visZ''(x,\eta)\\
+\end{array}
+\end{fmathpar}
+Now by inversion on $H_8$, we get the following:
+\begin{fmathpar}
+\begin{array}{lll}
+& H_{13}: & V' \in \left \lfloor V  \right \rfloor \\
+& H_{14}: & \not\exists V'' \in \left \lfloor V  \right \rfloor.
+|V''|>|V'|\\
+(\mathtt{from \; H_{13}}) & H_{15}: & V' \subseteq V \; \wedge \;
+(\trunc{R})^{-1}_V(V') \subseteq V' \; \wedge \\ & & (\trunc{R})^{-1}_V(V')  =
+(\trunc{R})^{-1}_{E.A}(V') 
+\end{array}
+\end{fmathpar}
+Now we can destruct $R$, where we get multiple cases, only two of which
+are non-trivial, ($R=\visZ$) and ($R=\trunc{R};\visZ$)
+\begin {itemize}
+\item{\bf Case1}($R=\visZ$):\\
+$\trunc{R}=\nullR$, thus V itself satisfies the requirements in $H_{15}$
+and we get that {\scriptsize $(V=\left \lfloor V  \right \rfloor_{\mathtt{max}})$} and
+the following holds:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{16}: & V = V'
+\end{array}
+\end{fmathpar}
+which results in contradiction from $H_1$ and $H_{11}$.
+\\
+\item{\bf Case2}($R=\trunc{R};\visZ$):\\
+Since {\scriptsize $|V'\cup\{a\}|>|V'|$} we have the following:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{17}: & (V'\cup\{a\}) \not\in \left \lfloor V  \right \rfloor 
+\end{array}
+\end{fmathpar}
+which based on the definition yields that the conditiones for holding
+the above relation are not true, i.e.
+\begin{fmathpar}
+\begin{array}{ll}
+H_{18}: &  \neg ((V'\cup\{a\}) \subseteq V \; \wedge \;
+(\trunc{R})^{-1}_V(V'\cup\{a\}) \subseteq (V'\cup\{a\}) \; \wedge \\ & 
+(\trunc{R})^{-1}_V(V'\cup\{a\})  =
+(\trunc{R})^{-1}_{E.A}(V'\cup\{a\}))
+\end{array}
+\end{fmathpar}
+or:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{19}: &  \neg ((V'\cup\{a\}) \subseteq V)\; \vee \\
+        &  \neg ((\trunc{R})^{-1}_V(V'\cup\{a\}) \subseteq
+	(V'\cup\{a\})) \; \vee \\ & 
+\neg ((\trunc{R})^{-1}_V(V'\cup\{a\})  =
+(\trunc{R})^{-1}_{E.A}(V'\cup\{a\}))
+\end{array}
+\end{fmathpar}
+By inversion on the above, we get three cases, two of which are
+trivial. The last conjunct can't hold because of $H_4$ and the first one
+also contradics with $H_1$ and $H_{15}$. Thus, we are left with only one
+case: 
+\begin{fmathpar}
+\begin{array}{ll}
+H_{20}: & ((\trunc{R})^{-1}_V(V'\cup\{a\}) \not\subseteq
+	(V'\cup\{a\})) 
+\end{array}
+\end{fmathpar}
+Now, from the second conjunct in $H_{15}$ we know that it should be the
+case that: 
+\begin{fmathpar}
+\begin{array}{ll}
+H_{21}: & ((\trunc{R})^{-1}_V(a) \not\subseteq
+	(V'\cup\{a\})) 
+\end{array}
+\end{fmathpar}
+The above hypothesis yields the existance of $c\not= a$ such that:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{22}: & c \in (\trunc{R})^{-1}_V(a)\\
+H_{23}: & c \not\in V'
+\end{array}
+\end{fmathpar}
+Now, by rewriting the case in $H_{12}$ we get $H_{24}$, which can be
+rewritten again into $H_{25}$ from the definition:
+\begin{fmathpar}
+\begin{array}{lrll}
+H_{24}: & \forall (x\in E'.A). ((\trunc{R};\visZ)''(x,\eta) & \Rightarrow
+& \visZ''(x,\eta)) \\
+H_{25}: & \forall (x\in E'.A). (\exists b.\trunc{R}''(x,b) \; \wedge & & \\
+& \visZ''(b,\eta) & \Rightarrow & \visZ''(x,\eta))
+\end{array}
+\end{fmathpar}
+Now, we instantiate $H_{25}$ with $x=c$:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{26}: & \exists b.\trunc{R}''(c,b) \; \wedge \;
+ \visZ''(b,\eta)  \Rightarrow  \visZ''(c,\eta)
+\end{array}
+\end{fmathpar}
+we can replace $\trunc{R}''$ with $\trunc{R}'$ in above definition,
+since from $H_3$, the only difference in interpretation under $E'$ and
+$E''$ is the extra element $(a,\eta)$ in $E''.\visZ$ which does not
+effect $\trunc{R}''(c,b)$:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{27}: & \exists b.\trunc{R}'(c,b) \; \wedge \;
+ \visZ''(b,\eta)  \Rightarrow  \visZ''(c,\eta)
+\end{array}
+\end{fmathpar}
+Moreover, since $c\not= a$, we can replace $\visZ''(c,\eta)$ with
+$\visZ'(c,\eta)$:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{28}: & \exists b.\trunc{R}'(c,b) \; \wedge \;
+ \visZ''(b,\eta)  \Rightarrow  \visZ'(c,\eta)
+\end{array}
+\end{fmathpar}
+From $H_{15}$ and $H_{22}$ we get $H_{29}$, and $H_{30}$ also holds
+trivially from $H_3$:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{29}: & \trunc{R}'(c,a) \\
+H_{30}: & \visZ''(a,\eta)
+\end{array}
+\end{fmathpar}
+which can be used in instantiation of  $H_28$ with $b=a$ and derive the
+following:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{31}: & \visZ' (c,\eta)
+\end{array}
+\end{fmathpar}
+However, we know -from the previously explained argument- that $H_{31}$
+results in $H_{32}$, which results in contradiction with $H_{23}$.
+\begin{fmathpar}
+\begin{array}{ll}
+H_{32}: & c \in V'
+\end{array}
+\end{fmathpar}
+\fcolorbox{red}{white}{\color{black} \footnotesize QED.}
+
+
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{footnotesize}
+\newpage

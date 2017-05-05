@@ -1,4 +1,79 @@
 Here, we present the detailed proofs of the theorems of the paper. 
+Let's first present a useful lemma:
+\begin{lemma}
+For all relations $R$ and execution steps:
+\begin{fmathpar}
+(\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E',\eff)
+\end{fmathpar}
+interpretatin of $R$ under $E$ and $E'$ only differs considering $\eta$,
+i.e.  {\scriptsize $a,b\not= \eta \Rightarrow (R'(a,b) \Leftrightarrow
+R(a,b))$}
+\label{lemma1}
+\end{lemma}
+\begin{proof}
+We only prove $\Rightarrow$, the other part can be done
+similarly. We have the following goal and hypotheses: 
+\begin{fmathpar}
+\begin{array}{ll}
+H_0: & (\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E',\eff) \\
+H_1: & a,b \not= \eta\\ 
+H_2: & R' (a,b)\\
+G_0: & R (a,b)
+\end{array}
+\end{fmathpar}
+Now by destructing $R$ we have the followings from new hypothesis and
+goal:
+\begin{fmathpar}
+\begin{array}{ll}
+H_3: & (\trunc{R};r)' (a,b) \\
+G_1: & (\trunc{R};r) (a,b)
+\end{array}
+\end{fmathpar}
+which can be rewritten by the definition to  get that y exists s.t.
+\begin{fmathpar}
+\begin{array}{ll}
+H_4: & (\trunc{R})'(a,y)\\
+H_5: & r'(y,b) \\
+G_1: & \exists x. (\trunc{R})(a,x) \wedge (r)(x,b)
+\end{array}
+\end{fmathpar}
+Now we instantiate the goal with y itself and by using induction on the
+length of R, the first conjunct is proved, and we are left with the
+following:
+\begin{fmathpar}
+\begin{array}{ll}
+H_6: & r'(y,b) \\
+G_1: & r (y,b)
+\end{array}
+\end{fmathpar}
+Now by inversion on $H_0$ we get two cases, at both of which the
+following can be derived. (In one case V should be replaced by V' but
+has no effect on the proof):
+\begin{fmathpar}
+\begin{array}{ll}
+H_7: & \visZ' = \visZ \cup V \times \{\eta\} \\
+H_8: & \soZ' = \soZ' = \soZ \cup \{(\eta',\eta) \,|\, \eta'\in \EffSoup_{({\sf
+SessID}=s)} 
+\end{array}
+\end{fmathpar}
+Now, because of $H_1$ (and the fact that $y\not= \eta$) it is easy to get the following from $H_7$ and
+$H_8$:
+\begin{fmathpar}
+\begin{array}{ll}
+H_9: & \visZ(y,b) \Rightarrow \visZ(y,b) = \\
+H_{10}: & \soZ(y,b) \Rightarrow \soZ(y,b) =
+\end{array}
+\end{fmathpar}
+Which directly prove the goal, after destructing $r$.
+\end{proof}
+
+
+
+
+
+
+
+
 \subsection{Proof of Theorem \ref{theorem:one}}
 \label{app:proof1}
 \input{Sections/correctness_proof}

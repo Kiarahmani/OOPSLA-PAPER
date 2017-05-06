@@ -11,7 +11,7 @@ G_0: & \bot
 \end{array}
 \end{fmathpar}
 Now we call {\scriptsize $(E'.A,E'.\visZ \cup \{(a,\eta)\},E'.\soZ)$} as
-{\scriptsize $E'$} and derive
+{\scriptsize $E''$} and derive
 the following from $H_3$:
 \begin{fmathpar}
 \begin{array}{ll}
@@ -52,7 +52,7 @@ by inversion on $H_9$ we get $H_{10}$ and from that and from $H_2$, following a 
 theorem 1, we get $H_{11}$: 
 \begin{fmathpar}
 \begin{array}{ll}
-H_{10}: & \visZ' = \visZ \cup V \times \{\eta\}\\
+H_{10}: & \visZ' = \visZ \cup V' \times \{\eta\}\\
 H_{11}: & a \not\in V'
 \end{array}
 \end{fmathpar}
@@ -105,14 +105,14 @@ H_{18}: &  \neg ((V'\cup\{a\}) \subseteq V \; \wedge \;
 (\trunc{R})^{-1}_{E.A}(V'\cup\{a\}))
 \end{array}
 \end{fmathpar}
-or:
+or equally:
 \begin{fmathpar}
 \begin{array}{ll}
-H_{19}: &  \neg ((V'\cup\{a\}) \subseteq V)\; \vee \\
-        &  \neg ((\trunc{R})^{-1}_V(V'\cup\{a\}) \subseteq
-	(V'\cup\{a\})) \; \vee \\ & 
-\neg ((\trunc{R})^{-1}_V(V'\cup\{a\})  =
-(\trunc{R})^{-1}_{E.A}(V'\cup\{a\}))
+H_{19}: &   (V'\cup\{a\}) \not\subseteq V\; \vee \\
+        &  (\trunc{R})^{-1}_V(V'\cup\{a\}) \not\subseteq
+	(V'\cup\{a\}) \; \vee \\ & 
+(\trunc{R})^{-1}_V(V'\cup\{a\})  \not=
+(\trunc{R})^{-1}_{E.A}(V'\cup\{a\})
 \end{array}
 \end{fmathpar}
 By inversion on the above, we get three cases, two of which are
@@ -121,15 +121,16 @@ also contradics with $H_1$ and $H_{15}$. Thus, we are left with only one
 case: 
 \begin{fmathpar}
 \begin{array}{ll}
-H_{20}: & ((\trunc{R})^{-1}_V(V'\cup\{a\}) \not\subseteq
-	(V'\cup\{a\})) 
+H_{20}: & (\trunc{R})^{-1}_V(V'\cup\{a\}) \not\subseteq
+	(V'\cup\{a\})
 \end{array}
 \end{fmathpar}
 Now, from the second conjunct in $H_{15}$ we know that it should be the
 case that: 
 \begin{fmathpar}
-\begin{array}{ll}
-H_{21}: & ((\trunc{R})^{-1}_V(a) \not\subseteq
+\begin{array}{lll}
+\hspace{-30mm} (\mathtt{\tiny from\; H_{15}: (\trunc{R})^{-1}_V(V')
+\subseteq V' }) \quad & H_{21}: & ((\trunc{R})^{-1}_V(a) \not\subseteq
 	(V'\cup\{a\})) 
 \end{array}
 \end{fmathpar}
@@ -140,7 +141,7 @@ H_{22}: & c \in (\trunc{R})^{-1}_V(a)\\
 H_{23}: & c \not\in V'
 \end{array}
 \end{fmathpar}
-Now, by rewriting the case in $H_{12}$ we get $H_{24}$, which can be
+Now, by rewriting ({\scriptsize $R=\trunc{R};\visZ$}) in $H_{12}$ we get $H_{24}$, which can be
 rewritten again into $H_{25}$ from the definition:
 \begin{fmathpar}
 \begin{array}{lrll}
@@ -183,7 +184,7 @@ H_{29}: & \trunc{R}'(c,a) \\
 H_{30}: & \visZ''(a,\eta)
 \end{array}
 \end{fmathpar}
-which can be used in instantiation of  $H_28$ with $b=a$ and derive the
+which can be used in instantiation of  $H_{28}$ with $b=a$ and derive the
 following:
 \begin{fmathpar}
 \begin{array}{ll}
@@ -202,23 +203,4 @@ H_{32}: & c \in V'
 
 \end{itemize}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \end{footnotesize}
-\newpage

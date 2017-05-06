@@ -84,7 +84,9 @@ Which directly prove the goal, after destructing $r$.
 
 \subsection{Proof of Theorem \ref{theorem:three}}
 \label{app:proof3}
-Before proving the theorem, let's first prove the following lemma: 
+Before proving the theorem, we first present and prove a useful lemma
+and then we will present 
+a new definition, regarding sets of effects.
 \begin{lemma}
 Under an execution state E and for a given set $S \subseteq E.A$, if
 $S$ is $\psi$-consistent under $E$, then $\forall(x\in S).R_S^{-1}(x)
@@ -93,7 +95,7 @@ $S$ is $\psi$-consistent under $E$, then $\forall(x\in S).R_S^{-1}(x)
 From $\psi$-consistency of $S$ we have the following:
 \begin{smathpar}
 \begin{array}{ll}
-H_0: & \forall(x\in S). \forall (y\in E.A). R.(y,x) \in S \\
+H_0: & \forall(x\in S). \forall (y\in E.A). R(y,x) \in S \\
 \end{array}
 \end{smathpar}
 Now based on the definition of $R$, we have the following: 
@@ -110,7 +112,7 @@ H_2: & \forall(x\in S). R_{S}^{-1}(x) \subseteq S \\
 \end{array}
 \end{smathpar}
 which completes the proof of the lemma.
-
+\\ QED.
 \end{proof}
 \end{lemma}
 \label {lemma1}

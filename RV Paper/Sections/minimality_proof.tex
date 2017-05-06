@@ -1,61 +1,66 @@
-Now, in order to prove the theorem, we define $V=S$, so now we need to find $E''$ and $\eta'$, such that the following
-hy
-potheses and goal hold.
-\begin{smathpar}
-\begin{array}{ll}
-H_0: & \auxred{S} {(\E,op_{<s,i>})} {} {(\E',\eff)}   \\
-H_1: & \mathtt{S \cup \{\eta\} \; is \;} \psi \mathtt{-consistent \;
-under \;} E'   \\
-G_0: & ((\E,op_{<s,i>})\;\xrightarrow{S}\;(\E'',\eff'))
-\end{array}
-\end{smathpar}
-
-\paragraph{Case I: $vis \subseteq r_k $}
-We define $S'$ to be the maximal closed subset of $S$, i.e. $S' = \left
-\lfloor S \right \rfloor_S $. Now we can $\eta'=F_{op}(S')$.
-Moreover, in order to define $E''$, we first define the following: 
-\begin{smathpar}
+\begin{footnotesize}
+\begin{definition} 
+We define the completment of a given set of effects $S$ (under an
+execution state $E$) as the super set of $S$, containing ALL the
+mid-level effects required to determine ALL the dependencies of the
+effects in $S$, i.e.
+\begin{fmathpar}
 \begin{array}{lll}
-
-A'' & = & E.A \cup \{\eta'\}  \\
-so'' & = & E.so \cup \{(\eta'',\eta')|\eta''\in E.A\} \\
-vis'' & = & E.vis \cup S'\times \{\eta'\}\\
+S' \in  \left \lceil S \right \rceil \iff  R^{-1}_{S'}(S) = R^{-1}_{E.A}(S)
 \end{array}
-\end{smathpar}
-Finally, we define $E''=(A'',vis'',so'')$, and now by applying
-\rulelabel{OPER} rule, we will have the following:
-\begin{smathpar}
+\end{fmathpar}
+\end{definition}
+Now, using the above theorem and lemma, we present the proof of the
+theorem 3, which starts by listing the following hypotheses and the goal:
+\begin{fmathpar}
 \begin{array}{ll}
-H_2: &  \auxred {S'} {((\EffSoup,\visZ,\soZ), op_{<s,i>}))}
-    {} {((\EffSoup'',\visZ'',\soZ''),\eta')}
+H_0: & \auxred{S} {(\E,op_{<s,i>})} {} {(\E',\eff)}    \\
+H_1: & S \cup \{\eta\} \; is \;  \psi\mathtt{-consistent}\\
+G_0: & \exists E''.\exists \eta'. \exists V.
+((\E,op_{<s,i>})\;\xrightarrow{V}\;(\E'',\eff'))
 \end{array}
-\end{smathpar}
-Now, by applying \rulelabel{exec} rule on $G_0$, we have the following
-new goals:
-\begin{smathpar}
+\end{fmathpar}
+Now, by destructing $R$ we get two non-trivial cases:
+\begin{itemize}
+\item {\bf Case1}($R=\trunc R ;\visZ$):\\
+In this case, we generate the premises of the \rulelabel{ub exec} to
+achieve the goal. We define the following: 
+\begin{fmathpar}
 \begin{array}{ll}
-G_0: & S \subseteq E.A  \\
-G_1: & R_S^{-1}(\eta) \subseteq S \\
-G_2: & vis \subseteq r_k \\
-G_3: & S' = S' = \left \lfloor S \right \rfloor_S \\
-G_4: & \auxred{S'} {(\E,op_{<s,i>})} {} {(\E',\eff)} \\
+H_3: & S' = \left
+\lfloor S \right \rfloor_{\mathtt{max}} \\\vspace{1mm}
+H_4: & \eta' = F_{op}(S')
 \end{array}
-\end{smathpar}
-All the goals above are an already shown assumption but $G_1$, which is
-the direct result of applying lemma \ref{lemma1} on $H_1$.
-\paragraph{Case II: $vis \not\subseteq r_k $}
-We pick $E'' = E'$ and $\eta'=\eta$, so by applying the
-\rulelabel{Exec} we have the following:
-\begin{smathpar}
+\end{fmathpar}
+
+
+
+
+\begin{fmathpar}
 \begin{array}{ll}
-G_0: & S \subseteq E.A  \\
-G_1: & R_S^{-1}(\eta) \subseteq S \\
-G_2: & vis \not\subseteq r_k \\
-G_3: & \auxred{S} {(\E,op_{<s,i>})} {} {(\E',\eff)} \\
+H_2: & V = S\\
+G_1: & \exists E''.\exists \eta'.
+((\E,op_{<s,i>})\;\xrightarrow{S}\;(\E'',\eff'))
 \end{array}
-\end{smathpar}
-$G_1$ is the direct result of lemma \ref{lemma1}, and the rest of the goals
-are in fact in the  assumptions, and thus the theorem is proved. 
+\end{fmathpar}
 
 
 
+
+
+
+
+
+\item {\bf Case2}($R=\trunc R;\soZ$):\\
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+\end{footnotesize}

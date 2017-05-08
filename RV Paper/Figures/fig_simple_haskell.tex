@@ -9,10 +9,10 @@ read :: State -> (String,Maybe Effect)
 read s = (s,Nothing)
 
 write :: String -> ((),Maybe Effect)
-write comment = ((),comment)
+write comment = ((),Just comment)
 
 apply :: State -> Effect -> State 
-apply s eff = in s ++ " - " ++ comment
+apply s comment = s ++ comment
 	\end{lstlisting}
 	\caption{A simple implementation}
 	\label{subfig:comment_code}
@@ -21,7 +21,7 @@ apply s eff = in s ++ " - " ++ comment
 	\begin{subfigure}[b]{0.475\textwidth}
 	\includegraphics[scale=0.282]{Figures/comment_application.pdf}
 	\caption{Example execution}
-	\label{subfig:comment_example}
+	\label{subfig:example_exec}
 	\end{subfigure} 
 \\ \hrulefill
 \caption{A distributed application for comment section

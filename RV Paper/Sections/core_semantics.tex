@@ -2,23 +2,32 @@
 \raggedright
 \textbf{Auxiliary Definitions}\\ \vspace{-2mm}
 %
-\begin{minipage}{0.5\textwidth}
+\begin{minipage}{0.35\textwidth}
 \begin{fmathpar}
 \begin{array}{lclcl}
-  \multicolumn{5}{c}{
-    {op} \in \mathtt{Operation\; Name} \spc \spc
-    {v} \in \mathtt{Return\; Value} \spc \spc
-    {s} \in \mathtt{Session\; Id} \spc\spc
-  } 
-  \\ 
-  \eff & \in & \mathtt{Effect} & \coloneqq &  (s,op,v)\\
-  F_{op} & \in & \mathtt{Op.\,Def.} & \coloneqq & \set{\eff} \mapsto v\\
+    {\op} & \in & \mathtt{Operation\; Name} & & \\ 
+    {v} & \in & \mathtt{Return\; Value}  & & \\ 
+    {s} & \in & \mathtt{Session\; ID} & & \\
+  \eff & \in & \mathtt{Effect}  \coloneqq   (s,op,v) & & \\
+\end{array}
+\end{fmathpar}
+\end{minipage}
+~\qquad
+\begin{minipage}{0.45\textwidth}
+\begin{fmathpar}
+\begin{array}{lclcl}
+  F_{\op} & \in & \mathtt{Op.\,Def.} & \coloneqq & \set{\eff} \mapsto v\\
   \EffSoup & \in & \mathtt{Eff\,Soup}	  & \coloneqq & \set{\eff} \\
   \visZ,\soZ &	\in & \mathtt{Relations} & \coloneqq & \set{(\eff,\eff)} \\
   {\E} 	& \in & \mathtt{Exec\;State}  & \coloneqq & \Exec \\
 \end{array}
 \end{fmathpar}
 \end{minipage}
+
+
+
+
+
 %
 
 \vspace {3mm}

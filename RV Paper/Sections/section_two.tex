@@ -5,56 +5,57 @@
 \label{sec:sys_model}
 
 A data store in our system model is a collection of \emph{replicas}
-(\#1,\#2,...), each of which maintains an instance of a set of
-replicated \emph{data object} ($x$,$y$,...).  These objects, which are
-defined by application developers, contain a \emph{state}
-($v$,$v'$,...) and are equipped with a set of \emph{operations}
-($op$,$op'$,...), each of which are designated as either read-only or
-effectful.  The former characterizes operations that just read from
-the store, and receive an instance of an object's state, while the
-latter characterizes operations that modify an object's state by
-generating \emph{update effects} ($\eff$,$\eff'$,...).  Update effects
-or simply effects are associated with an \emph{apply} function that
-executes asynchronously, and modifies object state on different
-replicas.  An effectful operation is handled by a replica that updates
-the object's state, and guarantees eventual delivery of the effect to
-all other replicas in the system. Each recipient uses the apply
-function to modify its local instance of the object;
-Fig.\ref{fig:system_model} illustrates this behavior.
+(\replO{1},\replO{2},...), each of which maintains a copy of a set of
+replicated \emph{data object} (\xO,\yO,...).  Each data object includes
+maintains a \emph{state value} (\vO,\vO',...) and is equipped with a set of \emph{operations}
+(\opO,\opO',...). Operations may read the state of an object
+residing in a replica, and modify it by generating \emph{update
+effects} ($\eff$,$\eff'$,...).
+Update effects
+or simply effects are asynchronously sent to all other replicas, where,
+by using a
+user-defined function, are \emph{applied} to the state of the object
+instance in the recipient replica. 
+Fig.~\ref{fig:sys_model1} and \ref{fig:sys_model2} illustrate this
+process, where the example shows how effects are locally created and
+remotely applied. 
 
-Observe there is no direct synchronization between replicas when an
-operation is executed, which means there can be conflicting updates on
-an object, that are generated at different replicas concurrently.  We
-do not bound the system to a particular conflict resolution strategy
-Consequently, this model admits all inconsistencies and anomalies
-associated with eventual consistency~\cite{quelea}; our goal is equip
-applications and implementations with mechanisms to specify and avoid
-such inconsistencies.
+Observe that in our system model, there is no direct synchronization between replicas when an
+operation is executed, which means concurrent and possibly conflicting
+updates can be generated at different replicas. We
+require the user-defined \emph{apply} function to implement a conflict
+resolution strategy for replicas to eventually converge. 
+This model admits all inconsistencies and anomalies
+associated with eventual consistency \cite{quelea,terry}, and our goal is equip
+applications and implementations with mechanisms to specify and prevent
+such inconsistencies. 
 
-Clients interact with the store by invoking operations on objects.
+Clients in our model, interact with the store by invoking operations on objects.
 A \emph{session} is a sequence of operations invoked by a particular
-client. Consequently, operations (and update effects) can be uniquely
-identified by their invoking \emph{session id} and
-their \emph{sequence number} in that particular session. The data
-store is typically accessed by a large number of clients concurrently
-and as a result of the load balancing regulations of the store,
-operations might be routed to different replicas, even if they are
-from the same session (Figures \ref{fig:sys_model1} and
-\ref{fig:sys_model3}).  Operations belonging to a given session are
-not required to be handled by the same replica.
+client. Consequently, operations (and effects) can be uniquely
+identified by the \emph{session id} that invoked them, and
+their \emph{sequence number} in that particular session, which is used
+by replicas, to record the set of all updates locally applied.
+Since, the data
+store is concurrently accessed by a typically large number of clients,
+and as a result of the load balancing regulations,
+operations (even from the same session) might be routed to different
+replicas (Fig.~\ref{fig:sys_model1} and
+\ref{fig:sys_model3}). 
 
-We new define two relations over effects created in the store.
-\emph{Session order} ($\xrightarrow{\soZ}$) is an irreflexive, transitive relation that relates
-effects from the same session following the integer \emph{smaller
-than} relation over their sequence numbers.  \emph{Visibility} ($\eff
-\xrightarrow{\visZ} \eff'$) is an
-irreflexive and assymetric relation that holds if effect $\eff$ has
-been applied to a replica $R$ before $\eff'$ is applied to $R$.  In
-Fig.\ref{fig:sys_model3} for example, $\eff'$ (the effect of executing
-op') will witness the updates associated with effect $\eff$
-($\eff \xrightarrow{\visZ} \eff'$), since $\eff$ is already present at
-the replica4, when op' is submitted).
 
+Lastly, we define two relations over effects created in the store.
+\emph{Session order} ($\soZ$) is an irreflexive, transitive relation that relates
+an effect to all subsequent effects from the same session.
+Moreover, we define 
+\emph{visibility} (${\visZ}$) 
+as an irreflexive and assymetric relation that 
+relates an effects to all others that are influenced by it (witnessed its
+update) at the time of their generation.
+For example, in Fig.~\ref{fig:sys_model3} $\visO
+(\eta,\eta')$ holds, since $\eta$ (the effect of $\opO$) has already been
+delivered and applied to the replica~\replO{4}, when $\opO$ is executed and thus has influenced 
+generation of $\eff'$.
 \input{Figures/fig_system_model}
 
 

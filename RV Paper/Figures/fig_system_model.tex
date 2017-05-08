@@ -1,26 +1,30 @@
 \begin{figure}[t]
     \centering
-    \begin{subfigure}[t]{0.31\textwidth}
+    \begin{subfigure}[t]{0.3\textwidth}
     \centering
         \includegraphics[scale=0.32]{Figures/system_model1.pdf}
-        \caption{\scriptsize A client submits an operation op to the store, which
-	is routed to the replica1.}
+        \caption{\scriptsize A client submits an operation $\op$ to the store, which
+	is routed to the replica \texttt{\#1}.}
         \label{fig:sys_model1}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.31\textwidth}
+    \vline
+    \hfill
+    \begin{subfigure}[t]{0.3\textwidth}
         \centering
 	\includegraphics[scale=0.32]{Figures/system_model2.pdf}
-        \caption{\scriptsize The state of the eplica1 is updated, an
+        \caption{\scriptsize The state of the replica \texttt{\#1} is updated, an
 	effect is created and is being propagated}
         \label{fig:sys_model2}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.31\textwidth}
+    \vline
+    \hfill
+    \begin{subfigure}[t]{0.3\textwidth}
         \centering
 	\includegraphics[scale=0.32]{Figures/system_model3.pdf}
-        \caption{\scriptsize Second operation op' is submitted to the store, which
-	is routed to another replica}
+        \caption{\scriptsize Second operation $\op'$ is submitted to the store, which
+	is routed to the replica \texttt{\#4}}
         \label{fig:sys_model3}
     \end{subfigure}
     \caption{system model of \tool}\label{fig:system_model}

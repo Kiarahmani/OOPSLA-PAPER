@@ -1,70 +1,56 @@
 \section {Specification Language} 
 \label{sec:ctrt_language}
-
-The formal syntax of our specification language is presented in
-Fig.~\ref{fig:ctrt_syntax}.  The language allows the definition of
-propositions, FOL formulae that establish the conditions under which
-one effect may become visible to another.  The dependencies that must
-hold for a particular visibility effect to be valid is given in
-terms of a composition of 
-
-The type \relationS{} which is used to define dependencies between
-effects in \propS{}s, is a sequence of \seedS{}s where each of them is
-a $\visZ$ or $\soZ$ relation or the union of them both over the set of
-effects. 
-We use the following interpretation for the sequence of relations: 
-\begin{equation} \scriptsize
-a \xrightarrow{R;r_k} b \iff \exists c. a \xrightarrow{R} c
-\wedge c \xrightarrow {r_k} b
-\end{equation}
-
-In order to configure each environment, the developers are
-required to write a \specS{} for each of them, that is consisted of
-conjunctions of \propS{}s, which simply allows developers to
-eliminiate multiple types of anomalous behavior from each
-environment. For example, the developers of the comment management
-application, can simply write $\psi_1\wedge \psi_2$ for their \readC{}
-operation and prevent \emph{both} anomalies explained in the previous
-section.
 \input{Sections/syntax}
+The formal syntax of our specification language is presented in
+Fig.~\ref{fig:ctrt_syntax}, which allows definition of propositions
+(\propS{}), FOL formulae that 
+establish dependence relations between effects in order to determine
+the effects an operation should witness.
+The language is seeded with $\soZ$ and $\visZ$, respectively representing session
+order and visibility over effects, 
+and defines a \relationS{} as a sequence\footnote{\tool also allows
+definition of the closure of relations, however we omitted them here for
+simplicity reasons} of relation seeds, representing dependencies between effects,  
+which should be desugared as
+follows:
+\begin{equation} \scriptsize
+a \xrightarrow{\rel_1;...;\rel_k} b \iff \exists c. (a
+\xrightarrow{\rel_1;...;\rel_{k-1}} c
+\wedge c \xrightarrow {\rel_k} b)
+\end{equation}
+Additionally, the language allows definition of \specS{}, that is a
+conjunction of propositions, and is used to define safe environments that are 
+free of \emph{multiple} inconsistencies. 
+Our language is crafted to capture fine-grained weak consistency
+requirements, including the famous session guarantees \cite{terry}, presented
+in Fig \ref{fig:ctrt_example}.
 
-Now we syntactically  classify propositions into \emph{lower bound} (LB) and
-\emph{upper bound} (UB) and hybrid types, and show that they completely
-align with types of
-anomalies previously mentioned. 
-\begin{itemize}
-\item {\bf LB}: We define a \propS{} to be of type LB, 
-if its dependency relation $R$, ends with an $\soZ$ relation, i.e. is of
-the following from: $\scriptsize \forall a. a
+%
+% UB and LB contracts
+%
+
+We finish this section by syntactically classifying 
+contracts, and explaining how each of them requires different
+enforcement techniques.
+\begin{description}
+\item {\textsf LB}: If the defined dependency relation for a contract ends with an \soZ, i.e. is of
+the following form ({\scriptsize $\forall a. a
 \xrightarrow{r_1;r_2;...;\soZ} \hat{\eff}
-\Rightarrow a \xrightarrow{\visZ} \hat{\eff}$.
-Observe that these contracts simply put a lower bound on the set of
-effects each operation must witness, by defining a certain set of
-dependency for each effect, that must be visible to it, which makes the
-blocking technique very suitable for easily maintaining them.
-\item {\bf UB}:  These propositions are similarly defined as \propS{}s
-with dependency relations ending with $\visZ$, or of the following form: 
-$\scriptsize \forall a. a\xrightarrow{r_1;r_2;...;\visZ} \hat{\eff}
-\Rightarrow a \xrightarrow{\visZ} \hat{\eff}$.
-This type of \propS{}s, put an upper bound on the set of effects 
-a replica should make visible to each operation when executing it, by
-enforcing that if an effect is made visible, certain set of dependent
-effects must also be made visible. This clearly resembles the
-filteration technique, where only a subset of available effects can enter
-the consistent environments.
-\item {\bf Hybrid}: The \propS{}s whose dependency relation ends with
-$\visZ\cup \soZ$, which require both blocking and filteration to be
-maintained. 
-\end{itemize}
-We can extend the above definitions to \specS{}s also, by defining an LB
-(UB) \specS{} to contain only LB (UB) \propS{}s. Hybrid \specS{}s are also
-defined as the ones that are neither LB or UB.
+\Rightarrow a \xrightarrow{\visZ} \hat{\eff}$}), we call it a \emph{lower
+bound} (\LB{}) contract, since it specificly defines the smallest set of
+effects that any operation should witness to maintain consistency, e.g.
+\textsc{rmw} and \textsc{mr} in Fig.~\ref{fig:ctrt_example}.
 
-We finish this section by presenting weak consistency guarantees from
-Terry et. al. in figure \ref{fig:ctrt_rep}, which shows the generality
-of our simple specification language. We also present a simple way of
-representing contracts as graphs where the left-hand-side of the
-contracts are depicted as the sequence of edges relating two effects,
-and the right-hand-sinde (or what must be enforced by replicas at the
-execution time) is represented as the single dashed $\visZ$ edge.
-%\input{Figures/fig_contracts_rep}
+\item {\textsf UB}: Similarly, we define the \emph{upper bound} (\UB{})
+contracts, as the ones with dependency relations ending with a $\visZ$.
+These contracts define constraints on the set of effects made visible
+to each operation, by enforcing that if an effect is being witnessed
+certain set of dependencies must also be witnessed.
+\end{description}
+Our consistency enforcement approach is based on blocking operations with \LB{}
+contracts to make sure that they witness \emph{all effects that they are
+supposed to}, and filteration for \UB{} contracts to make sure that they
+would not witness \emph{effects that they are not supposed
+to}. A combination of both approaches is also taken for contracts that are
+neither  \LB{} nor \UB{}, i.e hybrid contracts.
+

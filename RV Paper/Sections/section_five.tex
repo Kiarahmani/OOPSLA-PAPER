@@ -3,69 +3,65 @@
 %========================================================================================================================
 \section{Semantics}
 \label{sec:semantics}
-In this section we formalize our consistency enforcement algorithm with an
-operational semantics, which is also a high-level abstraction of our
-tool \tool.
-Our approach is complete for the specification language defined
-in section \ref{sec:ctrt_language}, however, here for simplicity reasons we present an operational semantics 
-parametrized over a non-hybrid contract with a single prop. As we will explain
-in section \ref{subsec:generalization}, the rules can be easily
-generalized to cover multiple consistency levels, each specified by any
-given contract. Therefore, in the rest of this section we will assume a given contract $\psi$ of the
-following form:
+In this section, we present the consistency enforcement mechanism of
+\tool, abstracted as a formal operational semantics. Our approach is
+complete for the specification language defined in
+Sec.~\ref{sec:ctrt_language}, however for better
+comprehensibility, here we present the semantics and the theorems
+paramterized over a non-hybrid contract consisting of one proposition.
+Therefore, in the rest of this section, we will assume a given contracat $\psi$
+of the following form:
 \begin{fmathpar}
 \begin{array}{lll}
-\psi = \forall a. a \xrightarrow{R} \hat{\eta} \Rightarrow a 
+\psi = \forall a. a \xrightarrow{\rel_1;\rel_2;...;\rel_k} \hat{\eta} \Rightarrow a 
 \xrightarrow{\visZ} \hat{\eta}
-&\qquad & \quad R = r_1;r_2;...;r_k 
-\quad
+&\qquad 
+\quad & \rel_i \in \{\visZ;\soZ\}
 \end{array}
 \end{fmathpar}
+%
+%
 
 The operational semantics is defined via a small-step relation over \emph{execution
 states}, which are tuples of the form $\E=(\EffSoup,\visZ ,\soZ)$.
-The \emph{effect soup} $\EffSoup$, represents the set of all
-effects produced in the system, and  $\visZ$,
-$\soZ$ $\subseteq \EffSoup \times \EffSoup$, respectively stand for the
-visibility and session order relations
+The \emph{effect soup} $\EffSoup$, stands for the set of all
+effects produced in the system, and \emph{primitive relations} $\visZ$,
+$\soZ$ $\subseteq \EffSoup \times \EffSoup$, respectively represent the
+visibility and session order 
 among such effects. Figures \ref{subfig:execution_graph} and
 \ref{subfig:execution_example} represent a simple
-execution state of a system consisting of 9 effects with associated
-primitive relations, where we ommited drawing the transitive $\soZ$ edge between
-$\eff_8$ and $\eff_1$, for better readability.
+execution state consisting of 9 effects with associated
+primitive relations\footnote{we ommit drawing transitive $\soZ$
+edges (e.g. between
+$\eff_8$ and $\eff_1$) for better readability}.
 \input{Figures/fig_execution}
-We use notation $\EffSoup_{(condition)}$
-to represent a  subset of $\EffSoup$ consisting of effects that
-satisfy the specified condition.
+We denote the subset of $\EffSoup$ consisting of effects that
+satisfy a certain condition as $\EffSoup_{(\mathtt{condition})}$.
+%
+
 Note that \tool's contracs are in fact constraints over execution states,
 where the domain of quantification is fixed to the effect soup
 $\EffSoup$, and
 interpretation for $\soZ$ and $\visZ$ relations (which occur free in the
 contract formulae) are also provided. Thus, execution states are
-potential
-models for any first-order formula expressable in the contract
-language. If an execution state $\E$ is in fact a valid model for a contract
-$\psi$, we say that $\E$ satisfies $\psi$, written as $\E
+potential models for any first-order formula expressable in the
+specification language. If an execution state $\E$ is in fact a valid model
+for a contract $\psi$, we say that $\E$ satisfies $\psi$, written as $\E
 \models \psi$. 
 
 
-The samentics' reduction step is of the form
-\begin{smathpar}
-\scriptsize
+The reduction relation in the semantics is of the form
+{\scriptsize $
 (\E,\op_{<s,i>}) \;\xrightarrow{\V}\; (\E', \eff),
-\end{smathpar}
-which can be interpreted as a reduction of the initial execution state
-$\E$, initiated by a replica with a local 
-set of effects $\V$, after it executes an operation
-$\op$, which is the $i^{th}$ request from the session $s$. 
+$}
+which can be interpreted as the reduction of the initial execution state
+$\E$, performed by a replica with a local 
+set of effects $\V$ when it executes
+$\op$, which is the $i^{th}$ operation from the session $s$. 
 During this reduction step a new effect $\eff$ is produced and added to
-the system, resulting a new execution state $\E'$ with updated effect
+the system, resulting in a new execution state $\E'$ with updated effect
 soup and primitive relations.
 
-Before introducing the operational semantics, we will first formally
-present the required definitions in the next section. Namely, we will define  
-notions of the \emph{inverse} of a given relation $R$, and the \emph{maximally
-closed subset} of a given set of effects $V$ under a contract $\psi$. 
 
 
 
@@ -75,6 +71,8 @@ closed subset} of a given set of effects $V$ under a contract $\psi$.
 %=============================================================================================================
 \subsection{Preliminaries}
 \label{subsec:prelim}
+Before introducing the operational semantics, we will first formally
+present the required definitions in the next section. 
 We start by formally defining the inverse of a seed relation ($\rel \in$
 \seedS{}) given an 
 execution state $\E$:
@@ -269,6 +267,34 @@ by the underlying ECDS.
 \input{Sections/subsec_maximality}
 \input{Sections/subsec_minimalwait}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% GENERALIZATION OF THE SEMANTICS WHICH I DONT THINK SHOULD BE INCLUDED
+% BECAUSE OF LACK OF SPACE
+%=============================================================================================================
+%=============================================================================================================
+\begin{comment}
 %=============================================================================================================
 %--------- How it can be generalized for all contracts
 %=============================================================================================================
@@ -335,4 +361,4 @@ work only on a specific subset of available effects at any replica. The subset, 
 maintained according to the contract assosiated with each operation, and
 is guaranteed to preserve the consistency requirements following the
 theorems of sections \ref{subsec:sound} and \ref{subsec:opt}. 
-
+\end{comment}

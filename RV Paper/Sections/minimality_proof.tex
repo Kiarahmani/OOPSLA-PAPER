@@ -10,6 +10,8 @@ S' \in  \left \lceil S \right \rceil \iff  R^{-1}_{S'}(S) = R^{-1}_{E.A}(S)
 \end{array}
 \end{fmathpar}
 \end{definition}
+\hrule
+\vspace{4mm}
 
 Now, using the above theorem and lemma, we present the proof of the
 theorem 3, which starts by listing the following hypotheses and the goal:
@@ -24,44 +26,154 @@ G_0: & \exists E''.\exists \eta'. \exists V.
 Now, by destructing $R$ we get two non-trivial cases:
 \begin{itemize}
 \item {\bf Case1}($R=\trunc R ;\visZ$):\\
-In this case, we generate the premises of the \rulelabel{ub exec} to
-achieve the goal. We define the following: 
+In this case\footnote{\scriptsize Note that in this case the goal $G_0$,
+trivially holds. That is because the contract in this case is
+\rulelabel{ub}, which represents executions whitout blocking or waiting,
+that can always make progress  by showing \emph{some} set of effects to
+the operations}, we generate the premises of the \rulelabel{ub exec} to
+achieve the goal as follows. Firstly, we define $S'$ and present $\eta'$: 
 \begin{fmathpar}
 \begin{array}{ll}
 H_3: & S' = \left
-\lfloor S \right \rfloor_{\mathtt{max}} \\\vspace{1mm}
-H_4: & \eta' = F_{op}(S')
+\lfloor S \right \rfloor_{\mathtt{max}} \\
+H_4: & \eta' = (s,op,F_{op}(S')) 
 \end{array}
 \end{fmathpar}
-
-
-
-
+Moreover, we will define the followings, which will be used when
+presenting $E''$:
 \begin{fmathpar}
 \begin{array}{ll}
-H_2: & V = S\\
-G_1: & \exists E''.\exists \eta'.
-((\E,op_{<s,i>})\;\xrightarrow{S}\;(\E'',\eff'))
+H_5: & \soZ'' = \soZ \cup A_{\mathtt{(SessID = s)}}\times \{\eta'\}  \\
+H_6: & \visZ'' = \visZ \cup S' \times \{\eta'\} \\
+H_7: & A'' = E.A \cup \{\eta'\}
 \end{array}
 \end{fmathpar}
-
-
-
-
-
-
-
-
+Now we present $V$ and $E''$ as follows and rewrite the goal:
+\begin{fmathpar}
+\begin{array}{ll}
+H_8: & V = S\\
+H_9: & E''=(A'',\soZ'',\visZ'')\\
+G_1: & (\E,op_{<s,i>})\;\xrightarrow{V}\;(\E'',\eff')
+\end{array}
+\end{fmathpar}
+by applying \rulelabel{ub exec} on $G_1$ we get the following new goals
+(after rewriting $H_9$ and $H_3$): 
+\begin{fmathpar}
+\begin{array}{ll}
+G_2: & r_k = \visZ\\
+G_3: & S \subseteq E.A \\
+G_4: & S' = \left \lfloor S \right \rfloor\\
+G_5: & \auxred{S'} {(\E,op_{<s,i>})} {} {(\E'',\eff')}  
+\end{array}
+\end{fmathpar}
+first three goals are proved via the assumptions, and the last one can
+be easily shown to hold by applying \rulelabel{oper} and deriving the
+following new goals:
+\begin{fmathpar}
+\begin{array}{ll}
+G_6: & S' \subseteq E.A\\
+G_7: & F_{op}(S') = v\\
+G_8: & \eta' = (s,op,v)\\ 
+G_9: & \eta \not\in S'\\
+G_{10}: & E''.A = E.A \cup \{\eta'\}\\
+G_{11}: & E''.\visZ = E.\visZ \cup S' \times \{\eta\}\\
+G_{12}: & E''.\soZ = E.\soZ \cup (A_{\mathtt{(SessID=s)}}) \times \{\eta\}
+\end{array}
+\end{fmathpar}
+all the above goals have already been shown in the assumptions and the
+case is proved.
+\\
 \item {\bf Case2}($R=\trunc R;\soZ$):\\
+Similarly in this case we define the following: 
+\begin{fmathpar}
+\begin{array}{ll}
+H_{13}: & V = \left \lceil S\cup\{\eta\} \right \rceil \\
+\end{array}
+\end{fmathpar}
+which yields: 
+\begin{fmathpar}
+\begin{array}{ll}
+H_{14}: & \forall (x \in S\cup\{\eta\}).R^{-1}_V(x)=R^{-1}_{E'.A}(x)\\
+\end{array}
+\end{fmathpar}
+and also: 
+\begin{fmathpar}
+\begin{array}{ll}
+H_{15}: & R^{-1}_V(\eta)=R^{-1}_{E'.A}(\eta)\\
+\end{array}
+\end{fmathpar}
+Similar to the previous case, we now define the followings: 
+\begin{fmathpar}
+\begin{array}{ll}
+H_{16}: & \eta' = (s,op,F_{op}(V))\\
+H_{17}: & \soZ'' = \soZ \cup A_{\mathtt{(SessID = s)}}\times \{\eta'\}  \\
+H_{18}: & \visZ'' = \visZ \cup V \times \{\eta'\} \\
+\end{array}
+\end{fmathpar}
+Now we present$E''$ as follows and rewrite the goal:
+\begin{fmathpar}
+\begin{array}{ll}
+H_{19}: & E''=(A'',\soZ'',\visZ'')\\
+G_{1}: & (\E,op_{<s,i>})\;\xrightarrow{V}\;(\E'',\eff')
+\end{array}
+\end{fmathpar}
+by applying \rulelabel{lb exec} on $G_1$ we get the following new goals
+\begin{fmathpar}
+\begin{array}{ll}
+G_2: & r_k = \soZ\\
+G_3: & V \subseteq E.A \\
+G_4: & R^{-1}_V(\eta') = R^{-1}_{E''.A} (\eta')   \\
+G_5: & R^{-1}_V (\eta') \subseteq V \\ 
+G_6: & \auxred{V} {(\E,op_{<s,i>})} {} {(\E'',\eff')}  
+\end{array}
+\end{fmathpar}
+Now, $G_2$ and $G_3$ are trivially proved from the assumptions, and
+$G_6$ also can be easily proved following the argument from the previous case. 
+We prove  $G_4$ and $G_5$, by a new  claim that $R^{-1}_{E'.A}(\eta) =
+R_{E''.A}^{-1}(\eta')$ which will be proved separately.
+Thus, we can rewrite the goals and add the new claim:
+\begin{fmathpar}
+\begin{array}{ll}
+G_7: & R^{-1}(\eta) = R^{-1}_{E'.A} (\eta) \\
+G_8: & R^{-1}(\eta) \subseteq V \\ 
+G_9: & R^{-1}_{E'.A}(\eta) = R^{-1}_{E''.A}(\eta')
+\end{array}
+\end{fmathpar}
+Now $G_7$ is equal to  the assumption $H_{15}$, and $G_8$ is the direct result
+of applying the lemma 2 on $H_1$.
+Now by rewriting $R=\trunc{R};\soZ$ in $G_9$ we have the following: 
+\begin{fmathpar}
+\begin{array}{ll}
+G_{10}: & (\trunc{R};\soZ)^{-1}_{E'.A}(\eta) =
+(\trunc{R};\soZ)^{-1}_{E''.A}(\eta')
+\end{array}
+\end{fmathpar}
+Now, note that the only difference in $E'$ and $E''$ is in how the update
+the $\visZ$ relation from $E$, the former makes the set $S$ visible to the
+operation and the latter the set $\left \lceil S \cup \{\eta\}\right
+\rceil $. Now since the given relation $R$ ends with an $\soZ$ relation,
+it is straigtforward to show that $G_10$ holds and thus the case (and
+the theorem) is proved. 
 \end{itemize}
-
-
-
-
-
-
-
-
-
-
+\fcolorbox{red}{white}{\color{black} \footnotesize QED.}
 \end{footnotesize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

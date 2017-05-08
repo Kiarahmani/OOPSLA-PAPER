@@ -84,37 +84,66 @@ Which directly prove the goal, after destructing $r$.
 
 \subsection{Proof of Theorem \ref{theorem:three}}
 \label{app:proof3}
+\begin{footnotesize}
 Before proving the theorem, we first present and prove a useful lemma
 and then we will present 
 a new definition, regarding sets of effects.
+\vspace{2mm}
+\hrule
 \begin{lemma}
 Under an execution state E and for a given set $S \subseteq E.A$, if
 $S$ is $\psi$-consistent under $E$, then $\forall(x\in S).R_S^{-1}(x)
 \subseteq S$ under $E$.
-\begin{proof}
-From $\psi$-consistency of $S$ we have the following:
-\begin{smathpar}
-\begin{array}{ll}
-H_0: & \forall(x\in S). \forall (y\in E.A). R(y,x) \in S \\
-\end{array}
-\end{smathpar}
-Now based on the definition of $R$, we have the following: 
-\begin{smathpar}
-\begin{array}{ll}
-H_1: & \forall(x\in S). R_{E.A}^{-1}(x) \subseteq S \\
-\end{array}
-\end{smathpar}
-However, since $S\subseteq E.A$ we have $R_{S}^{-1}(x) \subseteq
-R_{E.A}^{-1}(x)$ and the following will be derived: 
-\begin{smathpar}
-\begin{array}{ll}
-H_2: & \forall(x\in S). R_{S}^{-1}(x) \subseteq S \\
-\end{array}
-\end{smathpar}
-which completes the proof of the lemma.
-\\ QED.
-\end{proof}
 \end{lemma}
+\begin{proof}
+\begin{fmathpar}
+\begin{array}{ll}
+H_0: & S is \psi\mathtt{-consistent} \\
+G_0: & \forall(x\in S). R_{S}^{-1}(x) \subseteq S \\
+\end{array}
+\end{fmathpar}
+after intros:
+\begin{fmathpar}
+\begin{array}{ll}
+H_1: & x \in S\\
+G_1: & R_{S}^{-1}(x) \subseteq S \\
+\end{array}
+\end{fmathpar}
+inversion on $H_0$ gives the following:
+\begin{fmathpar}
+\begin{array}{ll}
+H_2: & \forall (\eta \in S).\forall(a\in E.A). R(a,\eta) \Rightarrow a
+\in S \\
+\end{array}
+\end{fmathpar}
+which can be rewritten to:
+\begin{fmathpar}
+\begin{array}{ll}
+H_3: & \forall (\eta \in S). R^{-1}(\eta) \subseteq S\\
+\end{array}
+\end{fmathpar}
+however, since $S\subseteq E.A$ then\footnote{\scriptsize we skip the formal proof
+of this claim, however, since the only difference in the definitions of
+$R^{-1}$ and $R^{-1}_S$ is the extra requirement about mid-level
+effects in the latter, it should be a subset of the former.}:
+\begin{fmathpar}
+\begin{array}{ll}
+H_4: & \forall (a\in E.A).R^{-1}_S(a) \subseteq R^{-1}(a)  \\
+\end{array}
+\end{fmathpar}
+Now we can instantiate $H_3$ and $H_4$ into:
+\begin{fmathpar}
+\begin{array}{ll}
+H_5: & R^{-1}(x) \subseteq S \\
+H_6: & R^{-1}_S(x) \subseteq R^{-1}(x) 
+\end{array}
+\end{fmathpar}
+which trivially yields $G_1$ and the proof is completed.\\
+\fcolorbox{red}{white}{\color{black} \footnotesize QED.}
+\vspace{2mm}
+\hrule
+\end{proof}
 \label {lemma1}
+\end{footnotesize}
 \input{Sections/minimality_proof}
 

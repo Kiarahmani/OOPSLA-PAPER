@@ -14,6 +14,7 @@ simplicity reasons} of relation seeds, representing dependencies between effects
 which should be desugared as
 follows:
 \begin{equation} \scriptsize
+\label{eq:desugar}
 a \xrightarrow{\rel_1;...;\rel_k} b \iff \exists c. (a
 \xrightarrow{\rel_1;...;\rel_{k-1}} c
 \wedge c \xrightarrow {\rel_k} b)

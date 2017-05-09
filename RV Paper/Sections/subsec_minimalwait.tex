@@ -4,8 +4,8 @@
 
 \begin{theorem}
 \label{theorem:three}
-For all execution states $E$, set of effects
-($S\subseteq E.A$), if: 
+For all execution states $\E$, if there exists a set of effects
+$S\subseteq \E.\EffSoup$, such that: 
 \begin{fmathpar}
 \auxred{S} {(\E,op_{<s,i>})} {} {(\E',\eff)} \spc \wedge \spc (\mathtt{S \cup \{\eta\} \; is 
 \;} \psi \mathtt{-consistent \; under \;} E' )  
@@ -13,7 +13,11 @@ For all execution states $E$, set of effects
 then there exist  $\E''$, $\eff'$ and $\V\subseteq \E.\EffSoup$ such that:
 $((\E,op_{<s,i>})\;\xrightarrow{V}\;(\E'',\eff'))$
 \end{theorem}
-\begin{proof}
-Appendix \ref{app:proof3}
-\end{proof}
+As a result of the above theorem the liveness of our operational
+semantics is guaranteed, since at least one set $S$ with the desired
+properties, always exists\footnote{$S=\E.\EffSoup$. This requires the
+preservation of $\psi$-consistency under the resuction step, that is
+already shown in theorem 1.} at any execution state. 
+
+
 

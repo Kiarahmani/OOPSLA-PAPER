@@ -31,7 +31,7 @@ visibility and session order
 among such effects. Figures \ref{subfig:execution_graph} and
 \ref{subfig:execution_example} represent a simple
 execution state consisting of 9 effects with associated
-primitive relations\footnote{we ommit drawing transitive $\soZ$
+primitive relations\footnote{we omit drawing transitive $\soZ$
 edges (e.g. between
 $\eff_8$ and $\eff_1$) for better readability}.
 \input{Figures/fig_execution}
@@ -55,67 +55,61 @@ The reduction relation in the semantics is of the form
 (\E,\op_{<s,i>}) \;\xrightarrow{\V}\; (\E', \eff),
 $}
 which can be interpreted as the reduction of the initial execution state
-$\E$, performed by a replica with a local 
+$\E$, caused by a replica with a local 
 set of effects $\V$ when it executes
 $\op$, which is the $i^{th}$ operation from the session $s$. 
 During this reduction step a new effect $\eff$ is produced and added to
-the system, resulting in a new execution state $\E'$ with updated effect
-soup and primitive relations.
+the system, resulting in a new execution state $\E'$ consisting of a new effect
+soup and updated primitive relations.
 
 
 
 
 
 %=============================================================================================================
-%--------- Definitions to be used in the semanrics
+%=============================================================================================================
+%--------- Definitions to be used in the semantics
 %=============================================================================================================
 \subsection{Preliminaries}
 \label{subsec:prelim}
-Before introducing the operational semantics, we will first formally
-present the required definitions in the next section. 
-We start by formally defining the inverse of a seed relation ($\rel \in$
-\seedS{}) given an 
-execution state $\E$:
+In this part, we will formally present the definitions and notations
+required to explain our operational semantics.
+We start by defining the interpretation of the \emph{inverse} of a given
+{\footnotesize $\Rel \in$ \relationS{}}, under an execution state $\E$, 
+which represents the basis of our consistency enforcement mechanism.
+We previously mentioned our interpretation for seed relations between
+effects under  $\E$, which can now be trivially extended to their inverse as
+follows\footnote{Note that when the input of an inversed relation is a singleton
+$\{\eta\}$, we drop the brackets and simply write it as
+$\rel^{-1}(\eta)$}:
 \begin{equation}
 \label{eq:r_inv}
 \scriptsize
 \rel^{-1}(\Set) = 
-\begin{cases}
 \begin{array}{lcl}
-\bigcup\limits_{b\in \Set}\{a|(a,b) \in \E.\rel \} & \myif
-&\rel\in\{\soZ,\visZ\}\ \\ 
-\rel_1^{-1}(\Set)\cup \rel_2^{-1}(\Set) & \myif & \rel=\rel_1\cup \rel_2
+\bigcup\limits_{b\in \Set}\{a|(a,b) \in \E.\rel \} & \qquad & \rel\in\{\soZ,\visZ\}
 \end{array}
-\end{cases}
 \end{equation}
-Note that when the input of an inversed relation is a singleton
-$\{\eta\}$, we drop the brackets and simply write it as
-$\rel^{-1}(\eta)$.
-We now present the definition of the inverse of 
-sequences (of size larger than 1) of \seedS{} as follows:
+Additionally, based on (\ref{eq:desugar}), we can
+extend the above definition to sequences of seed
+relations as well:
 \begin{equation}
 \label{eq:seq_inv}
 \scriptsize
 \begin{array}{lllll}
-b \in  (R';r)^{-1}(a) & \iff & \exists c. c \in r^{-1}(a)
-& \wedge & b \in (R')^{-1}(c) 
+b \in  (\Rel';\rel)^{-1}(a) & \iff & \exists c. c \in \rel^{-1}(a)
+& \wedge & b \in (\Rel')^{-1}(c) 
 \end{array}
 \end{equation}
-Inverse of sequences of length 1 is also implicitely defined as the
-inverse of the enclosed \seedS{}.
-
-Following definitions (\ref{eq:r_inv}) and (\ref{eq:seq_inv}), since
-\relationS{} in our specification language is defined as 
- either a \seedS{}, or a sequence of them, we are
-now ready to formally define the inverse of any given relation $R\in$
-\relationS{}.
-However, note that the definition (\ref{eq:seq_inv}) fails to capture the reality of distributed
-systems, where all computations are done locally by replicas, which
-might have access to only a \emph{subset of all effects} at any given
-moment. For example, consider  $(\soZ;\visZ)^{-1}(\eta_1)$ of the
-execution state in figure
-\ref{fig:execution_state}. In order to compute this set, based on the
-recursive defintion of (\ref{eq:seq_inv}) we have: 
+Now, It might seem that the inverse of $\Rel$ is now ready to be
+defined using the two definitions above; 
+however, definition (\ref{eq:seq_inv}) fails to capture
+the reality of our system model, where all computations are
+independently performed by replicas, which at any given moment, might have access to only a
+\emph{subset of all produced effects} in the system.
+For example, consider  $(\soZ;\visZ)^{-1}(\eta_1)$ under the
+execution state presented in figure
+\ref{fig:execution_state}. In order to compute this set, based on (\ref{eq:seq_inv}) we have: 
 \begin{smathpar}
 \scriptsize
 \begin{array}{lllll}
@@ -124,40 +118,59 @@ b \in  (\soZ;\visZ)^{-1}(\eta_1) & \iff & \exists c. c \in
 & \wedge & b \in (\soZ)^{-1}(c)
 \end{array}
 \end{smathpar}
-Since
-there exist \emph{mid-level} effects $\eta_2$ and $\eta_3$, such that satisfy the above
+Now, since there exist \emph{mid-level} effects $c=\eta_2$ and $c=\eta_3$, such that satisfy the above
 definition respectively 
-for $b=\eta_7$ and $b=\eta_9$, we have: $(\soZ;\visZ)^{-1}(\eta_1) =
+for $\eta_7$ and $\eta_9$, we can conclude: $(\soZ;\visZ)^{-1}(\eta_1) =
 \{\eta_7,\eta_9\}$.
-Now assume a replica only contains $\{\eta_1, \eta_6, \eta_7, \eta_8,
-\eta_9\}$ and wants to check if the dependencies of $\eta_1$ are locally present 
-or not. Even though based on the above definitions the
-answer is yes (since the replica does contain $\{\eta_7,\eta_9\}$), but in
-reality the replica would not be able to verify that, since the mid-level
+Now consider a replica that contains $\{\eta_1, \eta_6, \eta_7,
+\eta_9\}$ at the moment, and wants to check if the dependencies of $\eta_1$ are locally present 
+or not. Even though based on the above definition, the
+answer is positive (since the replica does contain $\{\eta_7,\eta_9\}$), but in
+reality the replica has no way of verifying it, since the mid-level
 effects $\eta_2$ and $\eta_3$ are not present at the replica yet. 
 
-To capture the above property, we now present partial definition of the inverse of a given relation $R \in$
-\relationS{} \emph{according to a set of available effects $V$}. 
-We define the inverse, only if all the required mid-level effects are
-present in $V$ using definition (\ref{eq:r_inv}) and a slightly different version of the 
-definition (\ref{eq:seq_inv}).
+
+To capture the above property, we now partially define the 
+inverse of $\Rel$, \emph{according to a set of available effects $V$}, 
+only if all the required mid-level effects are present in $V$.
+The following is our definition, based on (\ref{eq:r_inv}) and a more
+strict
+%\footnote{The only difference is an
+%extra conjunct, ensuring the presence of mid-level effects before each recursive call} 
+version of (\ref{eq:seq_inv}):
 \begin{equation}
+\label{eq:R_inv}
 \scriptsize
-b \in R^{-1}_V(a) \iff
+b \in \Rel^{-1}_V(a) \iff
 \begin{cases}
 \begin{array} {lllll} 
-\bot & \;\myif\; & R = \nullR& & \\
-b \in \rel^{-1}(a) & \;\myif\; & R=\rel & & \\
+\bot & \;\myif\; & \Rel = \nullR& & \\
+b \in \rel^{-1}(a) & \;\myif\; & \Rel=\rel & & \\
 \exists c. c \in
-\rel^{-1}(a) \wedge b \in (R')^{-1}(c) \wedge
-\rel^{-1}(a) \subseteq V   & \;\myif\; & R=R';\rel & & \;
+\rel^{-1}(a) \wedge b \in (\Rel')^{-1}(c) \wedge
+\rel^{-1}(a) \subseteq V   & \;\myif\; & \Rel=\Rel';\rel & & \;
 \end{array}
 \end{cases}
 \end{equation}
-Note that the only difference between the third case in above definition
-and the definition (\ref{eq:seq_inv}), is the last conjunct which is
-added to ensure the presence of mid-level
-effects before performing the next recursive call.  
+For example, in Fig.~\ref{fig:execution_state}, 
+{\footnotesize  ($\eta_9 \in
+(\soZ;\visZ)_{\{\eta_1,\eta_3\}}^{-1}(\eta_1)$)}
+holds, but {\footnotesize($\eta_9 \not\in (\soZ;\visZ)_{\{\eta_1\}}^{-1}(\eta_1)$)}. 
+As a result, we can now define a set $V$ to be \emph{self-contained} for
+a given effect $\eta$,
+written as {\footnotesize $\SC
+R \eta V$}, if $V$ contains all the required mid-level effects to compute
+$R$ inverse of $\eta$ in totality. Formally:
+\begin{equation}
+\scriptsize 
+\SC R \eta {V} \iff R^{-1}_V(\eta) = R^{-1}_{E.A}(\eta)
+\end{equation}
+For example in Fig.~\ref{fig:execution_state}, {\footnotesize $\SC R
+{\eta_1} V$} holds for an arbitrary  $R$ and for any $V$ that is a superset of
+{\footnotesize $\{\eta_1,\eta_2,\eta_3,\eta_4,\eta_5\}$}.
+%but as
+%mentioned before, it does not
+%hold for $V=\{\eta_1,\eta_6,\eta_7,\eta_9\}$
 
 Now, we define \trunc{} as a function that
 given  $R \in$ \relationS{}, removes the last element from the
@@ -172,23 +185,31 @@ R' & \myif & R = R';\rel
 \end{array}
 \end{cases}
 \end{equation}
-Finally, we define \emph{closed subsets} of a given set of
-effects $V$ under the contract $\psi$, which the maxiamal element among such
-subsets is also defined next\footnote{We abuse the previously defined notation slightly
+
+And finally, we define \emph{closed subsets} of a given set $V$, 
+as all subsets of $V$ that are closed under $(\trunc{R}^{-1}_V)$, that
+also contain all the required mid-level effects to compute
+$\trunc{R}^{-1}$.
+We also define the maxiamal element among such
+subsets next\footnote{We slightly abuse the previously defined notation
+in (\ref{eq:R_inv})
 and use a \emph{set} of effects as the input to the inverse of
 $R\in $\relationS{}, which simply means 
 the union of the results of apply the function for all the effects in
 the input set}:
-\begin{equation}
-\scriptsize
+\begin{fmathpar}
 \begin{array}{rlllll}
 \mathtt{closed \; subsets:} &  V' \in \left \lfloor  V \right \rfloor & \iff & V' \subseteq V & \wedge &
-(\trunc R)_V^{-1}(V') \subseteq V'   \\
+(\trunc R)_V^{-1}(V') \subseteq V' ~\wedge ~ \SC {\trunc{R}} \eta {V'}    \\
 \mathtt{maximally \; closed \; subset:} & V' = \left \lfloor  V \right
 \rfloor_{\mathtt{max}} & \iff & V' \in \left \lfloor  V \right \rfloor &
 \wedge & \not\exists V'' \in \left \lfloor  V \right \rfloor. |V''|>|V'|
 \end{array}
-\end{equation}
+\end{fmathpar}
+
+
+
+
 
 
 %=============================================================================================================
@@ -196,74 +217,72 @@ the input set}:
 %=============================================================================================================
 \subsection{Core Operational Semantics}
 
+\input{Sections/core_semantics} %--- The Figure Containing the Rules
 %--- Section intro
-In this part we present the reduction rules, representing our
-consistency preservation approach.
-Figure \ref{fig:semantics} presents the set of rules defining the
-auxiliary relation ($\hookrightarrow$) and small-step reduction relation 
-($\rightarrow$) over executions. The latter relation is parametrized
+In this part we present our operational semantics, as a set of rules representing our
+consistency enforcement approach.
+Figure \ref{fig:semantics} presents the rules defining the
+auxiliary relation ($\hookrightarrow$) and then the small-step reduction relation 
+($\rightarrow$) over execution states, where the latter is parametrized
 over a set $V$,
-that represents the set of effects that are available at the replica 
-taking the step. Obviously $V$ must be a subset of the effect soup 
-of the initial execution, however, there is no other restrictions on $V$,
+which stands for the locally available set of effects at the replica
+taking the reduction step. 
+Trivially, $V$ is a subset of all effects in the system at the
+initial execution state, however, there is no other restrictions on $V$,
 since we only assume eventual consistency at the underlying store.
 
-%--- The [OPER] rule
+%--- The Aux [OPER] rule
 The rule
-\rulelabel{oper} represtns the procedure of producing a new effect $\eff$, by witnessing a set
-of effects $S$. 
-An effect is formally defined as a tuple $\eff=(s,op,v)$, representing the
+\rulelabel{oper} represtns the procedure of generating a new effect $\eff$, by witnessing a set
+of effects $S$, using a user-defined function $F_{op}$. 
+We formally define an effect as a tuple $\eff=(s,op,v)$, representing the
 session and the operation name 
 whose execution created $\eff$, and the value
 that the replica returns as the response to that operation.
-The rule explains how the execution state changes after producing an
-effect at a replica. Specifially, in the new state, the effect soup
-$\EffSoup'$ contains the newly created effect $\eff$, and the relations $\visZ'$
-and $\soZ'$ capture the fact that all effects in the set $S$ were made
-visible to $\eta$, and all effects from the same session that were
-already presenet in the intial execution state, should be in session
+Moreover, the rule explains how the execution state changes after producing an
+effect at a replica. Specifially, in the new execution state, 
+the effect soup
+$\EffSoup'$ contains the newly created effect $\eff$, 
+the relation $\visZ'$
+captures the fact that all effects in the set $S$ were made
+visible to $\eta$, and $\soZ'$ states that all effects from the same
+session as the current operation, that are
+already presenet in the system, should be in session
 order with $\eff$ in the final execution state.
 
-\input{Sections/core_semantics} %--- The Figure Containing the Rules
-
 %--- rule for (->) relation
+%UB
 Now we explain the rules for reduction relation $(\xrightarrow{V})$,
-starting with \rulelabel{ub exec}, which represents the execution of operations
+starting with \rulelabel{ub exec}, which represents the execution of an
+operation
 in a replica that updates the global state and produces a new
-effect under a UB contract. 
-The rule requires operations witnessing only the maximally consistent
-subset $V'$ of the local set of  available effects $V$. In other words,
-the rule filters out the effects that may result anomalies and shows the
-safe environment to the operation.
+effect under a \UB{} contract. 
+The rule requires operations to only witness $V'$, the maximally closed
+subset of $V$, or in other words, the rule governs replicas to 
+create safe environments for operations, by
+filtering out effects that may cause anomalies. 
 
+%LB
 The next rule, \rulelabel{lb exec}, represents the step taken when an
-operation is performed under an LB contract. The precondition 
+operation is performed under an \LB{} contract. The precondition 
 $R_V^{-1}(\eff)\subseteq V$ in the rule, ensures that the reduction
 happens only if the effects necessary to avoid the specified anomaly are
-present in V. The operations performing under an LB contract must be
-blocked, untill all the necessary effects (and possibly required
-mid-level effects) become available in the locally available set of
-effects $V$. Note that in this case effects are not filtered out, and
-the operation witnesses all effects in set $V$.
+present in V, assuming that V is a self contained set for the newly
+created effect, $\eta$. In other words, the rule requires replicas to
+block execution of an operation under an \LB{} contract, if the replica is unable to verify the
+presence of all necessary dependent effects.
+
 
 %=============================================================================================================
 %--------- Theorem on correctness of enforcement
 %=============================================================================================================
-\subsection{Soundness}
+\subsection{Soundness and Optimality}
 \label{subsec:sound}
 \input{Sections/subsec_theorems}
 
 %=============================================================================================================
 %--------- Theorem on maxVis and minWait
 %=============================================================================================================
-\subsection{Optimality}
-Now we will present theorems 2 and 3, the former showing that the set of effects made visible during each
-operation execution is the largest one possible, and the later
-presenting the liveness property of the semantics, which states that the
-store will take a step, if the required dependencies are locally
-present. This guarantees that the store would never get stuck, since the
-eventual delivery of all updates to all replicas is guaranteed 
-by the underlying ECDS.
 \input{Sections/subsec_maximality}
 \input{Sections/subsec_minimalwait}
 

@@ -5,10 +5,10 @@
 \begin{minipage}{0.35\textwidth}
 \begin{fmathpar}
 \begin{array}{lclcl}
-    {\op} & \in & \mathtt{Operation\; Name} & & \\ 
-    {v} & \in & \mathtt{Return\; Value}  & & \\ 
-    {s} & \in & \mathtt{Session\; ID} & & \\
-  \eff & \in & \mathtt{Effect}  \coloneqq   (s,op,v) & & \\
+    {\op} & \in & \mathtt{Oper.\; Name} & & \\ 
+    {v} & \in & \mathtt{Ret.\; Val.}  & & \\ 
+    {s} & \in & \mathtt{Sess.\; ID} & & \\
+  \eff & \in & \mathtt{Effect}  \coloneqq (s,op,v) && \\
 \end{array}
 \end{fmathpar}
 \end{minipage}
@@ -74,9 +74,9 @@ SessID}=s)}      \}\qquad
 \begin{array}{l}
 \RuleTwo
 {
-  r_k = \visZ \spc
+  \rel_k = \visZ \spc
   V \subseteq E.A \spc  
-  V'= \left \lfloor V \right \rfloor_V \spc
+  V'= \left \lfloor V \right \rfloor_{\mathtt{max}} \spc
   \\ %   R^{-1}_{V}(\eta) \subseteq V' \\
   \auxred {V'} {(E, op_{<s,i>}))}
     {} {(E',\eta)} 
@@ -96,9 +96,10 @@ SessID}=s)}      \}\qquad
 \begin{array}{l}
 \RuleTwo
 {
-     r_k = \soZ \spc
+     \rel_k = \soZ \spc
      V \subseteq E.A \spc  
-     R^{-1}_{V}(\eta) = R^{-1}_{E'.A}(\eta)  \\ R^{-1}_V(\eta) \subseteq V \spc
+     \SC R \eta V 
+  \\ R^{-1}_V(\eta) \subseteq V \spc
      \spc
   \auxred {V} {(E, op_{<s,i>}))}
     {} {(E',\eta)} 

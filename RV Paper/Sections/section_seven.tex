@@ -1,56 +1,97 @@
 \newpage
 \section{Evaluation}
 \label{sec:eval}
-In this section, we present our evaluation study of \tool. The results
-are presented in three parts, where we first present the distribution of
-weak consistency requirements on benchmark programs. Second, we presents
-our studies on the performance of programs running on various
-consistency levels and finally, we present the complexity and
-perforamnce results from our study of implementing 
-a well-understood 
-ad-hoc prevention mechanism for lost-updates anomaly, compared to writing
-the same program in \tool. 
 %
-%
-% 
-\subsection{Weak Consistency in Benchmark Programs}
 \input{Figures/fig_dist_table}
-In this section, we present seven different benchmark applications we collected,
-in which various types of anomalous behavior under eventual consistency have been
-detected. We present these programs and their detected consistency
-requirements, in figure \ref{fig:dist_table}. 
-For example, two following anomalies have been detected for operations
-of the microblog application:
-\begin{enumerate}
-  \item When Alice unfollows Donald, but later
-  sees more tweets from him. This is because the
-  $\mathtt{getFolloweeList}$ operation did not witness the effect of the
-  $\mathtt{unfollow}$
-  operation; a clear example of lost-updates anomaly which can be
-  prevented by RMW guarantee.
-  \item When Donald posts a series of tweets, but after Alice refreshes
-  her timline, only sees the fifth tweet. This can be prevented by
-  requiring $\mathtt{getTweet}$ operation to return only tweets, whose prior
-  tweets are also visible; which is exacly what is provided by
-  enforcing MW contract.
-\end{enumerate}
+%intro: benchmark programs
+In this section we present an evaluation study of our implementation,
+including a report on
+benchmark applications that utilize fine-grained weak consistency
+requirements, expressable
+in our specification language.
+Fig.~\ref{fig:dist_table} presents seven of such programs, including
+individual data types as well as larger programs consisted of multiple
+data types. 
 
-In addition to having a large number of operations each of which might
-require a different level of consistency, above examples also show how
-in practice, some programs might inlcude
-operations that are involved in \emph{multiple} types of anomalies. For example
-the $\mathtt{getBalance}$ operation of the bank account application above,
-shows two different types of anomalies, whose prevention requires 2VIS
-\emph{and} RMW. The possiblity of showing \emph{combinations} of
-anomalies, considering the large number of known anomalies, shows the
-inefficiency of any consistency enforcement technique specific to a
-certain type of anomaly.
+%multiple consistency levels for each program
+Each program offers various operations, each of which is assigned a
+potentially different consistency requirement,
+representing the need for a multi-consistnet environement for
+efficient execution of the programs. Surprisingly, we found no program
+requiring causal consistency; all known consistency anomalies that operations
+may be involved in, are expressable with simple contracts made of
+dependency relations of length 1 or 2,
+which differs from what was knwon in the context before, where all such
+operations were considered to require CC.
+
+%conjunction of consistency requirements for even a single operation
+Additionally, in many cases we found operations that are involved in
+multiple anomalies, requiring simultaneous enforcement of different
+consistency guarantees, which shows the unfeasability of hand-writing
+such guarantees, considering the vast set  of known consistency
+anomalies. 
 %
-%
-%
-\subsection{Latency and Staleness Comparison}
+%example
+For example, consider the bank account application, which offers
+\dRV{}, \wdRV{} and \gbRV{} operations, where a \wdRV{} is a
+strongly consistent operation that succeeds only if there are sufficient
+funds in the account. There are two annomalies associate with
+\gbRV{} in this program:
+\begin{enumerate*}[label=(\roman*)]
+\item when a users performs a \dRV{}, which is however, not refleceted
+in the subsequent \gbRV{}
+\item when a \gbRV{} witnesses a \wdRV{} effect, without witnessing all
+the \dRV{} effects that were visible to it,
+which may result in \gbRV{} returning a
+negative balance.
+\end{enumerate*}
+As it is presented in Fig.~\ref{fig:dist_table}, in order to preempt
+these anomalies, \gbRV{} requires
+both \rmwCTRT{} and \visCTRT{} guarantees.
 \input{Figures/fig_comparison}
 
+% performance evaluation
+To evaluate its performance, we deploy \tool on a cloud cluster,
+consisting of three fully replicated Cassandra replicas, running on
+seperate machines within the same
+datacenter. 
+Each machine is instantiated with a
+\tool shim layer, that responds to clients,  
+ which are instantiated on a virtual machine 
+co-located with one of the replicas on a machine.
+We deploy the cluster on three \texttt{m4.4xlarge} Amazon EC2 instances
+in US-West (Oregon) region, with inter-machine communication time of 5ms.
+
+% The problem with Cassandra
+Since Cassandra is developed over TCP connections for replica communications, 
+we found all messages being  delivered with no loss and in order, making
+it much more consistent  than  EC, and masking out the
+differences between our fine-grained consistency guarantees.
+Consequently, to simulate a
+realistic EC environment, we inject random message losses at the shim
+layers, where a message delivery is delayed for 1
+second in case it is lost.
+
+%The latency and staleness gain using fine-grained consistency
+Fig.~\ref{fig:eval}(a) and \ref{fig:eval}(b) represent
+our experimental results, with a workload generated 
+by 50 concurrent clients repeatedly running sessions, each composed of three
+operations, where operations uniformly choose from 5 objects and are
+performed under the specified consistency level. 
+We increased the
+percentage of delayed messages from 0 to 14, and each experiment ran for
+100 repeaded sessions per client, where the staleness measure is the
+the ratio of the number of visible effects, 
+to all available effects, averaged on all operations at all
+replicas.
+
+The first set of experiments, measures the client perceived latency for
+three different \LB{} contracts all implemented in \tool. As expected,
+causal consistency, the strongest consistency level our tool can
+enforce,  experiences the larges increase in latency. The results show
+$17\%$ and $67\%$ increase in latency between (RMW-MR) and (MR-CC) at only
+$4$ percent message loss. These numbers go up to respectively $18\%$ and
+$87\%$ at $10$ percent message loss.
 
 
 
@@ -69,6 +110,33 @@ certain type of anomaly.
 
 
 
-\newpage
-\subsection{Ad-hoc vs \tool }
-\newpage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

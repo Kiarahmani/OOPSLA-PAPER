@@ -24,12 +24,15 @@
 \hline
  { \texttt Guarantee} & {\texttt Contract} \\ [0.5ex] 
 \hline 
-RMW & $\forall a. a ~  ~\xrightarrow{\soZ}  ~ ~
+\textsf{RMW} & $\forall a. a ~  ~\xrightarrow{\soZ}  ~ ~
 \hat{\eta} \Rightarrow a \xrightarrow{\visZ} \hat{\eta} $ \\ 
-MW & $\forall a. a \xrightarrow{\soZ;\visZ}
+\textsf{MW} & $\forall a. a \xrightarrow{\soZ;\visZ}
 \hat{\eta} \Rightarrow a \xrightarrow{\visZ} \hat{\eta} $ \\ 
-MR & $\forall a. a \xrightarrow{\visZ;\soZ}
+\textsf{MR} & $\forall a. a \xrightarrow{\visZ;\soZ}
 \hat{\eta} \Rightarrow a \xrightarrow{\visZ} \hat{\eta} $ \\ 
+\textsf{2VIS} & $\forall a. a \xrightarrow{\visZ;\visZ}
+\hat{\eta} \Rightarrow a \xrightarrow{\visZ} \hat{\eta} $ \\ 
+
 \hline
 \end{tabular}
 \end{scriptsize}
@@ -40,7 +43,5 @@ MR & $\forall a. a \xrightarrow{\visZ;\soZ}
 }
 \label{fig:ctrt_example}
 \end{subfigure}
-
-
 \caption{\tool Specification Language}
 \end{figure}

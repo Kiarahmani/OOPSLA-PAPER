@@ -24,16 +24,16 @@ subset} of the set of all updates submitted to the system globally.
 Applications that  cannot tolerate the anomalous behaviors allowed under
 EC, may choose to use various stronger instantiations, that are
 collectively refered to as \emph{weak consistency} guarantees. 
-Unfotunately, weak notions of consistency, are closely tied to the 
+Unfotunately, weak notions of consistency, are closely tied to  
 specific data-store implementations, and in very few cases, such as 
-\emph{causal consistency} (CC), for which there exists
+\emph{causal consistency} (CC) for which there exists
 relatively standard definitions and known implementation techniques,
 users are usually offered with unnecessary levels of consistency and potental
 performance loss\footnote{In fact, CC is the
 strongest consistency guarantee that remains available under network
 partitioning}. In order to face this problem, developers are forced to
 inject their code with \emph{ad-hoc} anomaly tolerance mechanisms that are closely
-tied to the application logic and conflates it with concerns orthogonal
+tied to the application logic and conflate it with concerns orthogonal
 to its semantics.
 To illustrate this problem, we will present an example in section
 \ref{sec:motiv}, where we introduce a simple distributed application
@@ -59,7 +59,7 @@ about both \emph{operationally}.  By separating application semantics
 from consistency enforcement semantics, admitting operational
 reasoning for the former, and declarative reasoning for the latter
 programmers are liberated from having to worry about implementation details of
-preemption mechanisms, and instead focus on reasoning about
+anomaly preemption mechanisms, and instead focus on reasoning about
 application semantics, under the assumption that specified consistency
 requirements are automatically enforced by the data store at runtime.  
 %
@@ -73,14 +73,14 @@ the result of nodes executing operations, before a certain set of
 \emph{dependencies} arrive at that node. 
 Users in \tool, can
 specify arbitary dependency relations between updates, and the 
-runtime monitoring system working on top of each ECDS replica, guarantees that an 
+runtime system working on top of each ECDS replica, guarantees that an 
 operation will only proceed if it can witness all of its dependencies. 
 For example, \emph{lost-updates}, which is a very well known anomaly
 under EC, occures when an operation from a session
 is routed to a replica different than the replica that served the earlier
 operaitons of the same session (because of transient system
-properties, such as load balancing or network partitions)
-and is successfully executed, without witnessing the update from those
+properties, such as load balancing or network partitions),
+and is successfully executed without witnessing the update from those
 earlier  operations.
 In this case, the dependency of the operations can be defined as the
 updates from \emph{all previous operations from the same sessions}, and
@@ -98,7 +98,7 @@ To summarize the contributions of this paper:
 
 \item We describe a generic consistency enforcement runtime that
     analyzes each operation's consistency specification, and ensures
-    that its dependencies are satisfied before it is executed.    
+    that its dependencies are available before it is executed.    
     We formalize the operational semantics of the runtime, and prove its
     correctness and optimality (including \emph{minimum blocking} and
     \emph {minimum staleness}) guarantees. 

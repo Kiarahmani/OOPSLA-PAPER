@@ -2,15 +2,17 @@
 %Subsection on the correctness of contract 
 %
 In this section we present our meta-theoretic results on the desired
-properties for our consistency enforcement mechanism. What follows is three
-theorems regarding the correctness of our approach, maximality of
+properties for our consistency enforcement mechanism. Three
+theorems are presented, regarding the correctness of our approach, maximality of
 witnessed effects by each operation (i.e. minimum staleness) and the
-liveness guarantee of the system, given the eventual delivery of all
-effects to all replicas, which is guaranteed by the underlying ECDS. Detailed proofs of all
+liveness guarantee of the system assuming the eventual delivery of all
+effects at all replicas. Detailed proofs of all
 theorems can be found in 
 appendix \ref{appendix:proofs}.
-Before presenting the theorems, we should define a $\psi$-consistent set of effects $S$ under
-an execution state $\E$ as a set that is closed under $R$, i.e.
+
+Before presenting the theorems, we  define a $\psi$-consistent set of effects $S$ under
+an execution state $\E$ as a set that is closed under
+{\footnotesize $(R=\rel_1;...;\rel_k)$}, i.e.
 \begin{equation}
 \scriptsize
 S \mathtt{\;is\;} \psi \mathtt{-consistent} \iff \forall (\eff \in S).
@@ -27,12 +29,12 @@ S \mathtt{\;is\;} \psi \mathtt{-consistent} \iff \forall (\eff \in S).
 \begin{theorem}
 \label{theorem:one}
 For all reduction steps 
+{\scriptsize
 $
-\scriptsize
 \; (\E,op_{<s,i>}) 
     \xrightarrow{V}
   (\E',\eff)  
-$,
+$}, the followins hold:
 \begin{fmathpar}
 \begin{array}{ll}
 (i) & \mathtt{If\;} V \mathtt{\;is\;} \psi \mathtt{-consistent\;} \mathtt{under\;} \E,
@@ -41,9 +43,10 @@ $,
 \end{array}
 \end{fmathpar}
 \end{theorem}
-This theorem states the preservation of $\psi$-consistency at replicas
-under reduction stpes and secondly, the correctness of the enforced
-consistency guarantee.
+The above theorem states the preservation of $\psi$-consistency at
+replicas,
+under reduction stpes. Moreover, it states the correctness of the enforced
+consistency guarantee at the final execution state.
 
 
 

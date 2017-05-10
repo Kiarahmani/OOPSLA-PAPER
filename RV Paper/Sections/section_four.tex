@@ -1,52 +1,53 @@
 \section {Specification Language} 
 \label{sec:ctrt_language}
 \input{Sections/syntax}
-The formal syntax of our specification language is presented in
-Fig.~\ref{fig:ctrt_syntax}, which allows definition of propositions
-(\propS{}), FOL formulae that 
-establish dependence relations between effects in order to determine
-the effects an operation should witness.
+The formal syntax of our specification (or contract) language, presented in
+Fig.\ref{fig:ctrt_syntax}, allows definition of
+\propS{}, that is a FOL formula
+establishing dependency relations between effects,
+which is necessary to determine effects an operation may witness, under
+a consistency requirement.
 The language is seeded with $\soZ$ and $\visZ$, respectively representing session
 order and visibility over effects, 
-and defines a \relationS{} as a sequence\footnote{\tool also allows
-definition of the closure of relations, however we omitted them here for
-simplicity reasons} of relation seeds, representing dependencies between effects,  
-which should be desugared as
-follows:
-\begin{equation} \scriptsize
-\label{eq:desugar}
-a \xrightarrow{\rel_1;...;\rel_k} b \iff \exists c. (a
+and defines dependency \relationS{} as a sequence\footnote{\tool also allows
+using closures of seeds, which is omitted here for
+simplicity} of seeds,  
+where 
+({\footnotesize $a \xrightarrow{\rel_1;...;\rel_k} b$})
+must be interpreted as 
+{\footnotesize$\exists c. (a
 \xrightarrow{\rel_1;...;\rel_{k-1}} c
-\wedge c \xrightarrow {\rel_k} b)
-\end{equation}
-Additionally, the language allows definition of \specS{}, that is a
-conjunction of propositions, and is used to define safe environments that are 
-free of \emph{multiple} inconsistencies. 
-Our language is crafted to capture fine-grained weak consistency
-requirements, including the famous session guarantees \cite{terry}, presented
-in Fig \ref{fig:ctrt_example}.
+\wedge c \xrightarrow {\rel_k} b)$}
+in meta-language. We also define $\nullR{}$ as a relation that never
+holds.
+Additionally, the language allows definition of \specS{},
+a conjunction of propositions, that is used to define a safe environment
+free from \emph{multiple} inconsistencies. 
+Our language is crafted to capture all fine-grained weak consistency
+levels, including the famous session guarantees proposed by Terry et al. \cite{terry}, presented
+in Fig.\ref{fig:ctrt_example}.
 
 %
 % UB and LB contracts
-%
-
-We finish this section by syntactically classifying 
-contracts, and explaining how each of them requires different
-enforcement techniques.
+We finish this section by introducing two syntactical classes of 
+contracts, and explaining how they can be
+satisfied with different enforcement techniques.
 \begin{description}
-\item {\textsf LB}: If the defined dependency relation for a contract ends with an \soZ, i.e. is of
-the following form ({\scriptsize $\forall a. a
+\item {\textsf LB}: If all the defined dependency relations for a
+contract end with an \soZ, i.e. are of
+the following form: ({\footnotesize $\forall a. a
 \xrightarrow{r_1;r_2;...;\soZ} \hat{\eff}
 \Rightarrow a \xrightarrow{\visZ} \hat{\eff}$}), we call it a \emph{lower
-bound} (\LB{}) contract, since it specificly defines the smallest set of
+bound} (\LB{}) contract, since it specifies the smallest set of
 effects that any operation should witness to maintain consistency, e.g.
-\textsc{rmw} and \textsc{mr} in Fig.~\ref{fig:ctrt_example}.
+\rmwCTRT{} and \mrCTRT{} in Fig.\ref{fig:ctrt_example}.
 
 \item {\textsf UB}: Similarly, we define the \emph{upper bound} (\UB{})
-contracts, as the ones with dependency relations ending with a $\visZ$.
+contracts, as the ones with all dependency relations ending with a $\visZ$.
 These contracts define constraints on the set of effects made visible
-to each operation, by enforcing that if an effect is being witnessed
-certain set of dependencies must also be witnessed.
+to each operation, by enforcing that if an effect is in the set,
+certain dependencies of that effect must also be included, e.g.
+\visCTRT{} and \mwCTRT{} in Fig.\ref{fig:ctrt_example}.
 \end{description}
 Our consistency enforcement approach is based on blocking operations with \LB{}
 contracts to make sure that they witness \emph{all effects that they are
@@ -54,4 +55,3 @@ supposed to}, and filteration for \UB{} contracts to make sure that they
 would not witness \emph{effects that they are not supposed
 to}. A combination of both approaches is also taken for contracts that are
 neither  \LB{} nor \UB{}, i.e hybrid contracts.
-

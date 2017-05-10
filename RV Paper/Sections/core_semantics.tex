@@ -5,7 +5,7 @@
 \begin{minipage}{0.35\textwidth}
 \begin{fmathpar}
 \begin{array}{lclcl}
-    {\op} & \in & \mathtt{Oper.\; Name} & & \\ 
+    {op} & \in & \mathtt{Oper.\; Name} & & \\ 
     {v} & \in & \mathtt{Ret.\; Val.}  & & \\ 
     {s} & \in & \mathtt{Sess.\; ID} & & \\
   \eff & \in & \mathtt{Effect}  \coloneqq (s,op,v) && \\
@@ -16,7 +16,7 @@
 \begin{minipage}{0.45\textwidth}
 \begin{fmathpar}
 \begin{array}{lclcl}
-  F_{\op} & \in & \mathtt{Op.\,Def.} & \coloneqq & \set{\eff} \mapsto v\\
+  F_{op} & \in & \mathtt{Op.\,Def.} & \coloneqq & \set{\eff} \mapsto v\\
   \EffSoup & \in & \mathtt{Eff\,Soup}	  & \coloneqq & \set{\eff} \\
   \visZ,\soZ &	\in & \mathtt{Relations} & \coloneqq & \set{(\eff,\eff)} \\
   {\E} 	& \in & \mathtt{Exec\;State}  & \coloneqq & \Exec \\
@@ -50,10 +50,8 @@ S \subseteq \EffSoup \qquad F_{op}(S) = v \qquad
 %\id(\eta) = i \qquad
 %\{\eff'\} = \EffSoup_{({\sf SessID}=s,\,{\sf SeqNo}=i-1)}\\
 \EffSoup' = \EffSoup \cup \{\eff\}  \qquad
-\visZ' = \visZ \cup S \times\{\eff\}\qquad
-\soZ' = \soZ \cup \{(\eta',\eta) \,|\, \eta'\in \EffSoup_{({\sf
-SessID}=s)}      \}\qquad
-%\soZ' = (\soZ^{-1}(\eff') \cup \eff') \times\{\eff\} \cup \soZ
+\visZ' = \visZ \cup (S \times\{\eff\})\qquad
+\soZ' = \soZ \cup (\EffSoup_{({\sf SessID}=s)}\times \{\eta\})
 }
 {
   \auxred {S} {((\EffSoup,\visZ,\soZ), op_{<s,i>}))}

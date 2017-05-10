@@ -7,15 +7,15 @@
 A data store in our system model is a collection of \emph{replicas}
 (\replO{1},\replO{2},...), each of which maintains a copy of a set of
 replicated \emph{data object} (\xO,\yO,...).  Each data object includes
-maintains a \emph{state value} (\vO,\vO',...) and is equipped with a set of \emph{operations}
+and maintains a \emph{state value} (\vO,\vO',...) and is equipped with a set of \emph{operations}
 (\opO,\opO',...). Operations may read the state of an object
 residing in a replica, and modify it by generating \emph{update
 effects} ($\eff$,$\eff'$,...).
 Update effects
-or simply effects are asynchronously sent to all other replicas, where,
+or simply effects are then asynchronously sent to all other replicas, where,
 by using a
 user-defined function, are \emph{applied} to the state of the object
-instance in the recipient replica. 
+instance at the recipient replica. 
 Fig.~\ref{fig:sys_model1} and \ref{fig:sys_model2} illustrate this
 process, where the example shows how effects are locally created and
 remotely applied. 
@@ -35,7 +35,7 @@ A \emph{session} is a sequence of operations invoked by a particular
 client. Consequently, operations (and effects) can be uniquely
 identified by the \emph{session id} that invoked them, and
 their \emph{sequence number} in that particular session, which is used
-by replicas, to record the set of all updates locally applied.
+by replicas, to record the set of all updates that are locally applied.
 Since, the data
 store is concurrently accessed by a typically large number of clients,
 and as a result of the load balancing regulations,
@@ -54,7 +54,7 @@ relates an effects to all others that are influenced by it (witnessed its
 update) at the time of their generation.
 For example, in Fig.~\ref{fig:sys_model3} $\visO
 (\eta,\eta')$ holds, since $\eta$ (the effect of $\opO$) has already been
-delivered and applied to the replica~\replO{4}, when $\opO$ is executed and thus has influenced 
+delivered and applied to the replica~\replO{4}, when $\opO'$ is executed and thus has influenced 
 generation of $\eff'$.
 \input{Figures/fig_system_model}
 

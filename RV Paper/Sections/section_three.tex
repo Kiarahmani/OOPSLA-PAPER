@@ -20,7 +20,7 @@ comment on a post by calling the \writeC{} function, and a \readC{}
 call simply returns the \stateC{} of the object at the serving
 replica.
 The \applyC{} function, simply returns the updated state of the replica,
-which is a concatination of the old state and a given effect.
+which is the concatination of the old state and the given effect.
 For perspicuity, we omit any
 conflict resolution strategy in the code; however, developers (using
 roll-backs, etc) can design the \applyC{} function to resolve
@@ -28,7 +28,7 @@ conflicting concurrent updates as they desire.
 
 %explaining the figure and how users interact with the system
 An example of how users interact with this application is presented
-in Fig. \ref{subfig:example_exec}, where Alice and Bob are
+in Fig.\ref{subfig:example_exec}, where Alice and Bob are
 invoking operations on an object (here, a photo of Alice in Chicago), and the 
 chronological order of events is given in black circles.
 At time \ding{182}, Bob
@@ -42,10 +42,10 @@ the two replica.
 %explain the anomaly possible in this setting
 As mentioned before, lost-updates, is a well known  undesirable behavior admitted
 by ECDS. 
-An example of sych anomaly can occure here if at time 
+An example of such anomaly can occure here if at
 time \ding{187}, Bob is temporarily
 disconnected from both replicas in the figure, and his read operation
-is routed to another replica that has not yet received any updates from
+is routed to another replica \replO{3},  that has not yet received any updates from
 \replO{1} or \replO{2}. Consequently,
 Bob cannot see his first comment and would retry submitting it,
 assuming the first time it was failed.
@@ -58,7 +58,7 @@ Sec.~\ref{sec:sys_model}. Using these tags, replicas will be able to
 track all locally available effects, and temporarily \emph{block}
 operations, until all the preceding effects from the same session 
 arrive at the replica. For example, the replica \replO{3} that receives Bob's read
-in the example scenario, can simply postpone its execution until all
+in the above undesired scenario, can simply postpone its execution until all
 dependencies arrive.
 
 In order to reduce the overhead of tracking dependencies per
@@ -75,8 +75,8 @@ the same session is already
 applied to the state (which transitively yields the presence of all
 dependencies).
 
-We present a new version of our running example
-in appendix~\ref{appendix:app}, which is modified to
+We present a modified version of the running example
+in appendix~\ref{appendix:app}, which is updated to
 tolerate the lost-update anomaly by implementing the blocking mechanism
 in the \readC{} function and the filteration in the \applyC{} function
 as explained above. Unfortunately, these modifications require fundamental and pervasive
@@ -93,17 +93,9 @@ alteration at the data store level, to accomodate the data on the newly
 joined session.  This  requires strong synchronization of
 replicas, degrading application performance and availability.
 Moreover, to make the matter worse, new anomalies are constantly
-found
-%\footnote{In the running example assume Chris gets
-%connected to a replica \replO{4}, that only contains Bob's first write.
-%Now Chris sees a photo with only one comment "Me too!"} 
-in the
+found in the
 systems after the design phase, which require non-trivial, further polluting,  ad-hoc solutions
-that leave the old implementation obsolete.
-
-
-
-
+that leave the existing implementation obsolete.
 
 
 
@@ -118,15 +110,15 @@ We now present our generic consistency management tool.
 \tool allows developers to define a consistency level for each
 operation \emph{a priory}, and rely on the runtime system for its
 satisfaction. Our approach is consisted of generalized blocking and
-filteration mechanisms, which admits arbitrary user-defined dependence
-relations for each operation and  maintaines a multi-consistent
+filteration mechanisms, which admits arbitrary user-defined dependency
+relations for each operation and  maintains a multi-consistent
 \emph{shim layer} on top of each ECDS replica. 
 
 The \tool shim layer maintains
-multiple safe environments ($E_1,E_2,...$) by periodic (or on-demand) 
+multiple safe environments ({\footnotesize $E_1,E_2,...$}) by periodic (or on-demand) 
 reads from the underlying ECDS database, and adding effects to each
 environment, only if its dependencies have already been added
-(Fig.~\ref{fig:syncope_outline}). 
+(Fig.\ref{fig:syncope_outline}). 
 \tool realizes this idea efficiently, using a simple tagging mechanism that
 represents effects in an environment by giving them a tag associated
 with that environment. Each operation in \tool only witnesses its
@@ -139,11 +131,11 @@ them to define constraints on read operations, that can be used to
 synthesize appropriate filteration and blocking mechanisms.
 For example, the following \emph{contract}, eliminates the possibilty of
 lost-update anomaly, by establishing the appropriate condition under which an effect
-may become visible to the effect of the current operation, $\hat{\eff}$:
+may be witnessed by the current operation:
 \begin{fmathpar}
 \begin{array}{lllll}
 
-\psi_1: & \forall a. &  \xrightarrow{\soZ} \hat{\eff} & \Rightarrow
+\psi: & \forall a. &  \xrightarrow{\soZ} \hat{\eff} & \Rightarrow
 & a
 \xrightarrow {\visZ} \hat{\eff}  \\
 \end{array}

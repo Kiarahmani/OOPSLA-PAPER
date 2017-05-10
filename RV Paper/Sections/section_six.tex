@@ -4,9 +4,9 @@
 %intro
 In Sec.~\ref{sec:semantics}, we presented a high-level
 abstraction of our system behavior, where we explained \emph{what} subset of
-effects at a replica, must be witnessed by every operations. In this
+effects at a replica, must be witnessed by every operation. In this
 section, we explain \tool's algorithm to efficiently maintain a \emph{consistent
-cache}, in order to avoid redundancies in filteration mechanism.
+cache}, in order to avoid redundancies in the filteration mechanism.
 
 %how cache works
 \tool maintains a consistent cache on top of each replica, by periodic
@@ -15,27 +15,27 @@ cache, only  if the cache already includes {\footnotesize
 $\trunc{R}_V^{-1}(\eta)$}. Consequently, all operations under \UB{}
 contracts can be immediately executed
 by witnessing the cache, which is a closed subset (not necessarily maximal all the time) 
-of effects present at the replica. 
-Moreover, \LB{} contracts can be satisfied, if operations are
-blocked until effects of all previous operations from the same session enter
+of $V$, the set of effects present at the replica. 
+Moreover, \LB{} contracts can also be satisfied, by blocking  operations 
+until effects of all previous operations from the same session enter
 the cache, in which case current operation can proceed and witness \emph{all}
 effects present at the replica.
 
 %the memoization technique
 Additionally, we implemented a simple memoization technique in \tool,
 that extends the binary notion of dependency presence to the
-\emph{degree of dependency presence} (\DDP{}), that represents 
-the maximum \emph{depth} of dependencies, whose presence have been
+\emph{degree of dependency presence} (\DDP{}), which represents 
+the maximum \emph{depth} of the dependencies of an effect, whose presence have been
 verified so far. 
 Consequently, when verifying the presence of
 dependencies for an effect fails, the runtime system can avoid redundant
 computations, next time it tries to verify the same property for the
 same effect.
 \tool's runtime, by performing
-periodic \DDP{} refreshes, tries to assign larger numbers to each effect
-while more effects arrive at the replica. 
-Specifically, at each refresh the $DDP$ of an effect $\eff$ is increased from $i$ to $i+1$ if
-all effects in $r_{i+1}^{-1}(\eff)$ already have $DDP$ values at least
+periodic \DDP{} refreshes, tries to assign larger \DDP{} values to each effect
+while more dependencies arrive at the replica. 
+Specifically, at each refresh the \DDP{} of an effect $\eff$ is increased from $i$ to $i+1$ if
+all effects in $r_{i+1}^{-1}(\eff)$ already have \DDP{} values at least
 equal to $i$.
 
 % example
@@ -45,7 +45,10 @@ replica, whose \DDP{} is initially set to 0.
 During the next refreshes, $\eta$ is given the value 1, if all
 effects in $\soZ^{-1}(\eta)$ have \DDP{} equal to 0 (i.e. are present at the
 replica). Similarly, $\eta$ is given the value 2, if all effects in
-$\visZ^{-1}(\eta)$ have \DDP{} value of at least 1, which means that now
-$(\soZ;\visZ)^{-1}_V(\eta)$ is now present at the replica and $\eta$ can
-be safely added to the consistent cache (Fig.~\ref{fig:avail_deg})
+$\visZ^{-1}(\eta)$ have \DDP{} value of at least 1, which means that 
+$(\soZ;\visZ)^{-1}_V(\eta)$ is now present at the replica and
+consequently, $\eta$ can
+be safely added to the consistent cache (Fig.\ref{fig:avail_deg}).
+Using this technique, \tool avoid redundant computations of potentially large
+dependency relations.
 \input{Figures/fig_availability_degrees.tex}

@@ -8,8 +8,8 @@ In this section we present an evaluation study of our implementation,
 including a report on
 benchmark applications that utilize fine-grained weak consistency
 requirements, expressable
-in our specification language.
-Fig.~\ref{fig:dist_table} presents seven of such programs, including
+in \tool's specification language.
+Fig.\ref{fig:dist_table} presents seven of such programs, including
 individual data types as well as larger programs consisted of multiple
 data types. 
 
@@ -18,27 +18,28 @@ Each program offers various operations, each of which is assigned a
 potentially different consistency requirement,
 representing the need for a multi-consistnet environement for
 efficient execution of the programs. Surprisingly, we found no program
-requiring causal consistency; all known consistency anomalies that operations
-may be involved in, are expressable with simple contracts made of
+intrinsically requiring causal consistency; all known consistency anomalies that operations
+may be involved in, are expressable with simple fine-grained contracts
+composed of
 dependency relations of length 1 or 2,
 which differs from what was knwon in the context before, where all such
 operations were considered to require CC.
 
 %conjunction of consistency requirements for even a single operation
-Additionally, in many cases we found operations that are involved in
+Additionally, in many cases we found operations that may be involved in
 multiple anomalies, requiring simultaneous enforcement of different
 consistency guarantees, which shows the unfeasability of hand-writing
-such guarantees, considering the vast set  of known consistency
+such guarantees, considering the vast set of known consistency
 anomalies. 
 %
 %example
-For example, consider the bank account application, which offers
-\dRV{}, \wdRV{} and \gbRV{} operations, where a \wdRV{} is a
+For example, consider  a bank account application, which offers
+\dRV{}, \wdRV{} and \gbRV{} operations, where \wdRV{} is a
 strongly consistent operation that succeeds only if there are sufficient
-funds in the account. There are two annomalies associate with
+funds in the account. There are two annomalous scenarios associate with
 \gbRV{} in this program:
 \begin{enumerate*}[label=(\roman*)]
-\item when a users performs a \dRV{}, which is however, not refleceted
+\item when a user performs a \dRV{}, which is however, not refleceted
 in the subsequent \gbRV{}
 \item when a \gbRV{} witnesses a \wdRV{} effect, without witnessing all
 the \dRV{} effects that were visible to it,
@@ -47,11 +48,11 @@ negative balance.
 \end{enumerate*}
 As it is presented in Fig.~\ref{fig:dist_table}, in order to preempt
 these anomalies, \gbRV{} requires
-both \rmwCTRT{} and \visCTRT{} guarantees.
+both \rmwCTRT{} and \visCTRT{} guarantees simultaneously.
 \input{Figures/fig_comparison}
 
 % performance evaluation
-To evaluate its performance, we deploy \tool on a cloud cluster,
+For our performance evaluation, we deploy \tool on a cloud cluster,
 consisting of three fully replicated Cassandra replicas, running on
 seperate machines within the same
 datacenter. 
@@ -63,12 +64,12 @@ We deploy the cluster on three \texttt{m4.4xlarge} Amazon EC2 instances
 in US-West (Oregon) region, with inter-machine communication time of 5ms.
 
 % The problem with Cassandra
-Since Cassandra is developed over TCP connections for replica communications, 
-we found all messages being  delivered with no loss and in order, making
-it much more consistent  than  EC, and masking out the
-differences between our fine-grained consistency guarantees.
+Inter-replica communications in Cassandra use TCP connections, 
+causing all messages get delivered with no loss and reordering, which
+is in practice, far  more consistent than EC,  and masks out the
+performance gain from our fine-grained consistency guarantees.
 Consequently, to simulate a
-realistic EC environment, we inject random message losses at the shim
+realistic EC environment, we inject artificial message loss at the shim
 layers, where a message delivery is delayed for 1
 second in case it is lost.
 
@@ -78,26 +79,55 @@ our experimental results, with a workload generated
 by 50 concurrent clients repeatedly running sessions, each composed of three
 operations, where operations uniformly choose from 5 objects and are
 performed under the specified consistency level. 
-We increased the
-percentage of delayed messages from 0 to 14, and each experiment ran for
-100 repeaded sessions per client, where the staleness measure is the
-the ratio of the number of visible effects, 
-to all available effects, averaged on all operations at all
-replicas.
+We increase the
+percentage of delayed messages from 0 to 14, where each experiment ran for
+100 repeaded sessions per client. Additional to client perceived
+latency, we also measure the staleness of operations, which we define as
+the average ratio of the number of visible effects,
+to the number of all available effects, at the time an operation is executed.
 
-The first set of experiments, measures the client perceived latency for
-three different \LB{} contracts all implemented in \tool. As expected,
-causal consistency, the strongest consistency level our tool can
-enforce,  experiences the larges increase in latency. The results show
-$17\%$ and $67\%$ increase in latency between (RMW-MR) and (MR-CC) at only
-$4$ percent message loss. These numbers go up to respectively $18\%$ and
-$87\%$ at $10$ percent message loss.
+% latency result
+In the first set of experiments, we measure latency under
+three different \LB{} contracts, all implemented in \tool. As
+expected,
+causal consistency and RMW experience respectively the highest and the
+lowest
+performance loss as the percentage of lost messages is increased\footnote{In fact, 
+they define the storngest and the weakest
+\LB{} dependency relations expressable in our language:
+$(\xrightarrow{\soZ})$ and $(\xrightarrow{(\soZ\cup\visZ)^*})$}.
+At only $4$ percent message loss rate, we see $17\%$ higher latency under MR
+contract compared to RMW, and similarly $67\%$ higher latency in CC
+compared to MR, whereas with $10$ percent message loss, the numbers are
+increased to $18\%$ and $87\%$.
+
+
+%latency result
+Similarly, we repeated the experiment with 3 \UB{} contracts, where
+\emph{causal visibility} (CV) contract (i.e. {\footnotesize $ \forall a.
+a\xrightarrow{(\soZ\cup\visZ)^*;\visZ}\hat{\eta}\Rightarrow a\xrightarrow{\visZ}
+\hat{\eta} $}), offers the most stale data when the percentage of lost
+messages is increased, whereas staleness in MW is the lowest and is
+barely effected. We report $3\%$ ($6\%$) difference 
+between staleness of data under MW and 2VIS, and $4\%$ ($7\%$)
+difference between 2VIS and CV,
+at four (ten) percante message
+loss rate.
 
 
 
-
-
-
+%handwritten compared
+Finally, in order to evidence the practicality of \tool, we implemented
+an ad-hoc mechanism to prevent lost-updates anomaly, for a simple
+counter application. Fig.~\ref{fig:eval}(c) shows the latency results of
+this application compared to the same in \tool, under the same
+setting s before (albeit with no message loss). We report $78\%$
+higher latency for the handwritten code compared to \tool with 50
+concurrent clients.
+We experienced many bookkeeping complications with the handwritten
+implementation, mainly because of the lack of meta-data queries in
+Cassandra which needs strongly consistent table alterations at the
+beginning and the end of each session, as mentioned before.
 
 
 

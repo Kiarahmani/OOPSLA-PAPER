@@ -3,7 +3,7 @@
 
 Historically, the \emph{de facto} system abstraction for developing
 distributed programs has typically included ACID\footnote{Atomicity,
-  Consistency, Isolation and Durability} properties.  These properties
+Consistency, Isolation and Durability} properties.  These properties
 guarantee replication transparency (i.e. requiring distributed systems
 to \emph{appear} as a single compute and storage server to users), and
 make it straightforward to develop standardized implementation and
@@ -12,29 +12,40 @@ distributed stores.  Although such strong notions of consistency
 simplify reasoning, they also introduce extensive synchronization
 overhead which is often unacceptable for web-scale applications that
 need to be ``always-on'' even in the presence of network partitions.
-Applications are therefore usually designed to tolerate certain
-\emph{inconsistencies}, in exchange for availability and low latency.
-An extreme example is \emph{eventual consistency} (EC), where the
-local state of each node only represents an \emph{unspecified order}
-of an \emph{unspecified subset} of the aggregate collection of all
-updates submitted to the system globally.  Consequently, application
-level invariants that hold under strong consistency might break under
-eventual consistency.  Applications that cannot tolerate these
-anomalous behaviors under EC may choose to run under a stronger,
-albeit still weaker than SC, consistency model.  Weak notions of
-consistency, however, are closely tied to specific data-store
-implementations. More often than not, however, users are offered a
-choice of consistency levels that negatively impacts performance.  In
-order to overcome this issue, developers are forced to inject their
-code with \emph{ad-hoc} anomaly tolerance mechanisms that are closely
-tied to application logic, confounding standardization, and
-complicates application reasoning, maintainability, and reusability.
+Such applications are therefore usually designed to tolerate certain
+inconsistencies, allowing them to adopt weaker notions of consistency
+that impose less synchronization overhead. An extreme example is
+\emph{eventual consistency} (EC), where the local state of each
+application server only represents an \emph{unspecified order} of an
+\emph{unspecified subset} of the aggregate collection of all updates
+submitted to the system globally. Applications that may not tolerate
+the level of inconsistency imposed by EC are often equipped with
+\emph{ad hoc} mechanisms to enforce the required level of consistency.
+Unfortunately, such enforcement mechanisms are closely tied to the
+application logic, confounding standardization, while complicating
+application reasoning, maintainability, and reusability.
 
-%
-%
+% Applications are therefore usually designed to tolerate certain
+% \emph{inconsistencies}, in exchange for availability and low latency.
+% An extreme example is \emph{eventual consistency} (EC), where the
+% local state of each node only represents an \emph{unspecified order}
+% of an \emph{unspecified subset} of the aggregate collection of all
+% updates submitted to the system globally.  Consequently,
+% application-level invariants that hold under strong consistency might
+% break under eventual consistency.  Applications that cannot tolerate
+% these anomalous behaviors under EC may choose to run under a stronger,
+% albeit still weaker than SC, consistency model.  Weak notions of
+% consistency, however, are closely tied to specific data-store
+% implementations. More often than not, users are offered a
+% choice of consistency levels that negatively impacts performance.  In
+% order to overcome this issue, developers are forced to inject their
+% code with \emph{ad-hoc} anomaly tolerance mechanisms that are closely
+% tied to application logic, confounding standardization, and
+% complicates application reasoning, maintainability, and reusability.
 
-In this paper, we propose a dramatically different alternative.  \tool
-is a lightweight runtime verification system for Haskell that allows
+In this paper, we propose an alternative approach to weak consistency
+enforcement that circumvents the aforementioned issues.  \tool is a
+lightweight runtime verification system for Haskell that allows
 application developers to take advantage of weak consistency without
 having to re-engineer their code to accommodate anomaly preemption
 mechanisms.  The key insight that drives \tool's design is that the

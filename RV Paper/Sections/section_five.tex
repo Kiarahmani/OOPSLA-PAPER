@@ -6,11 +6,11 @@
 In this section, we present the consistency enforcement mechanism of
 \tool, abstracted as a formal operational semantics. Our approach is
 complete for the specification language defined in
-Sec.\ref{sec:ctrt_language}, however for better
-comprehensibility, here we present the semantics and the theorems
-paramterized over a non-hybrid contract consisting of a single  proposition.
-Therefore, in the rest of this section, we will assume a given contracat $\psi$
-of the following form:
+Sec.\ref{sec:ctrt_language}.  However for better comprehensibility, we
+present the semantics and the theorems paramterized over a contract
+consisting of a single proposition.  Therefore, in the rest of this
+section, we will assume a given contracat $\psi$ of the following
+form:
 \begin{fmathpar}\footnotesize
 \begin{array}{lll}
 \psi = \forall a. a \xrightarrow{\rel_1;\rel_2;...;\rel_k} \hat{\eta} \Rightarrow a 
@@ -25,17 +25,17 @@ of the following form:
 The operational semantics defines a small-step relation over \emph{execution
 states}, which are tuples of the form {\footnotesize $\E=(\EffSoup,\visZ
 ,\soZ)$}.
-The \emph{effect soup} $\EffSoup$, stands for the set of all
+The \emph{effect soup} $\EffSoup$ stands for the set of all
 effects produced in the system, and \emph{primitive relations}
 {$\visZ,
 \soZ \subseteq \EffSoup \times \EffSoup$}, respectively represent the
 visibility and session order 
-among such effects. Figures \ref{subfig:execution_graph} and
+among such effects. Figs.~\ref{subfig:execution_graph} and
 \ref{subfig:execution_example} present a simple
 execution state consisting of 9 effects with associated
-primitive relations\footnote{we omit drawing transitive $\soZ$
+primitive relations\footnote{We omit drawing transitive $\soZ$
 edges (e.g. between
-$\eff_8$ and $\eff_1$) for better readability}.
+$\eff_8$ and $\eff_1$) for better readability.}.
 \input{Figures/fig_execution}
 We denote the subset of $\EffSoup$ consisting of effects that
 satisfy a certain condition as $\EffSoup_{(\mathtt{condition})}$.
@@ -46,17 +46,17 @@ where the domain of quantification is fixed to the effect soup
 $\EffSoup$, and
 interpretation for $\soZ$ and $\visZ$ relations (which occur free in the
 contract formulae) are also provided. Thus, execution states are
-potential models for any first-order formula expressable in the
-specification language. If an execution state $\E$ is in fact a valid model
-for a contract $\psi$, we say that $\E$ satisfies $\psi$, written as $\E
-\models \psi$. 
+potential models for any first-order formula expressible in the
+specification language. If an execution state $\E$ is a valid model
+for a contract $\psi$, we say that $\E$ satisfies $\psi$ ($\E
+\models \psi$). 
 
 %reduction relation
 The reduction relation in our semantics is of the form
 {\footnotesize $
 (\E,\op_{<s,i>}) \;\xrightarrow{V}\; (\E', \eff),
 $}
-which can be interpreted as the transformation of the initial execution state
+which can be interpreted as a transformation of the initial execution state
 $\E$, caused by a replica with a local 
 set of effects $V$, when it executes
 $\op$, the $i^{th}$ operation from the session $s$. 
@@ -74,15 +74,15 @@ soup and new primitive relations.
 %=============================================================================================================
 \subsection{Preliminaries}
 \label{subsec:prelim}
-In this part, we will present the formal definitions and notations
-required to explain our operational semantics.
+Before presenting the operational semantics, we first introduce
+supporting definitions and notations.
 We start by defining the interpretation of an \emph{inversed} 
 dependency relation 
 {\footnotesize $\Rel^{-1}$} under an execution state $\E$, 
 which is utilized in the basis of our consistency enforcement mechanism.
 We previously mentioned our interpretation for $\soZ$ and $\visZ$
 between
-effects under  $\E$, which can now be straightforwardly extended to their inverse as
+effects under  $\E$; this can now be straightforwardly extended to their inverse as
 follows\footnote{Note that when the input of an inversed relation is a singleton
 $\{\eta\}$, we drop the brackets and simply write it as
 $\rel^{-1}(\eta)$}:
@@ -96,7 +96,7 @@ $\rel^{-1}(\eta)$}:
 \end{equation}
 Additionally, based on our interpretation of the sequences of seed
 relations given in Sec.\ref{sec:ctrt_language}, we can
-extend the above definition to the following:
+extend the above definition:
 \begin{equation}
 \label{eq:seq_inv}
 \scriptsize
@@ -105,11 +105,11 @@ b \in  (\Rel';\rel)^{-1}(a) & \iff & \exists c. c \in \rel^{-1}(a)
 & \wedge & b \in (\Rel')^{-1}(c) 
 \end{array}
 \end{equation}
-Now, It might seem that we are ready to define any $\Rel^{-1}$ 
+It might seem that we are ready to define any $\Rel^{-1}$ 
 based on  the two definitions above; 
 however, note that definition (\ref{eq:seq_inv}) fails to capture
 the reality of our system model, where all computations are
-performed by replicas independently, which at any given moment, might have access to only a
+performed by replicas independently; at any given moment, a replica might have access to only a
 \emph{subset of all produced effects} in the system.
 For example, consider  {\footnotesize$(\soZ;\visZ)^{-1}(\eta_1)$} under the
 execution state presented in Fig.\ref{fig:execution_state}. 
@@ -122,21 +122,22 @@ b \in  (\soZ;\visZ)^{-1}(\eta_1) & \iff & \exists c. c \in
 & \wedge & b \in (\soZ)^{-1}(c)
 \end{array}
 \end{smathpar}
-Now, since there exist \emph{mid-level} effects $c=\eta_2$ and 
-$c=\eta_3$, such that satisfy the above definition respectively 
+%%%SJ: This is confusing.
+Now, since there exists \emph{mid-level} effects $c=\eta_2$ and 
+$c=\eta_3$,  that satisfy the above definition respectively 
 for $\eta_7$ and $\eta_9$, we can conclude: {\footnotesize$(\soZ;\visZ)^{-1}(\eta_1) =
 \{\eta_7,\eta_9\}$}.
-Now consider a replica that contains {\footnotesize$\{\eta_1, \eta_6, \eta_7,
+Consider a replica that contains {\footnotesize$\{\eta_1, \eta_6, \eta_7,
 \eta_9\}$} at the moment, and wants to check if the dependencies of $\eta_1$ are locally present 
 or not. Even though based on the above definition, the
-answer is affirmativ (since the replica does contain $\{\eta_7,\eta_9\}$), but in
-reality the replica has no way of verifying it, since the mid-level
+answer is affirmative (since the replica does contain $\{\eta_7,\eta_9\}$), 
+the replica has no way to verify it, since the mid-level
 effects $\eta_2$ and $\eta_3$ are not present at the replica yet. 
 
-To capture the above property, we now partially define the 
+To capture the above property, we redefine the 
 inverse of $\Rel$, \emph{according to a set of available effects $V$}, 
-only if all the required mid-level effects are present in $V$.
-The following is our definition, based on (\ref{eq:r_inv}) and a more
+that considers whether all required mid-level effects are present in $V$.
+The following definition is based on (\ref{eq:r_inv}) and a more
 strict version of (\ref{eq:seq_inv}):
 \begin{equation}
 \label{eq:R_inv}
@@ -156,7 +157,8 @@ For example, in Fig.\ref{fig:execution_state},
 {\footnotesize  ($\eta_9 \in
 (\soZ;\visZ)_{\{\eta_1,\eta_3\}}^{-1}(\eta_1)$)}
 holds, but {\footnotesize($\eta_9 \not\in (\soZ;\visZ)_{\{\eta_1\}}^{-1}(\eta_1)$)}. 
-Furthermore, we can now define a set $V$ to be \emph{self-contained} for
+
+We define a set $V$ to be \emph{self-contained} for
 a given effect $\eta$,
 written as {\footnotesize $\SC
 R \eta V$}, if $V$ contains all the required mid-level effects to compute
@@ -169,7 +171,7 @@ For example in Fig.\ref{fig:execution_state}, {\footnotesize $\SC R
 {\eta_1} V$} holds for an arbitrary  $R$ and for any $V$ that is a superset of
 {\footnotesize $\{\eta_1,\eta_2,\eta_3,\eta_4,\eta_5\}$}.
 
-Now, we define {\footnotesize \trunc{}} as a function that
+We define {\footnotesize \trunc{}} as a function that
 given  $R \in$ \relationS{}, 
 returns a new relation by removing the last element from the sequence
 in R:
@@ -193,7 +195,7 @@ subsets, as the \emph{maximally closed subset} of V as follows\footnote{We sligh
 in (\ref{eq:R_inv})
 and use a \emph{set} of effects as the input of
 $R^{-1}$, which is defined as:
-$x \in R^{-1}_V(S) \iff \exists (y\in S). x \in R^{-1}_V(y)$}:
+$x \in R^{-1}_V(S) \iff \exists (y\in S). x \in R^{-1}_V(y)$.}:
 %
 \begin{fmathpar}
 \begin{array}{rlllll}
@@ -217,60 +219,55 @@ $x \in R^{-1}_V(S) \iff \exists (y\in S). x \in R^{-1}_V(y)$}:
 
 \input{Sections/core_semantics} %--- The Figure Containing the Rules
 %--- Section intro
-In this part we present the operational semantics, as a set of rules representing our
-consistency enforcement approach.
-Fig.\ref{fig:semantics} presents the rules defining the
-auxiliary relation ($\hookrightarrow$) and then the small-step reduction relation 
-($\rightarrow$) over execution states, where the latter is parametrized
-over a set $V$,
-which stands for the locally available set of effects at the replica
-taking the reduction step. 
-Trivially, $V$ must be a subset of all effects in the system at the
-initial execution state, however, there is no other restrictions on $V$,
-since we only assume eventual consistency at the underlying store.
+Our operational semantics is defined as a set of reduction rules
+representing our consistency enforcement approach (see
+Fig.\ref{fig:semantics}). The small-step reduction relation
+($\rightarrow$) is parametrized over a set $V$, which stands for the
+locally available set of effects at the replica taking the reduction
+step.  Trivially, $V$ must be a subset of all effects in the system at
+the initial execution state, however, there is no other restrictions
+on $V$, since we only assume eventual consistency in the underlying
+store.
 
 %--- The Aux [OPER] rule
 The rule
 \rulelabel{oper} defines the abstract procedure of generating a new effect $\eff$, by witnessing a set
 of effects $S$, using a user-defined function $F_{op}$. 
 We formally define an effect as a tuple $\eff=(s,op,v)$, representing the
-session and the operation name 
+session $s$, operation name \emph{op} 
 whose execution created $\eff$, and the value $v$
 that the replica returns, responding to that operation.
 %
 Moreover, the rule explains how the execution state changes after a new
-effect is produced. Specifially, in the new execution state, 
+effect is produced. Specifically, in the new execution state, 
 the effect soup
 $\EffSoup'$ contains the newly created effect $\eff$,
 the relation $\visZ'$
 captures the fact that all effects in the set $S$ were made
 visible to $\eta$, and $\soZ'$ states that all effects from the same
-session as the current operation, that are
+session as the current operation that are
 already presenet in the system, should be in session
 order with $\eff$ in the final execution state.
 
 %--- rule for (->) relation
 %UB
-Now we explain the rules for the reduction relation $(\xrightarrow{V})$,
-starting with \rulelabel{ub exec}, 
-which defines the execution of an
-operation in a replica under a \UB{} contract. 
-The rule requires operations to only witness $V'$, the maximally closed
-subset of $V$, or in other words, the rule governs replicas to 
-create safe environments for operations, by
-filtering out effects that may cause the specified anomaly. 
+Rule\rulelabel{ub exec}, defines the execution of an operation in a
+replica under a \UB{} contract.  The rule requires operations to only
+witness $V'$, the maximally closed subset of $V$.  Thus,, the rule
+governs how replicas create safe environments for operations, by
+filtering out undesirable or uwanted effects.
 
 %LB
-The next rule, \rulelabel{lb exec}, defines the step taken by a
-replica, when an
-operation is executed under an \LB{} contract. The precondition 
-$R_V^{-1}(\eff)\subseteq V$ in the rule, ensures that the reduction
-happens only if the effects necessary to avoid the specified anomaly are
-present in V, assuming that V contains all the mid-level effects to
-determine dependencies of the newly created effect $\eta$ (i.e.
-is a self contained set). In other words, the rule governs replicas to
-block execution of an operation under an \LB{} contract, if the replica is unable to verify the
-presence of all necessary dependent effects.
+Rule \rulelabel{lb exec} defines the step taken by a replica when an
+operation is executed under an \LB{} contract. The precondition
+$R_V^{-1}(\eff)\subseteq V$ in the rule ensures that the reduction
+happens only if the effects necessary to avoid the specified anomaly
+are present in $V$, assuming that $V$ contains all the mid-level
+effects to determine dependencies of the newly created effect $\eta$
+(i.e.  is a self contained set). Thus, the rule governs replicas to
+block execution of an operation under an \LB{} contract, if the
+replica is unable to verify the presence of all necessary dependent
+effects.
 
 
 %=============================================================================================================

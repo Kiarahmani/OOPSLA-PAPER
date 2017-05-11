@@ -11,51 +11,42 @@ and maintains a \emph{state value} (\vO,\vO',...) and is equipped with a set of 
 (\opO,\opO',...). Operations may read the state of an object
 residing in a replica, and modify it by generating \emph{update
 effects} ($\eff$,$\eff'$,...).
-Update effects
-or simply effects are then asynchronously sent to all other replicas, where,
-by using a
-user-defined function, are \emph{applied} to the state of the object
-instance at the recipient replica. 
-Fig.~\ref{fig:sys_model1} and \ref{fig:sys_model2} illustrate this
-process, where the example shows how effects are locally created and
-remotely applied. 
+These effects are then asynchronously sent to all other replicas where
+they are applied to the state of the object instance at the recipient
+replica using a user-supplied function.
+Figs.~\ref{fig:sys_model1} and \ref{fig:sys_model2} illustrate this
+process.
 
-Observe that in our system model, there is no direct synchronization between replicas when an
-operation is executed, which means concurrent and possibly conflicting
-updates can be generated at different replicas. We
-require the user-defined \emph{apply} function to implement a conflict
-resolution strategy for replicas to eventually converge. 
-This model admits all inconsistencies and anomalies
-associated with eventual consistency \cite{quelea,terry}, and our goal is equip
-applications and implementations with mechanisms to specify and prevent
-such inconsistencies. 
+Because there is no direct synchronization between replicas when an
+operation is executed, concurrent and possibly conflicting updates can
+be generated at different replicas.  Conflict resolution is handled at
+the point when an effect is applied to the current state of the
+object, and must be designed to ensure that all replicas eventually
+converge to the same value, assuming generated effects quiesce.  This
+model admits all inconsistencies and anomalies associated with
+eventual consistency \cite{quelea,terry}.
 
-Clients in our model, interact with the store by invoking operations on objects.
-A \emph{session} is a sequence of operations invoked by a particular
-client. Consequently, operations (and effects) can be uniquely
-identified by the \emph{session id} that invoked them, and
+Clients in our model interact with the store by invoking operations on
+objects.  A \emph{session} is a sequence of operations invoked by a
+particular client. Consequently, operations (and effects) can be
+uniquely identified by the \emph{session id} that invoked them, and
 their \emph{sequence number} in that particular session, which is used
-by replicas, to record the set of all updates that are locally applied.
-Since, the data
-store is concurrently accessed by a typically large number of clients,
-and as a result of the load balancing regulations,
-operations (even from the same session) might be routed to different
-replicas (Fig.~\ref{fig:sys_model1} and
-\ref{fig:sys_model3}). 
-
+by replicas to record the set of all updates that are locally applied.
+Since, the data store may be concurrently accessed by a large number
+of clients, operations (even from the same session) might be routed to
+different replicas to improve latency (see Figs.~\ref{fig:sys_model1}
+and \ref{fig:sys_model3}).
 
 Lastly, we define two relations over effects created in the store.
-\emph{Session order} ($\soZ$) is an irreflexive, transitive relation that relates
-an effect to all subsequent effects from the same session.
-Moreover, we define 
-\emph{visibility} (${\visZ}$) 
-as an irreflexive and assymetric relation that 
-relates an effects to all others that are influenced by it (witnessed its
-update) at the time of their generation.
-For example, in Fig.~\ref{fig:sys_model3} $\visO
-(\eta,\eta')$ holds, since $\eta$ (the effect of $\opO$) has already been
-delivered and applied to the replica~\replO{4}, when $\opO'$ is executed and thus has influenced 
-generation of $\eff'$.
+\emph{Session order} ($\soZ$) is an irreflexive, transitive relation
+that relates an effect to all subsequent effects from the same
+session.  \emph{Visibility} (${\visZ}$) is an
+irreflexive and assymetric relation that relates an effect to all
+others that are influenced by it (i.e., witnesses its update) at the time of
+their generation.  For example, in Fig.~\ref{fig:sys_model3} $\visO
+(\eta,\eta')$ holds, since $\eta$ (the effect of $\opO$) has already
+been delivered and applied to the replica~\replO{4}, when $\opO'$ is
+executed and thus has influenced generation of $\eff'$.
 \input{Figures/fig_system_model}
 
 

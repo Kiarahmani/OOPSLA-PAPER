@@ -2,47 +2,47 @@
 \label{sec:alg}
 
 %intro
-In Sec.~\ref{sec:semantics}, we presented a high-level
-abstraction of our system behavior, where we explained \emph{what} subset of
-effects at a replica, must be witnessed by every operation. In this
-section, we explain \tool's algorithm to efficiently maintain a \emph{consistent
-cache}, in order to avoid redundancies in the filteration mechanism.
+While the semantics defines \emph{what} \emph{what} subset of
+effects at a replica  must be witnessed by every operation, it does
+not address \emph{how} to realize efficient construction of that subset.
 
 %how cache works
-\tool maintains a consistent cache on top of each replica, by periodic
-reads from the underlying ECDS, where an effect $\eta$ is moved to the
-cache, only  if the cache already includes {\footnotesize
+\tool maintains a consistent cache on top of each replica by periodically
+reading from the underlying ECDS, where an effect $\eta$ is moved to the
+cache only if the cache already includes {\footnotesize
 $\trunc{R}_V^{-1}(\eta)$}. Consequently, all operations under \UB{}
 contracts can be immediately executed
-by witnessing the cache, which is a closed subset (not necessarily maximal all the time) 
+by witnessing the cache, which is a closed subset (not necessarily maximal) 
 of $V$, the set of effects present at the replica. 
 Moreover, \LB{} contracts can also be satisfied, by blocking  operations 
 until effects of all previous operations from the same session enter
-the cache, in which case current operation can proceed and witness \emph{all}
+the cache, in which case the current operation can proceed and witness \emph{all}
 effects present at the replica.
 
 %the memoization technique
-Additionally, we implemented a simple memoization technique in \tool,
+Additionally, we implemented a simple memoization technique in \tool\
 that extends the binary notion of dependency presence to the
-\emph{degree of dependency presence} (\DDP{}), which represents 
-the maximum \emph{depth} of the dependencies of an effect, whose presence have been
+\emph{degree of dependency presence} (\DDP{}) representing 
+the maximum \emph{depth} (or size) of the dependencies of an effect, whose presence have been
 verified so far. 
-Consequently, when verifying the presence of
+Consequently, when verification of the presence of
 dependencies for an effect fails, the runtime system can avoid redundant
-computations, next time it tries to verify the same property for the
+computations the time it tries to verify the same property for the
 same effect.
 \tool's runtime, by performing
 periodic \DDP{} refreshes, tries to assign larger \DDP{} values to each effect
-while more dependencies arrive at the replica. 
-Specifically, at each refresh the \DDP{} of an effect $\eff$ is increased from $i$ to $i+1$ if
+when more dependencies arrive at the replica. 
+Specifically, at each refresh, the \DDP{} of an effect $\eff$ is increased from $i$ to $i+1$ if
 all effects in $r_{i+1}^{-1}(\eff)$ already have \DDP{} values at least
 equal to $i$.
 
 % example
+%%%SJ: This is confusing - you need to give an example of a
+%%%redundant computation, otherwise this paragraph will not be understood by the reader
 For example, consider a contract with dependency relation
 $\Rel=\soZ;\visZ;\soZ$, and a newly arrived effect $\eta$ to the
 replica, whose \DDP{} is initially set to 0. 
-During the next refreshes, $\eta$ is given the value 1, if all
+During the next refresh, $\eta$ is given the value 1, if all
 effects in $\soZ^{-1}(\eta)$ have \DDP{} equal to 0 (i.e. are present at the
 replica). Similarly, $\eta$ is given the value 2, if all effects in
 $\visZ^{-1}(\eta)$ have \DDP{} value of at least 1, which means that 

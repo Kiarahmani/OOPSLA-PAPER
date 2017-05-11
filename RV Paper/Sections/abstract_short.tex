@@ -4,19 +4,18 @@
   stores.  But, such architectures force application developers to
   make an undesirable tradeoff between ease of reasoning, possible
   when replicated data is required to be strongly consistent, and
-  performance, possible only when such guarantees are weakened.
+  performance, possible when such guarantees are weakened.
   Unfortunately, undesirable behaviors may arise under weak
   consistency that can violate application correctness, forcing
   designers to either implement ad-hoc mechanisms to avoid these
   anomalies, or choose to run applications using stronger levels of
   consistency than necessary. The former approach introduces unwanted
-  complexity, while the latter sacrifices performance.
-
-  In this paper, we describe a lightweight runtime verification system
-  that relieves developers from having to make such tradeoffs.
-  Instead, our approach leverages declarative axiomatic specifications
-  that reflect the necessary constraints any correct implementation
-  must satisfy to guide a runtime consistency enforcement mechanism.
+  complexity, while the latter sacrifices performance.  In this paper,
+  we describe a lightweight runtime verification system that relieves
+  developers from having to make such tradeoffs.  Instead, our
+  approach leverages declarative axiomatic specifications that reflect
+  the necessary constraints any correct implementation must satisfy to
+  guide a runtime consistency enforcement and monitoring mechanism.
   This mechanism guarantees a \emph{provably optimal} strategy that
   imposes no additional communication or blocking overhead beyond what
   is required to satisfy the specification, allowing distributed

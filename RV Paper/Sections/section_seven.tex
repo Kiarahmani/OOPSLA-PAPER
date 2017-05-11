@@ -20,17 +20,21 @@ replicated types.
 %%%SJ: This is a very confusing paragraph - what is CC, what does
 %%%length 1 or 2 mean in this context?
 Each program offers various operations, each of which is assigned a
-potentially different consistency requirement,
-representing the need for a multi-consistnet environement for
-efficient execution of the programs. Surprisingly, we found no program
-intrinsically requiring causal consistency; all known consistency anomalies that operations
-may be involved in are expressable with simple fine-grained contracts
-composed of
-dependency relations of length 1 or 2,
+potentially different consistency requirement, representing the need
+for a multi-consistent environment for efficient execution.  We found
+4 different kinds of consistency anomalies, in which 11 out of 38 (not
+requiring SC) operations defined in these programs were involved in,
+providing evidence for the need of a generic multi-consistnet
+environement for efficient program execution.  Surprisingly, we found
+no program intrinsically requiring causal consistency; all known
+consistency anomalies that operations may be involved in are
+expressable with simple fine-grained contracts composed of dependency
+relations of length 1 or 2,
 which differs from what was knwon in the context before, where all such
 operations were considered to require CC.
 
 %conjunction of consistency requirements for even a single operation
+<<<<<<< HEAD
 %%%SJ: quantify ``vast''
 Additionally, in many cases we found operations that may be involved in
 multiple anomalies, requiring simultaneous enforcement of different
@@ -63,7 +67,7 @@ seperate machines within the same
 datacenter. 
 Each machine is instantiated with a
 \tool shim layer, that responds to clients,  
- which are instantiated on a virtual machine 
+ which are instantiated on a VM 
 co-located with one of the replicas on a machine.
 We deploy the cluster on three \texttt{m4.4xlarge} Amazon EC2 instances
 in the US-West (Oregon) region, with an inter-machine communication time of 5ms.
@@ -71,13 +75,19 @@ in the US-West (Oregon) region, with an inter-machine communication time of 5ms.
 % The problem with Cassandra
 %%%SJ: is there any references you can cite to indicate this
 %%%decision is realistic, or consistent with other papers in this space?
-Inter-replica communications in Cassandra uses TCP connections,
+Inter-replica communication in Cassandra uses TCP connections,
 causing all messages to get delivered with no loss and reordering,
 which is in practice, far more consistent than EC, and masks out the
 performance gain from our fine-grained consistency guarantees.
-Consequently, to simulate a realistic EC environment, we inject
-artificial message loss at the shim layers, where message delivery is
-delayed for 1 second in case it is lost.
+Consequently, to simulate a realistic EC environment, 
+we injected artificial message losses in
+\tool's shim layer, forcing random messages to be delayed for 1s,
+simulating messages losses in a network with roughly 400ms RTT.
+
+% The problem with Cassandra
+% ! 
+% !
+% PLEASE ADD CITATIONS/EDIT -- I WILL BE LOOKING FOR CITATIONS
 
 %The latency and staleness gain using fine-grained consistency
 Fig.~\ref{fig:eval}(a) and \ref{fig:eval}(b) represent
@@ -90,7 +100,7 @@ percentage of delayed messages from 0 to 14.  Each experiment ran for
 100 repeaded sessions per client. In addition to client perceived
 latency, we also measure the staleness of operations, which we define as
 the average ratio of the number of visible effects,
-to the number of all available effects, at the time an operation is executed.
+to the number of all available effects, when executing an operation.
 
 % latency result
 In the first set of experiments, we measure latency under

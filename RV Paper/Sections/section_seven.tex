@@ -8,35 +8,35 @@ In this section we present an evaluation study of our implementation,
 including a report on
 benchmark applications that utilize fine-grained weak consistency
 requirements, expressable
-in \tool's specification language.
-Fig.\ref{fig:dist_table} presents seven of such programs, including
-individual data types as well as larger programs consisted of multiple
-data types. 
+in our specification language.
+Fig.\ref{fig:dist_table} presents seven of such programs, 
+which are all written in Haskell and compatible with \tool, 
+including individual RDTs as well as larger programs, collected
+from \cite{quelea}.
 
 %multiple consistency levels for each program
-Each program offers various operations, each of which is assigned a
-potentially different consistency requirement,
-representing the need for a multi-consistnet environement for
-efficient execution of the programs. Surprisingly, we found no program
-intrinsically requiring causal consistency; all known consistency anomalies that operations
-may be involved in, are expressable with simple fine-grained contracts
-composed of
-dependency relations of length 1 or 2,
+We found 4 different kinds of consistency anomalies, which 11 out of 38
+(not requiring SC) operations defined in these programs, were involved
+in, which evidences the need for a generic multi-consistnet environement for
+efficient execution of programs. Surprisingly, we found no program
+intrinsically requiring causal consistency; all consistency anomalies that operations
+may experience, are expressable with simple fine-grained contracts
+composed of dependency relations of length 1 or 2,
 which differs from what was knwon in the context before, where all such
 operations were considered to require CC.
 
 %conjunction of consistency requirements for even a single operation
-Additionally, in many cases we found operations that may be involved in
+Additionally, in many cases we found operations that were involved in
 multiple anomalies, requiring simultaneous enforcement of different
 consistency guarantees, which shows the unfeasability of hand-writing
 such guarantees, considering the vast set of known consistency
 anomalies. 
 %
 %example
-For example, consider  a bank account application, which offers
+For example, consider a bank account application, which offers
 \dRV{}, \wdRV{} and \gbRV{} operations, where \wdRV{} is a
 strongly consistent operation that succeeds only if there are sufficient
-funds in the account. There are two annomalous scenarios associate with
+funds in the account. There are two annomalous scenarios associated with
 \gbRV{} in this program:
 \begin{enumerate*}[label=(\roman*)]
 \item when a user performs a \dRV{}, which is however, not refleceted
@@ -58,20 +58,23 @@ seperate machines within the same
 datacenter. 
 Each machine is instantiated with a
 \tool shim layer, that responds to clients,  
- which are instantiated on a virtual machine 
+ which are instantiated on a VM 
 co-located with one of the replicas on a machine.
 We deploy the cluster on three \texttt{m4.4xlarge} Amazon EC2 instances
-in US-West (Oregon) region, with inter-machine communication time of 5ms.
+in US-West (Oregon) region, with inter-machine communication delay of 5ms.
 
 % The problem with Cassandra
-Inter-replica communications in Cassandra use TCP connections, 
+% ! 
+% !
+% PLEASE ADD CITATIONS/EDIT -- I WILL BE LOOKING FOR CITATIONS
+Inter-replica communications in Cassandra are over TCP connections, 
 causing all messages get delivered with no loss and reordering, which
-is in practice, far  more consistent than EC,  and masks out the
+is in practice, far  more consistent than EC, masking out the
 performance gain from our fine-grained consistency guarantees.
 Consequently, to simulate a
-realistic EC environment, we inject artificial message loss at the shim
-layers, where a message delivery is delayed for 1
-second in case it is lost.
+realistic EC environment, we injected artificial message losses at
+\tool's shim layer, forcing random messages to be delayed for 1s,
+simulating messages losses in a network with roughly 400ms RTT.
 
 %The latency and staleness gain using fine-grained consistency
 Fig.~\ref{fig:eval}(a) and \ref{fig:eval}(b) represent
@@ -80,11 +83,11 @@ by 50 concurrent clients repeatedly running sessions, each composed of three
 operations, where operations uniformly choose from 5 objects and are
 performed under the specified consistency level. 
 We increase the
-percentage of delayed messages from 0 to 14, where each experiment ran for
-100 repeaded sessions per client. Additional to client perceived
+percentage of delayed messages from 0 to 14, where each experiment ran 
+until all clients repeated their session 100 times. Additional to client perceived
 latency, we also measure the staleness of operations, which we define as
 the average ratio of the number of visible effects,
-to the number of all available effects, at the time an operation is executed.
+to the number of all available effects, when executing an operation.
 
 % latency result
 In the first set of experiments, we measure latency under
@@ -97,7 +100,7 @@ they define the storngest and the weakest
 \LB{} dependency relations expressable in our language:
 $(\xrightarrow{\soZ})$ and $(\xrightarrow{(\soZ\cup\visZ)^*})$}.
 At only $4$ percent message loss rate, we see $17\%$ higher latency under MR
-contract compared to RMW, and similarly $67\%$ higher latency in CC
+contract compared to RMW, and  $67\%$ higher latency in CC
 compared to MR, whereas with $10$ percent message loss, the numbers are
 increased to $18\%$ and $87\%$.
 
@@ -119,15 +122,15 @@ loss rate.
 %handwritten compared
 Finally, in order to evidence the practicality of \tool, we implemented
 an ad-hoc mechanism to prevent lost-updates anomaly, for a simple
-counter application. Fig.~\ref{fig:eval}(c) shows the latency results of
-this application compared to the same in \tool, under the same
-setting s before (albeit with no message loss). We report $78\%$
+counter application working directly on top of Cassandra. Fig.~\ref{fig:eval}(c) shows the latency results of
+this application compared to the \rmwCTRT{} guarantee in \tool, where we report $78\%$
 higher latency for the handwritten code compared to \tool with 50
 concurrent clients.
-We experienced many bookkeeping complications with the handwritten
+Additionally, we experienced many complications with beekkeeping in the handwritten
 implementation, mainly because of the lack of meta-data queries in
-Cassandra which needs strongly consistent table alterations at the
-beginning and the end of each session, as mentioned before.
+Cassandra, which forced us to implement a global lock for strongly
+consistent table alterations at 
+the beginning and the end of each session, as mentioned before.
 
 
 

@@ -85,8 +85,8 @@ practice, far more consistent than EC, and masks out the performance
 gain from our fine-grained consistency guarantees.  Consequently, to
 simulate a realistic EC environment, we injected artificial message
 losses in \tool's shim layer, forcing random messages to be delayed
-for 1s, simulating messages losses in a network with 400ms RTT
-(observed inter-replica RTT value during our experiments is 400ms).
+for 1s, simulating messages losses in a network with 600ms RTT
+(observed inter-replica RTT value during our experiments is 600ms).
 
 % The problem with Cassandra
 % ! 
@@ -148,7 +148,7 @@ worse than \tool is because it relies on certain cassandra-specific
 features that are not optimized for the current purpose (each time a
 new session is created, it performs a strongly-consistent schema
 alteration to create a new column that records the sequence number of
-the last update to every object from that session).  Short of
+the last update from that session to every object).  Short of
 replicating the \tool's shim layer-based approach, we found no other
 way to enforce the required consistency guarantee beyond the one we
 implemented. Beyond the performance numbers, the ad hoc approach to

@@ -13,51 +13,55 @@ benchmark applications that utilize fine-grained weak consistency
 requirements, expressable
 in \tool's specification language.
 Fig.\ref{fig:dist_table} presents seven such programs, that include
-library definitions of individual replicated data types as well as larger programs consisting of multiple
-replicated types. 
+library definitions of individual replicated data types as well as
+larger applications consisting of multiple replicated types. 
 
 %multiple consistency levels for each program
 %%%SJ: This is a very confusing paragraph - what is CC, what does
 %%%length 1 or 2 mean in this context?
-Each program offers various operations, each of which is assigned a
-potentially different consistency requirement, representing the need
-for a multi-consistent environment for efficient execution.  We found
-4 different kinds of consistency anomalies, in which 11 out of 38 (not
-requiring SC) operations defined in these programs were involved in,
-providing evidence for the need of a generic multi-consistnet
-environement for efficient program execution.  Surprisingly, we found
-no program intrinsically requiring causal consistency; all known
-consistency anomalies that operations may be involved in are
-expressable with simple fine-grained contracts composed of dependency
-relations of length 1 or 2,
-which differs from what was knwon in the context before, where all such
-operations were considered to require CC.
+Each program supports various operations, some of which have
+non-trivial consistency requirements. Out of the 38 non-SC operations
+defined in these programs, there are 11 such operations, whose
+consistency requirements can be expressed as a combination of four
+previously described consistency guarantees: Monotonic Reads (MR),
+Monotonic Writes (MW), Read-My-Writes (RMW), and Transitive Vis
+(2VIS). The significant diversity among the consistency requirements
+of these operations emphasizes the need for a multi-abled environment
+that can understand and enforce fine-grained consistency requirements
+efficiently. It is clearly not practical to hard code them all, due
+their sheer number; even if we ignore bespoke consistency
+requirements, there are 15 combinations of just the 4 aforementioned
+consistency guarantees, even as there are other known guarantees, such
+as writes-follow-reads (WFR), which we ignored.  Causal Consistency
+(CC), the strongest of the weak consistency guarantees, is often used
+as a metaphorical one-size to fit all weak consistency requirements.
+Notably, none of the operations we analyzed intrinsically require CC.
+Furthermore, we found that enforcing CC is significantly more
+expensive than enforcing weaker guarantees (see below), thus making CC
+a bad substitute for weaker guarantees. One the other hand, we found
+\tool's generic consistency enforcement mechanism to be very useful in
+this case.
 
-%conjunction of consistency requirements for even a single operation
-<<<<<<< HEAD
-%%%SJ: quantify ``vast''
-Additionally, in many cases we found operations that may be involved in
-multiple anomalies, requiring simultaneous enforcement of different
-consistency guarantees, which shows the infeasability of hand-writing
-such guarantees, considering the vast set of known consistency
-anomalies. 
 %
 %example
-For example, consider a bank account application, which offers
-\dRV{}, \wdRV{} and \gbRV{} operations, where \wdRV{} is a
-strongly consistent operation that succeeds only if there are sufficient
-funds in the account. There are two anomalous scenarios associated with
-\gbRV{} in this program:
-\begin{enumerate*}[label=(\roman*)]
-\item when a user performs a \dRV{} that is not reflected
-in subsequent \gbRV{} operations;
-\item when a \gbRV{} witnesses a \wdRV{} effect without witnessing all
-\dRV{} effects visible to it,  resulting in \gbRV{} returning a
-potentially (incorrect) negative balance.
-\end{enumerate*}
-As presented in Fig.~\ref{fig:dist_table}, to preempt
-these anomalies, \gbRV{} requires
-both \rmwCTRT{} and \visCTRT{} guarantees to be simultaneously satisfied.
+While the consistency requirements of the applications in
+Fig.~\ref{fig:dist_table} are expressible as the combination of known
+guarantees as described above, this is not necessary in general. The
+bespoke consistency specifications of an application are usually
+crafted by analyzing the anomalies that need to be prempted.  For
+example, consider a bank account application, which offers \dRV{},
+\wdRV{} and \gbRV{} operations, where \wdRV{} is a strongly consistent
+operation that succeeds only if there are sufficient funds in the
+account. There are two anomalous scenarios associated with \gbRV{} in
+this program: \begin{enumerate*}[label=(\roman*)] \item when a user
+      performs a \dRV{} that is not reflected in subsequent \gbRV{}
+    operations; \item when a \gbRV{} witnesses a \wdRV{} effect
+without witnessing all \dRV{} effects visible to it,  resulting in
+\gbRV{} returning a potentially (incorrect) negative balance.
+\end{enumerate*} The consistency specifications of  the bank account
+application are crafted to preempt these anomalies. As presented in
+Fig.~\ref{fig:dist_table}, \gbRV{} requires both \rmwCTRT{} and
+\visCTRT{} guarantees to be simultaneously satisfied.
 \input{Figures/fig_comparison}
 
 % performance evaluation
@@ -75,14 +79,14 @@ in the US-West (Oregon) region, with an inter-machine communication time of 5ms.
 % The problem with Cassandra
 %%%SJ: is there any references you can cite to indicate this
 %%%decision is realistic, or consistent with other papers in this space?
-Inter-replica communication in Cassandra uses TCP connections,
-causing all messages to get delivered with no loss and reordering,
-which is in practice, far more consistent than EC, and masks out the
-performance gain from our fine-grained consistency guarantees.
-Consequently, to simulate a realistic EC environment, 
-we injected artificial message losses in
-\tool's shim layer, forcing random messages to be delayed for 1s,
-simulating messages losses in a network with roughly 400ms RTT.
+Inter-replica communication in Cassandra uses TCP connections, causing
+all messages to get delivered with no loss and reordering, which is in
+practice, far more consistent than EC, and masks out the performance
+gain from our fine-grained consistency guarantees.  Consequently, to
+simulate a realistic EC environment, we injected artificial message
+losses in \tool's shim layer, forcing random messages to be delayed
+for 1s, simulating messages losses in a network with 400ms RTT
+(observed inter-replica RTT value during our experiments is 400ms).
 
 % The problem with Cassandra
 % ! 
@@ -139,11 +143,20 @@ for a simple counter application. Fig.~\ref{fig:eval}(c) shows the
 latency results of this application compared to the same in \tool,
 under the same setting as before (albeit with no message loss).  We
 see $78\%$ higher latency for the handwritten code compared to \tool
-with 50 concurrent clients.  Beyond the performance numbers, we
-experienced many bookkeeping complications with the handwritten
-implementation, mainly because of the lack of meta-data queries in
-Cassandra which needs strongly consistent table alterations at the
-beginning and the end of each session.
+with 50 concurrent clients. The reason hand-written code performs
+worse than \tool is because it relies on certain cassandra-specific
+features that are not optimized for the current purpose (each time a
+new session is created, it performs a strongly-consistent schema
+alteration to create a new column that records the sequence number of
+the last update to every object from that session).  Short of
+replicating the \tool's shim layer-based approach, we found no other
+way to enforce the required consistency guarantee beyond the one we
+implemented. Beyond the performance numbers, the ad hoc approach to
+consistency enforcement is also qualitatively inferior since it
+required significant re-engineering of the counter application (nearly
+40\% of the code needed refractoring to perform book-keeping needed
+for the ad hoc approach to work). With \tool, however, no refractoring
+was needed to enforce the required consistency.
 
 
 

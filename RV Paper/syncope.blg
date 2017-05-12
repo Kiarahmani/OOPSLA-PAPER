@@ -1,49 +1,15 @@
-This is BibTeX, Version 0.99d (TeX Live 2015)
-Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
-The top-level auxiliary file: syncope.aux
-The style file: unsrt.bst
-Database file #1: ref.bib
-Warning--empty booktitle in terry
-Warning--empty institution in rdtabs
-You've used 15 entries,
-            1791 wiz_defined-function locations,
-            544 strings with 6979 characters,
-and the built_in function-call counts, 5381 in all, are:
-= -- 516
-> -- 252
-< -- 10
-+ -- 89
-- -- 74
-* -- 384
-:= -- 784
-add.period$ -- 53
-call.type$ -- 15
-change.case$ -- 16
-chr.to.int$ -- 0
-cite$ -- 17
-duplicate$ -- 251
-empty$ -- 470
-format.name$ -- 74
-if$ -- 1261
-int.to.chr$ -- 0
-int.to.str$ -- 15
-missing$ -- 14
-newline$ -- 78
-num.names$ -- 15
-pop$ -- 44
-preamble$ -- 1
-purify$ -- 0
-quote$ -- 0
-skip$ -- 165
-stack$ -- 0
-substring$ -- 409
-swap$ -- 105
-text.length$ -- 10
-text.prefix$ -- 0
-top$ -- 0
-type$ -- 0
-warning$ -- 2
-while$ -- 51
-width$ -- 17
-write$ -- 189
-(There were 2 warnings)
+[0] Config.pm:324> INFO - This is Biber 2.1
+[0] Config.pm:327> INFO - Logfile is 'syncope.blg'
+[50] biber-darwin:276> INFO - === Fri May 12, 2017, 06:09:55
+[50] Biber.pm:333> INFO - Reading 'syncope.bcf'
+[159] Biber.pm:645> INFO - Found 14 citekeys in bib section 0
+[178] Biber.pm:2977> INFO - Processing section 0
+[193] Biber.pm:3115> INFO - Looking for bibtex format file 'ref.bib' for section 0
+[200] bibtex.pm:1021> INFO - Decoding LaTeX character macros into UTF-8
+[203] bibtex.pm:895> INFO - Found BibTeX data source 'ref.bib'
+[405] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[405] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[405] Biber.pm:2854> INFO - Sorting list 'nty' of type 'entry' with scheme 'nty' and locale 'en-US'
+[405] Biber.pm:2858> INFO - No sort tailoring available for locale 'en-US'
+[464] bbl.pm:505> INFO - Writing 'syncope.bbl' with encoding 'UTF-8'
+[467] bbl.pm:596> INFO - Output to syncope.bbl

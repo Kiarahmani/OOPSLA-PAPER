@@ -1,6 +1,56 @@
-\section{Algorithm}
+\section{Implementation}
 \label{sec:alg}
+We implemented our tool as an extension to a GHC Haskell add-on, called
+Quelea 
+\cite{quelea},
+previously developed by Sivaramakrishnan and two of the authors of this paper.
+Quelea maintains a causally consistent cache on top of Cassandra, and \emph{all} operations whose contract is satisfied under causal
+consistency, are performed witnessing that cache (even if they require considerably
+weaker guarantees than causal).
 
+In \tool, we maintain a generic cache equipped with a tagging mechanism,
+where each operation is associated with a tag, and is allowed to witnesses only the subset of effects in the
+cache, holding that tag (i.e. effects that are in the \emph{logical
+cache} associated with that operation). We implemented a dependency finder mechanism in
+\tool, that is used to verify the presence of arbitrarily defined dependencies of an
+effect in each logical cache. Consequently, \tool's filtration and blocking
+mechanisms are added to the runtime system, which rely on this dependency finder to keep each logical cache
+consistent according to its associated contract. Specifically, 
+considering a dependency relation $R$ and a replica containing a localset $V$
+of effects, an effect $\eta$ is allowed to enter a logical cache, only if
+$\trunc{R}_V^{-1}(\eta)$ is already in that cache. 
+
+
+%the memoization technique
+Considering the arbitrary length of the dependency relations expressible
+in our contract language, and the fact that verifying the presence of
+dependancies for an effect might fail for an unbounded number of trials
+until all the dependencies arrive, we noticed considerable redundencies
+in our dependency finder mechanism, which adversely affected the
+performance.
+To overcome this problem, we implemented a simple memoization technique in \tool\
+that extends the binary notion of dependency presence to the
+\emph{degree of dependency presence} (\DDP{}) representing 
+the maximum \emph{depth} (or size) of the dependencies of an effect, whose presence have been
+verified so far. 
+Consequently, when verification of the presence of
+dependencies for an effect fails, the runtime system can avoid redundant
+computations the time it tries to verify the same property for the
+same effect.
+\tool's runtime, by performing
+periodic \DDP{} refreshes, tries to assign larger \DDP{} values to each effect
+when more dependencies arrive at the replica. We leave the details of
+this technique, captured as an operational semantics in 
+appendix \ref{appendix:large_semantics} for an interested reader.
+
+
+
+
+
+
+
+
+\begin{comment}
 %intro
 While the semantics defines \emph{what} \emph{what} subset of
 effects at a replica  must be witnessed by every operation, it does
@@ -51,4 +101,5 @@ consequently, $\eta$ can
 be safely added to the consistent cache (Fig.\ref{fig:avail_deg}).
 Using this technique, \tool avoid redundant computations of potentially large
 dependency relations.
-\input{Figures/fig_availability_degrees.tex}
+%\input{Figures/fig_availability_degrees.tex}
+\end{comment}

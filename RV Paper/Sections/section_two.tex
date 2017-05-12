@@ -17,6 +17,7 @@ replica using a user-supplied function.
 Figs.~\ref{fig:sys_model1} and \ref{fig:sys_model2} illustrate this
 process.
 
+\input{Figures/fig_system_model}
 Because there is no direct synchronization between replicas when an
 operation is executed, concurrent and possibly conflicting updates can
 be generated at different replicas.  Conflict resolution is handled at
@@ -47,7 +48,6 @@ their generation.  For example, in Fig.~\ref{fig:sys_model3} $\visO
 (\eta,\eta')$ holds, since $\eta$ (the effect of $\opO$) has already
 been delivered and applied to the replica~\replO{4}, when $\opO'$ is
 executed and thus has influenced generation of $\eff'$.
-\input{Figures/fig_system_model}
 
 
 

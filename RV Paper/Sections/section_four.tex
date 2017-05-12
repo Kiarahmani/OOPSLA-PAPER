@@ -1,6 +1,5 @@
 \section {Specification Language} 
 \label{sec:ctrt_language}
-\input{Sections/syntax}
 The formal syntax of our specification (or contract) language, presented in
 Fig.\ref{fig:ctrt_syntax}, allows definitiosn of
 \propS{}, a first-order formula
@@ -26,6 +25,7 @@ Our language is crafted to capture all fine-grained weak consistency
 levels, including well-known ones such as those explicated by Terry et al. \cite{terry}
 (see e.g., Fig.\ref{fig:ctrt_example}).
 
+\input{Sections/syntax}
 %
 % UB and LB contracts
 We provide two important classes of 
@@ -52,4 +52,8 @@ Our consistency enforcement approach is based on blocking operations
 with \LB{} contracts to make sure that they witness \emph{all effects
   that they are supposed to}, and filtering for \UB{} contracts to
 make sure that they do not witness \emph{effects that they are not
-  supposed to}.  
+  supposed to} (e.g. see Fig.~\ref{fig:ub}).  
+\input{Figures/fig_ub_example}
+
+
+  

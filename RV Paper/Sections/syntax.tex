@@ -1,5 +1,5 @@
 \begin{figure}[t]
-\begin{subfigure}{0.43\textwidth}
+\begin{subfigure}{0.41\textwidth}
 \centering
   \begin{fmathpar}
   \begin{array}{lclcl}
@@ -13,30 +13,30 @@
 		\psi & \in & \texttt{spec} & \coloneqq & \pi \ALT \pi \conj \pi
   \end{array}
   \end{fmathpar}
-\caption{\scriptsize syntax of contracts}
+\subcaption{ syntax of contracts}
 \label{fig:ctrt_syntax}
 \end{subfigure}
 \hfill \vline \hfill
-\begin{subfigure}{0.43\textwidth}
+\begin{subfigure}{0.49\textwidth}
 \centering
 \begin{scriptsize}
 \begin{tabular}{|l | c |} 
 \hline
  { \texttt Guarantee} & {\texttt Contract} \\ [0.5ex] 
 \hline 
-\textsc{RMW} & $\forall a. a ~  ~\xrightarrow{\soZ}  ~ ~
+\textsc{Read My Writes} & $\forall a. a ~  ~\xrightarrow{\soZ}  ~ ~
 \hat{\eta} \Rightarrow a \xrightarrow{\visZ} \hat{\eta} $ \\ 
-\textsc{MW} & $\forall a. a \xrightarrow{\soZ;\visZ}
+\textsc{Monotonic Writes} & $\forall a. a \xrightarrow{\soZ;\visZ}
 \hat{\eta} \Rightarrow a \xrightarrow{\visZ} \hat{\eta} $ \\ 
-\textsc{MR} & $\forall a. a \xrightarrow{\visZ;\soZ}
+\textsc{Monotonic Reads} & $\forall a. a \xrightarrow{\visZ;\soZ}
 \hat{\eta} \Rightarrow a \xrightarrow{\visZ} \hat{\eta} $ \\ 
-\textsc{2VIS} & $\forall a. a \xrightarrow{\visZ;\visZ}
+\textsc{Transitive Visibility} & $\forall a. a \xrightarrow{\visZ;\visZ}
 \hat{\eta} \Rightarrow a \xrightarrow{\visZ} \hat{\eta} $ \\ 
 
 \hline
 \end{tabular}
 \end{scriptsize}
-\caption{\scriptsize examples 
+\subcaption{examples 
 %({\bf R}ead {\bf M}y {\bf W}rites, {\bf M}onotonic
 %{\bf W}rites and
 %{\bf M}onotonic {\bf R}eads)

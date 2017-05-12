@@ -3,7 +3,7 @@
 %==================== DEFINITIONS	
 %
 \begin{minipage}{\columnwidth}
-\begin{smathpar}
+\begin{fmathpar}
 \stretcharraybig
 \begin{array}{lclcl}
   \multicolumn{5}{c}{
@@ -31,17 +31,17 @@
   \Sigma 		& \in & \mathtt{Session\;Soup}   	 	& \coloneqq &
         \langle s, i, \sigma \rangle \pll \Sigma \ALT \emptyset \\
 \end{array}
-\end{smathpar}
+\end{fmathpar}
 \end{minipage}
 %
-\begin{smathpar}
+\begin{fmathpar}
 \begin{array}{c}
 \ssn(s,\_,\_,\_) = s \spc\spc
 \id(\_,j,\_,\_) = j \spc\spc
 \oper(\_,\_,op,\_) = op \spc\spc
 \rval(\_,\_,\_,n) = n\\
 \end{array}
-\end{smathpar}
+\end{fmathpar}
 %
 % ==================   rules
 %
@@ -53,7 +53,7 @@
 
 \begin{minipage}{\textwidth}
 \rulelabel{Oper}
-\begin{smathpar}
+\begin{fmathpar}
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
@@ -74,7 +74,7 @@ F_{op}(v) = \eta \qquad
   {} {((\EffSoup',\visZ',\soZ'),\eta)}
 }
 \end{array}
-\end{smathpar}
+\end{fmathpar}
 \end{minipage}
 
 
@@ -84,7 +84,7 @@ F_{op}(v) = \eta \qquad
 
 \begin{minipage}{3in}
 \rulelabel{Pool Refresh}
-\begin{smathpar}
+\begin{fmathpar}
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
@@ -99,12 +99,12 @@ F_{op}(v) = \eta \qquad
   (\E,\Theta,\Sigma) \;\xrightarrow{\eff}\; (\E, \Theta', \Sigma)
 }
 \end{array}
-\end{smathpar}
+\end{fmathpar}
 \end{minipage}
 %
 \begin{minipage}{2.8in}
 \rulelabel{DDP Refresh}
-\begin{smathpar}
+\begin{fmathpar}
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
@@ -122,12 +122,12 @@ F_{op}(v) = \eta \qquad
   (\E,\Theta,\Sigma) \;\xrightarrow{\eff}\; (\E, \Theta', \Sigma)
 }
 \end{array}
-\end{smathpar}
+\end{fmathpar}
 \end{minipage}
 %
 \begin{minipage}{2.8in}
 \rulelabel{Cache Refresh}
-\begin{smathpar}
+\begin{fmathpar}
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
@@ -143,12 +143,12 @@ F_{op}(v) = \eta \qquad
   (\E,\Theta,\Sigma) \;\xrightarrow{\eff}\; (\E, \Theta', \Sigma)
 }
 \end{array}
-\end{smathpar}
+\end{fmathpar}
 \end{minipage}
 \hspace{22 mm}
 \begin{minipage}{2.3in}
 \rulelabel{LB Exec}
-\begin{smathpar}
+\begin{fmathpar}
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
@@ -162,11 +162,12 @@ F_{op}(v) = \eta \qquad
   (\E',\Theta,\langle s,i+1,\sigma \rangle \pll \Sigma) 
 }
 \end{array}
-\end{smathpar}
+\end{fmathpar}
 \end{minipage}
-\begin{minipage}{2.3in}
+\vspace{2mm}
+\begin{minipage}{2.8in}
 \rulelabel{UB Exec}
-\begin{smathpar}
+\begin{fmathpar}
 \stretcharraybig
 \begin{array}{l}
 \RuleTwo
@@ -180,7 +181,7 @@ F_{op}(v) = \eta \qquad
   (\E',\Theta,\langle s,i+1,\sigma \rangle \pll \Sigma) 
 }
 \end{array}
-\end{smathpar}
+\end{fmathpar}
 \end{minipage}
 
 

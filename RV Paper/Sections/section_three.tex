@@ -1,7 +1,6 @@
 \section{Motivation}
 \label {sec:motiv}
 \subsection{Replicated Data Types in ECDS }
-\input {Figures/fig_simple_haskell}
 
 %intro
 To motivate our approach, consider a highly available (low
@@ -35,6 +34,7 @@ while Alice's first read operation is routed to \ding{184}.  Alice and
 Bob then keep talking, generating more read and write events, while
 updates are propagated concurrently between the two replica.
 
+\input {Figures/fig_simple_haskell}
 %explain the anomaly possible in this setting
 As mentioned before, lost updates, is a well-known, often undesirable,
 behavior admitted by eventually consistent data stores (ECDS).  An

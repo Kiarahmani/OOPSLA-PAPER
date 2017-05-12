@@ -24,6 +24,8 @@
 \usepackage{moresize}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage{sidecap}
+
 \definecolor{pblue}{rgb}{0.13,0.13,1}
 \definecolor{pgreen}{rgb}{0,0.5,0}
 \definecolor{pred}{rgb}{0.9,0,0}
@@ -49,6 +51,12 @@
 }
 \lstset{escapeinside={(*@}{@*)}}
 \input{insbox}
+\usepackage[backend=biber,style=numeric-comp,maxbibnames=99,firstinits=true]{biblatex}
+\addbibresource{ref.bib}
+\defbibheading{bibliography}[\refname]{\section*{#1}}
+%\DeclareNameAlias{sortname}{last-first}
+%\DeclareNameAlias{default}{last-first}
+
 
 
 %% Note: Authors migrating a paper from PACMPL format to traditional
@@ -123,15 +131,15 @@ Systems, Haskell}
 \input{Sections/section_eight}
 
 %================================ SECTION NINE: Conclusion
-\input{Sections/section_nine}
+%\input{Sections/section_nine}
 
 %
 % ---- Bibliography ----
 %
 %\nocite{*}
-\bibliographystyle{unsrt}
-\bibliography{ref}
-
+%\bibliographystyle{unsrt}
+%\bibliography{ref}
+\printbibliography
 
 %% Appendix
 \newpage
@@ -144,10 +152,10 @@ Systems, Haskell}
 \label{appendix:proofs}
 \input{Appendix/proofs}
 
-%\newpage
-%\section{Operational Semantics of the Augmented algorithm}
-%\label{appendix:large_semantics}
-%\input{Appendix/large_semantics}
+\newpage
+\section{Operational Semantics of the Augmented algorithm}
+\label{appendix:large_semantics}
+\input{Appendix/large_semantics}
 
 
 

@@ -1,8 +1,6 @@
-\newpage
 \section{Evaluation}
 \label{sec:eval}
 %
-\input{Figures/fig_dist_table}
 %intro: benchmark programs
 %%%SJ: you need to introduce the implementation - what is
 %%%the implementation written in, what does it run on top of,
@@ -12,7 +10,7 @@ including a report on
 benchmark applications that utilize fine-grained weak consistency
 requirements, expressable
 in \tool's specification language.
-Fig.\ref{fig:dist_table} presents seven such programs, that include
+Fig.~\ref{fig:dist_table} presents seven such programs, that include
 library definitions of individual replicated data types as well as
 larger applications consisting of multiple replicated types. 
 
@@ -32,23 +30,24 @@ efficiently. It is clearly not practical to hard code them all, due
 their sheer number; even if we ignore bespoke consistency
 requirements, there are 15 combinations of just the 4 aforementioned
 consistency guarantees, even as there are other known guarantees, such
-as writes-follow-reads (WFR), which we ignored.  Causal Consistency
+as writes-follow-reads (WFR), which we ignored previously.  Causal Consistency
 (CC), the strongest of the weak consistency guarantees, is often used
 as a metaphorical one-size to fit all weak consistency requirements.
 Notably, none of the operations we analyzed intrinsically require CC.
 Furthermore, we found that enforcing CC is significantly more
 expensive than enforcing weaker guarantees (see below), thus making CC
-a bad substitute for weaker guarantees. One the other hand, we found
+a bad substitute for weaker guarantees. On the other hand, we found
 \tool's generic consistency enforcement mechanism to be very useful in
 this case.
 
+\input{Figures/fig_dist_table}
 %
 %example
 While the consistency requirements of the applications in
 Fig.~\ref{fig:dist_table} are expressible as the combination of known
 guarantees as described above, this is not necessary in general. The
 bespoke consistency specifications of an application are usually
-crafted by analyzing the anomalies that need to be prempted.  For
+crafted by analyzing the anomalies that need to be preempted.  For
 example, consider a bank account application, which offers \dRV{},
 \wdRV{} and \gbRV{} operations, where \wdRV{} is a strongly consistent
 operation that succeeds only if there are sufficient funds in the
@@ -67,7 +66,7 @@ Fig.~\ref{fig:dist_table}, \gbRV{} requires both \rmwCTRT{} and
 % performance evaluation
 We have deployed \tool on a cloud cluster,
 consisting of three fully replicated Cassandra replicas, running on
-seperate machines within the same
+separate machines within the same
 datacenter. 
 Each machine is instantiated with a
 \tool shim layer, that responds to clients,  
@@ -85,8 +84,8 @@ practice, far more consistent than EC, and masks out the performance
 gain from our fine-grained consistency guarantees.  Consequently, to
 simulate a realistic EC environment, we injected artificial message
 losses in \tool's shim layer, forcing random messages to be delayed
-for 1s, simulating messages losses in a network with 600ms RTT
-(observed inter-replica RTT value during our experiments is 600ms).
+for 1s, simulating messages losses in a network with 600ms RTT.
+%(observed inter-replica RTT value during our experiments is 600ms).
 
 % The problem with Cassandra
 % ! 
@@ -101,7 +100,7 @@ operations, where operations uniformly choose from 5 objects,
 performed under a specified consistency level. 
 We increase the
 percentage of delayed messages from 0 to 14.  Each experiment ran for
-100 repeaded sessions per client. In addition to client perceived
+100 repeated sessions per client. In addition to client perceived
 latency, we also measure the staleness of operations, which we define as
 the average ratio of the number of visible effects,
 to the number of all available effects, when executing an operation.
@@ -128,10 +127,10 @@ Similarly, we repeated the experiment with 3 \UB{} contracts. Here, a
 a\xrightarrow{(\soZ\cup\visZ)^*;\visZ}\hat{\eta}\Rightarrow a\xrightarrow{\visZ}
 \hat{\eta} $}), yields the most stale data when the percentage of lost
 messages is increased, whereas staleness in MW is the lowest and is
-barely effected. We report $3\%$ ($6\%$) difference 
+barely affected. We report $3\%$ ($6\%$) difference 
 between staleness of data under MW and 2VIS, and $4\%$ ($7\%$)
 difference between 2VIS and CV,
-at four (ten) percante message
+at four (ten) percent message
 loss rate.
 
 
@@ -144,18 +143,18 @@ latency results of this application compared to the same in \tool,
 under the same setting as before (albeit with no message loss).  We
 see $78\%$ higher latency for the handwritten code compared to \tool
 with 50 concurrent clients. The reason hand-written code performs
-worse than \tool is because it relies on certain cassandra-specific
+worse than \tool is because it relies on certain Cassandra-specific
 features that are not optimized for the current purpose (each time a
 new session is created, it performs a strongly-consistent schema
 alteration to create a new column that records the sequence number of
 the last update from that session to every object).  Short of
 replicating the \tool's shim layer-based approach, we found no other
 way to enforce the required consistency guarantee beyond the one we
-implemented. Beyond the performance numbers, the ad hoc approach to
+implemented. Beyond the performance numbers, the ad-hoc approach to
 consistency enforcement is also qualitatively inferior since it
 required significant re-engineering of the counter application (nearly
-40\% of the code needed refractoring to perform book-keeping needed
-for the ad hoc approach to work). With \tool, however, no refractoring
+40\% of the original code needed refractoring to perform book-keeping needed
+for the ad-hoc approach to work). With \tool, however, no refractoring
 was needed to enforce the required consistency.
 
 

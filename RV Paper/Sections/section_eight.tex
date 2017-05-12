@@ -1,4 +1,56 @@
 \section{Related Works}
 \label{sec:rel_works}
 
+%RDTs
+Distributed data structures composed of  operation-based RDTs \cite{rdt,crdt} have been implemented and utilized in
+multiple systems \cite{tango,cassandra}. 
+These systems are developed without assuming eventual consistency
+guarantee and include durability and fault tolerance mechanisms,
+different from \tool, that similar to \cite{bolton} separates all liveness
+and durability issues from the consistency, leaving the former
+completely to the underlying data store.
+
+
+%coordination
+The consistency requirements of replicated data-objects have been
+studied in several works \cite{autoc,mahsa,bloom}, where multiple
+sufficient conditions and analysis techniques are proposed to detect
+potential coordination points in programs to enforce strong consistency. \tool takes another approach
+and allows users to declare application-level consistency requirements
+from a spectrum of (coordination-free) weak consistency guarantees.
+
+
+
+%Consistency on top of EC
+Several systems \cite{geofast,petersen,cbs,chapar,bolton,quelea} define
+and implement various levels of consistency guarantees in order to
+protect applications from anomalies admitted under EC.
+\cite{chapar} presents a verified implementation for a causally
+consistent store, assuming a system model with \emph{session stickiness}, 
+where unlike \tool, operations from a session are always routed to the same
+replica. The idea of a causally consistent shimlayer on top of an off-the-shelf
+ECDS, is proposed in \cite{bolton} and is utilized in \cite{quelea},
+to offer three coarse-grained levels of consistency, namely EC, CC and SC. 
+\tool extends the shimlayer in \cite{quelea} by maintaining \emph{multiple}
+fine-grained weak consistency levels simultaneously (in addition to SC
+and EC). 
+
+% contract language
+\tool's contract language is inspired
+from \cite{rdt,rdtabs}, but similar to \cite{quelea} is crafted for
+consistency specification. Compared to \cite{quelea}, \tool introduces a 
+more strictly structured syntax (without losing any generality), 
+allowing the classification of consistency  guarantees, which enables a 
+generic consistency enforcement method, whereas \cite{quelea} relies on
+an SMT solver to \emph{map} the operations, to the weakest
+\emph{pre-defined} consistency guarantee that satisfies the given
+contract. 
+
+
+
+
+
+
+
+
 

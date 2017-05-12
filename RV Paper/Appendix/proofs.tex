@@ -1,17 +1,20 @@
-Here, we present the detailed proofs of the theorems of the paper. 
-Let's first present a useful lemma:
+Here, we present detailed proofs of the theorems of the paper by
+first presenting a useful lemma.\\
+\rule{\textwidth}{1pt}
 \begin{lemma}
-For all relations $R$ and execution steps:
-\begin{fmathpar}
+For all relations {\footnotesize $R\in$ \relationS{}} and execution steps:
+{\footnotesize $
 (\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E',\eff)
-\end{fmathpar}
-interpretatin of $R$ under $E$ and $E'$ only differs considering $\eta$,
-i.e.  {\scriptsize $a,b\not= \eta \Rightarrow (R'(a,b) \Leftrightarrow
-R(a,b))$}
+$}
+interpretatin of $R$ under $\E$ and $\E'$ (Simply denoted by $R$ and $R'$) differ only on the single
+effect $\eta$,
+i.e.  {\footnotesize $\forall a,b\not= \eta \Rightarrow (R'(a,b) \Leftrightarrow
+R(a,b))$}.
 \label{lemma1}
 \end{lemma}
+\rule{\textwidth}{0.25pt}
 \begin{proof}
-We only prove $\Rightarrow$, the other part can be done
+We prove $\Rightarrow$, the other direction can be shown
 similarly. We have the following goal and hypotheses: 
 \begin{fmathpar}
 \begin{array}{ll}
@@ -21,50 +24,57 @@ H_2: & R' (a,b)\\
 G_0: & R (a,b)
 \end{array}
 \end{fmathpar}
-Now by destructing $R$ we have the followings from new hypothesis and
-goal:
+Now by destructing $R$, we get the followings, in the only non-trivial
+case:
 \begin{fmathpar}
 \begin{array}{ll}
 H_3: & (\trunc{R};r)' (a,b) \\
 G_1: & (\trunc{R};r) (a,b)
 \end{array}
 \end{fmathpar}
-which can be rewritten by the definition to  get that y exists s.t.
+which by rewriting the definition in $H_4$ and $G_1$, we get that $y$ exists s.t.
 \begin{fmathpar}
 \begin{array}{ll}
 H_4: & (\trunc{R})'(a,y)\\
 H_5: & r'(y,b) \\
-G_1: & \exists x. (\trunc{R})(a,x) \wedge (r)(x,b)
+G_2: & \exists x. (\trunc{R})(a,x) \wedge (r)(x,b)
 \end{array}
 \end{fmathpar}
-Now we instantiate the goal with y itself and by using induction on the
-length of R, the first conjunct is proved, and we are left with the
-following:
+Now by instantiating $G_2$ with $y$ and by inversion: 
 \begin{fmathpar}
 \begin{array}{ll}
-H_6: & r'(y,b) \\
-G_1: & r (y,b)
+G_3: & (\trunc{R})(a,y) \\ 
+G_4: & r(y,b)
 \end{array}
 \end{fmathpar}
-Now by inversion on $H_0$ we get two cases, at both of which the
-following can be derived. (In one case V should be replaced by V' but
+Now by induction on the length of the relation $R$, $G_3$ is trivially
+proved and we are left with the following: 
+\begin{fmathpar}
+\begin{array}{ll}
+H_5: & r'(y,b) \\
+G_4: & r (y,b)
+\end{array}
+\end{fmathpar}
+Now by inversion on $H_0$ we get two cases. We show the \rulelabel{lb
+exec} case, and the other case can be shown similarly (only difference
+is $V$ being replaced by $V'$, which
 has no effect on the proof):
 \begin{fmathpar}
 \begin{array}{ll}
 H_7: & \visZ' = \visZ \cup V \times \{\eta\} \\
-H_8: & \soZ' = \soZ' = \soZ \cup \{(\eta',\eta) \,|\, \eta'\in \EffSoup_{({\sf
-SessID}=s)} 
+H_8: & \soZ' \; = \soZ \cup  (\EffSoup_{({\sf
+SessID}=s)}\times \{\eta\}) 
 \end{array}
 \end{fmathpar}
 Now, because of $H_1$ (and the fact that $y\not= \eta$) it is easy to get the following from $H_7$ and
 $H_8$:
 \begin{fmathpar}
 \begin{array}{ll}
-H_9: & \visZ(y,b) \Rightarrow \visZ(y,b) = \\
-H_{10}: & \soZ(y,b) \Rightarrow \soZ(y,b) =
+H_9: & \visZ'(y,b) \Rightarrow \visZ(y,b) \\
+H_{10}: & \soZ'(y,b) \Rightarrow \soZ(y,b)
 \end{array}
 \end{fmathpar}
-Which directly prove the goal, after destructing $r$.
+which directly prove $G_4$, in both cases derived by destructing $r$.
 \end{proof}
 
 
@@ -85,11 +95,10 @@ Which directly prove the goal, after destructing $r$.
 \subsection{Proof of Theorem \ref{theorem:three}}
 \label{app:proof3}
 \begin{footnotesize}
+\vspace{-2mm}\rule{\textwidth}{1pt}\\ \vspace{-4mm} \\
 Before proving the theorem, we first present and prove a useful lemma
 and then we will present 
 a new definition, regarding sets of effects.
-\vspace{2mm}
-\hrule
 \begin{lemma}
 Under an execution state E and for a given set $S \subseteq E.A$, if
 $S$ is $\psi$-consistent under $E$, then $\forall(x\in S).R_S^{-1}(x)

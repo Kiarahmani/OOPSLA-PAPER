@@ -1,12 +1,12 @@
 \begin{footnotesize}
-
-{\bf (Part i)} We have the following two hypotheses and the goal:
+{\bf (Part i)}
+\rule{\textwidth}{1pt}\\ \vspace{0mm} \\
+ We have the following two hypotheses and the goal:
 \begin{fmathpar}
 \begin{array}{ll}
 H_0: & (\E,op_{<s,i>}) \;\xrightarrow{V}\; (\E',\eff)  
 \\
 H_1: & V \; \mathtt{ is }\; \psi\mathtt{-consistent \; under \; \E} \\
-\hline
 G_0: & V \cup \{\eta\} \; \mathtt{is} \; \psi\mathtt{-consistent \;
 under \; \E'}
 \end{array}
@@ -25,11 +25,11 @@ By intros we have:
 H_2: & b \in V \cup \{\eta\} \\
 H_3: & a \in E'.A \\
 H_4: & R' (a,b)\\
-\hline
 G_2: & a \in V \cup \{\eta\}
 \end{array}
 \end{fmathpar}
-by inversion on $H_0$, there is two cases, in case one (UB reduction) we
+by inversion on $H_0$, there is two cases, in case \rulelabel{ub
+exec} we
 have the 
 following:
 \begin{fmathpar}
@@ -43,15 +43,15 @@ by inversion on $T_1$ we will have the following:
 T_2: & E'.A = E.A \cup \{\eta\}
 \end{array}
 \end{fmathpar}
-Since the other case (LB reduction) also includes similar premises which
-yields $T_2$, we can add it to the hypothesis:
+Since the other case (\rulelabel{lb exec}) also includes similar premises which
+yields $T_2$, we can add it to the hypotheses:
 \begin{fmathpar}
 \begin{array}{ll}
 H_5: & E'.A = E.A \cup \{\eta\}
 \end{array}
 \end{fmathpar}
 by rewriting $H_5$ in $H_3$  and by inversion, we get two cases:
-$a=\eta$ and $a \in E.A$. The first case immediatly proves $G_2$, so we
+$(a=\eta)$ and $(a \in E.A)$. The first case immediatly proves $G_2$, so we
 only consider the second case where we have: 
 \begin{fmathpar}
 \begin{array}{ll}
@@ -73,7 +73,7 @@ H_7: & \forall (x \in V). \forall (y \in E.A). R(y,x) \Rightarrow y \in
 V
 \end{array}
 \end{fmathpar}
-by instantiation with a and b: 
+and by instantiating it with a and b: 
 \begin{fmathpar}
 \begin{array}{ll}
 H_8: & R(a,b) \Rightarrow a \in V
@@ -82,6 +82,7 @@ H_8: & R(a,b) \Rightarrow a \in V
 Now by applying the lemma 1 on $H_4$ we get that $R(a,b)$ holds (since
 $a,b \neq \eta$), which can be applied on $H_8$ to get $a \in V$ which
 proves the goal $G_2$.
+\vspace{3mm}
 %
 %
 %
@@ -93,8 +94,9 @@ proves the goal $G_2$.
 \hspace{-35 mm} \mathtt{(by \; rewriting \;} H_9 \mathtt{\;in\; } H_4) & H_{10}: & R'(a,\eta)
 \end{array}
 \end{fmathpar}
-Now we use inversion on $H_0$ and get two cases: (LB exec) and (UB exec)
-\subitem {\bf \footnotesize SCase (LB exec):}
+Now we use inversion on $H_0$ and get two cases: \rulelabel{LB exec} and
+\rulelabel {UB exec}:
+\subitem {\bf \footnotesize SCase \rulelabel{LB exec}}:
 we have $H_{11}$ and $H_{12}$ from the reduction rule premises:
 \begin{fmathpar}
 \begin{array}{ll}
@@ -112,7 +114,7 @@ H_{14}: & a \in R^{-1}_{V}(\eta)
 \end{fmathpar}
 The goal $G_2$ is now proved from $H_{12}$ and $H_{14}$.
 
-\subitem {\bf \footnotesize SCase (UB exec):}
+\subitem {\bf \footnotesize SCase \rulelabel{UB exec}}:
 We have the following from the premises: 
 \begin{fmathpar}
 \begin{array}{ll}
@@ -120,7 +122,7 @@ H_{15}: & V' = \left \lfloor V  \right \rfloor_{\mathtt{max}}\\
 H_{16}: & V' \subseteq V
 \end{array}
 \end{fmathpar}
-now destruct $R$, the only non-trivial cases are
+By destructing $R$, the only non-trivial cases are
 $(R=\trunc{R};\visZ)$ and 
 ($R=\visZ$):
 
@@ -142,7 +144,7 @@ from $H_{15}$ we have:
 H_{21}: & (\trunc{R})^{-1}_V(V') \subseteq V'
 \end{array}
 \end{fmathpar}
-Now from $H_{18}$ is straightforward to get:
+Now from $H_{18}$ (and $T_1$) it is straightforward to get:
 \begin{fmathpar}
 \begin{array}{ll}
 H_{22}: & c \in V'
@@ -174,7 +176,8 @@ H_{24}: & a \in V'
 %
 %
 %
-{\bf (Part ii)}  \\
+{\bf (Part ii)}  
+\rule{\textwidth}{1pt}\\ \vspace{0mm} \\
 For this part we have the  following hypothesis and the goal:
 \begin{fmathpar}
 \begin{array}{ll}
@@ -183,7 +186,7 @@ G_{0}: & E' \models [\eta/\hat{\eta}]
 \end{array}
 \end{fmathpar}
 By inversion on $H_0$, we have two cases: \\
-{\footnotesize \bf Case1} (UB exec):\\
+{\footnotesize \bf Case1} \rulelabel {UB exec}:\\
 \begin{fmathpar}
 \begin{array}{ll}
 H_{1}: & r_k = \visZ\\ 
@@ -192,7 +195,7 @@ H_{3}: & V'= \left \lfloor V  \right \rfloor_{\mathtt{max}}\\
 H_{4}: & \auxred{V'} {(\E,op_{<s,i>})} {} {(\E',\eff)}\\
 \end{array}
 \end{fmathpar}
-The goal $G_0$ can be rewritten as: 
+The goal $G_0$ can also be rewritten as: 
 \begin{fmathpar}
 \begin{array}{ll}
 G_{1}: & E' \models \forall a. a \xrightarrow{R} \eta \Rightarrow a
@@ -223,7 +226,7 @@ G_{4}: & (E' \models a \xrightarrow{R} \eta) \Rightarrow (E' \models a
 \xrightarrow{vis} \eta) 
 \end{array}
 \end{fmathpar}
-intros: 
+by intros: 
 \begin{fmathpar}
 \begin{array}{ll}
 H_{6}: & E' \models a \xrightarrow{R} \eta \\
@@ -245,8 +248,8 @@ by inversion on $H_4$:
 H_{8}: & \visZ' = \visZ \cup V' \times \{\eta\}
 \end{array}
 \end{fmathpar}
-Now since $\eta$ is a fresh effect, we get that $a \in V' \Rightarrow
-\visZ'(a,\eta)$ which can be applied to $G_6$ to get the following:
+Now since $\eta\not\in E.A$, we get that $a \in V' \Rightarrow
+\visZ'(a,\eta)$, which can be applied to $G_6$ to get the following:
 \begin{fmathpar}
 \begin{array}{ll}
 G_{7}: & a \in V'
@@ -294,7 +297,7 @@ H_{15}: & a \in V'
 \end{array}
 \end{fmathpar}
 which proves the goal $G_7$.\\ \vspace{3 mm} \\
-{\footnotesize \bf Case2} (LB exec):\\
+{\footnotesize \bf Case2} \rulelabel{LB exec}:\\
 We prove this case by induction on the length of the given relation $R$.
 We have the followings, from the premises of the reduction rule:
 \begin{fmathpar}
@@ -318,8 +321,8 @@ G_{1}: & \visZ'(a,\eta)
 We now destruct R to get $H_8$ from $H_7$, and rewrite the definition in it to get the next
 two hypotheses.
 Note that by destructing $R$, there are only two non-trivial cases
-$R=\trunc{R};\soZ$ and $R=\soZ$, which we are only consideing the
-former, since the latter can be proved similarly.
+$(R=\trunc{R};\soZ)$ and $(R=\soZ)$, which we only consider the
+former, since the latter can be proved similarly:
 \begin{fmathpar}
 \begin{array}{ll}
 H_{8}: & (\trunc{R};\soZ)'(a,\eta) \\ 
@@ -337,7 +340,7 @@ H_{11}: & b \in V
 The goal is proved by the induction hypothesis, $H_9$ and $H_{11}$.
 \\ \fcolorbox{red}{white}{\color{black} \footnotesize QED.}
 \end{footnotesize}
-
+\\
 
 
 

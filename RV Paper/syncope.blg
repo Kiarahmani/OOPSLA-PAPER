@@ -4,45 +4,46 @@ The top-level auxiliary file: syncope.aux
 The style file: unsrt.bst
 Database file #1: ref.bib
 Warning--empty booktitle in terry
-You've used 18 entries,
+Warning--empty institution in rdtabs
+You've used 15 entries,
             1791 wiz_defined-function locations,
-            575 strings with 7337 characters,
-and the built_in function-call counts, 5081 in all, are:
-= -- 462
-> -- 250
-< -- 5
-+ -- 90
-- -- 72
-* -- 413
-:= -- 793
-add.period$ -- 57
-call.type$ -- 18
-change.case$ -- 18
+            544 strings with 6979 characters,
+and the built_in function-call counts, 5381 in all, are:
+= -- 516
+> -- 252
+< -- 10
++ -- 89
+- -- 74
+* -- 384
+:= -- 784
+add.period$ -- 53
+call.type$ -- 15
+change.case$ -- 16
 chr.to.int$ -- 0
-cite$ -- 19
-duplicate$ -- 203
-empty$ -- 459
-format.name$ -- 72
-if$ -- 1123
+cite$ -- 17
+duplicate$ -- 251
+empty$ -- 470
+format.name$ -- 74
+if$ -- 1261
 int.to.chr$ -- 0
-int.to.str$ -- 18
-missing$ -- 16
-newline$ -- 93
-num.names$ -- 18
-pop$ -- 36
+int.to.str$ -- 15
+missing$ -- 14
+newline$ -- 78
+num.names$ -- 15
+pop$ -- 44
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 103
+skip$ -- 165
 stack$ -- 0
-substring$ -- 404
-swap$ -- 54
-text.length$ -- 5
+substring$ -- 409
+swap$ -- 105
+text.length$ -- 10
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
-warning$ -- 1
+warning$ -- 2
 while$ -- 51
-width$ -- 20
-write$ -- 207
-(There was 1 warning)
+width$ -- 17
+write$ -- 189
+(There were 2 warnings)

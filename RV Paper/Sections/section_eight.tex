@@ -1,4 +1,4 @@
-\section{Related Works}
+\section{Related Work and Conclusions}
 \label{sec:rel_works}
 
 %RDTs
@@ -34,6 +34,17 @@ shim layer on top of an off-the-shelf ECDS, is proposed in
 three coarse-grained levels of consistency.  \tool extends the shim
 layer in \cite{quelea} by maintaining \emph{multiple} fine-grained
 weak consistency levels.
+
+This paper presents \tool, a lightweight runtime mechanism and
+specification framework for enforcing fine-grained consistency
+contracts in eventually consistent distributed systems.  Our design is
+provably optimal and safe, and experimental results indicate that
+automatic consistency validation using the techniques described here
+outperforms \emph{ad hoc} manual solutions.  We believe these results
+pave the way for strengthening any off-the-shelf distributed data
+store with consistency validation support for free.
+
+
 
 %% % contract language
 %% \tool's contract language shares similarity to \cite{rdt,rdtabs}, but

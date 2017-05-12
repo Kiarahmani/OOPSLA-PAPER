@@ -30,15 +30,15 @@ efficiently. It is clearly not practical to hard code them all, due
 their sheer number; even if we ignore bespoke consistency
 requirements, there are 15 combinations of just the 4 aforementioned
 consistency guarantees, even as there are other known guarantees, such
-as writes-follow-reads (WFR), which we ignored previously.  Causal Consistency
-(CC), the strongest of the weak consistency guarantees, is often used
-as a metaphorical one-size to fit all weak consistency requirements.
-Notably, none of the operations we analyzed intrinsically require CC.
-Furthermore, we found that enforcing CC is significantly more
-expensive than enforcing weaker guarantees (see below), thus making CC
-a bad substitute for weaker guarantees. On the other hand, we found
-\tool's generic consistency enforcement mechanism to be very useful in
-this case.
+as writes-follow-reads (WFR), which we ignored previously.  Causal
+consistency (CC), the strongest of the weak consistency guarantees, is
+often used as a metaphorical one-size to fit all weak consistency
+requirements.  Notably, none of the operations we analyzed
+intrinsically require CC.  Furthermore, we found that enforcing CC is
+significantly more expensive than enforcing weaker guarantees (see
+below), thus making CC a bad substitute for weaker guarantees. On the
+other hand, we found \tool's generic consistency enforcement mechanism
+to be very useful in this case.
 
 \input{Figures/fig_dist_table}
 %

@@ -1,10 +1,10 @@
 all:
 	pdflatex -shell-escape syncope
 	pdflatex -shell-escape syncope
-	biber syncope
-	biber syncope
+#	biber syncope
+#	biber syncope
 	pdflatex -shell-escape syncope
-	biber syncope
+#	biber syncope
 	pdflatex -shell-escape syncope
 
 # Check style:
